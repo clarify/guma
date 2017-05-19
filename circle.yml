@@ -1,0 +1,14 @@
+dependencies:
+  pre:
+    - curl -o tmp.tar.gz -L https://github.com/Masterminds/glide/releases/download/v0.12.3/glide-v0.12.3-linux-amd64.tar.gz
+    - tar -xzvf tmp.tar.gz
+    - mkdir -p ${HOME}/.go_workspace/bin
+    - mv linux-amd64/glide ${HOME}/.go_workspace/bin/glide
+  override:
+    - mkdir -p ${HOME}/.go_workspace/src/github.com/${CIRCLE_PROJECT_USERNAME}
+    - ln -s ${HOME}/${CIRCLE_PROJECT_REPONAME} ${HOME}/.go_workspace/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
+    - cd ${HOME}/.go_workspace/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
+    - glide install
+test:
+  override:
+    - go test -v -race $(glide nv)

@@ -1,0 +1,8 @@
+package uatype
+
+// attrType is a private type used for enumeration values.
+type attrType uint8
+
+const ({{range .}}{{$name := index . 0}}{{$attrId := index . 1}}
+	AttrType{{$name}} attrType = {{$attrId}}{{end}}
+)
