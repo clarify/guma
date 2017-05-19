@@ -10,5 +10,12 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# Project-local go-task cache files.
+.*.lock
+schemas/
+
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
+
+# Other dependencies.
+vendor/

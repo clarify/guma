@@ -1,0 +1,20 @@
+download-schemas:
+  cmds:
+    - generate/scripts/download-schemas.bash
+    # Prevent task from running again by creating a lock file in the past.
+    - touch -t 197001010101 .download-schemas.lock
+  sources:
+    - .download-schemas.lock
+  generates:
+    - schemas/1.03/*
+generate-tools:
+  cmds:
+    - go get -u golang.org/x/tools/cmd/goimports
+    - go install github.com/searis/guma/generate/cmd/opcua-xml2code
+    - go install github.com/searis/guma/generate/cmd/csv2code
+generate:
+  deps:
+    - download-schemas
+    - generate-tools
+  cmds:
+    - go generate ./uatype

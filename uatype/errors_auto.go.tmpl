@@ -1,0 +1,14 @@
+package uatype
+
+const ({{range .}}{{$name := index . 0}}{{$code := index . 1}}{{$msg := index . 2}}
+	Status{{$name}} enumStatusCode = {{$code}}{{end}}
+)
+
+var statusText = map[enumStatusCode]string{ {{range .}}{{$name := index . 0}}{{$code := index . 1}}{{$msg := index . 2}}
+	Status{{$name}}: "{{$msg}}",{{end}}
+}
+
+// StatusText returns a text for the OPC UA status code. It returns the empty string if the code is unknown.
+func StatusText(code enumStatusCode) string {
+	return statusText[code]
+}
