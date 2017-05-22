@@ -9,7 +9,10 @@ import (
 	"fmt"
 )
 
-var ErrNodeIdNotNumeric = errors.New("not a numeric identifier")
+// Errors raised by unsuccessful NodeId information lookups.
+var (
+	ErrNodeIdNotNumeric = errors.New("not a numeric identifier")
+)
 
 // Uint16Identifier returns the identifier of two-byte, four-byte or numeric
 // node IDs as uint16. Calling this method on other types of node IDs will

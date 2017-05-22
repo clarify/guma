@@ -9,7 +9,12 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"fmt"
+)
+
+// Errors raised by BinaryUnmarshaler implementations.
+var (
+	ErrStringNotTerminated = errors.New("string not terminated")
+	ErrNotEnoughData       = errors.New("not enough data")
 )
 
 // BitLengther is implemented by types that should be encoded into, or has been
@@ -35,24 +40,34 @@ func BitLength() int {
 // Guid represents a 16 byte unique ID.
 type Guid [16]byte
 
-func (id Guid) MarshalBinary() ([]byte, error) {
-	return id[:], nil
-}
-
-func (id Guid) UnmarshalBinary(data []byte) error {
-	if len(data) < 16 {
-		return fmt.Errorf("expected 16 or more bytes, got %d", len(data))
-	}
-	copy(id[:], data[:])
-	return nil
-}
-
-// FIXME: add methods if needed.
+// ByteString is encoded as a string of bytes prefixed by the length as int32.
+// -1 is used to indicate a null string.
 type ByteString []byte
 
-// StringNotTerminated is returned by String.UnmarshalBinary if the passed in
-// data does not contain a 32bit null character.
-var ErrStringNotTerminated = errors.New("string not terminated")
+// Marshal binary returns the binary representation of bs.
+func (bs ByteString) MarshalBinary() ([]byte, error) {
+	l := int32(len(bs))
+	if l == 0 {
+		l = -1
+	}
+	var buf bytes.Buffer
+	if err := binary.Write(&buf, binary.LittleEndian, l); err != nil {
+		return nil, err
+	}
+	if l == -1 {
+		return buf.Bytes(), nil
+	}
+	if err := binary.Write(&buf, binary.LittleEndian, bs); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
+
+// BitLength returns the size in bits of bs when encoded to binary. The number
+// is at least 32, and always a multiplum of 8.
+func (bs ByteString) BitLength() int {
+	return 32 + 8*len(bs)
+}
 
 // String is a null-terminated string of UTF-8 characters.
 type String string
@@ -67,19 +82,6 @@ func (s String) MarshalBinary() ([]byte, error) {
 		return nil, err
 	}
 	return buf.Bytes(), nil
-}
-
-// UnmarshalBinary extracts bytes from data until a UTF-8 null character is
-// found. If no null-character is found, ErrStringNotTerminated is returned.
-func (s *String) UnmarshalBinary(data []byte) error {
-	length := bytes.IndexAny(data, string(0))
-	if length < 0 {
-		return ErrStringNotTerminated
-	}
-	read := make([]byte, length)
-	copy(read, data[:length])
-	*s = String(read)
-	return nil
 }
 
 // BitLength returns the size in bits of s when encoded to binary. The number
