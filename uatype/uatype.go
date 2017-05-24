@@ -6,15 +6,13 @@
 package uatype
 
 import (
-	"bytes"
 	"encoding/binary"
 	"errors"
 )
 
 // Errors raised by BinaryUnmarshaler implementations.
 var (
-	ErrStringNotTerminated = errors.New("string not terminated")
-	ErrNotEnoughData       = errors.New("not enough data")
+	ErrNotEnoughData = errors.New("not enough data")
 )
 
 // BitLengther is implemented by types that should be encoded into, or has been
@@ -46,46 +44,52 @@ type ByteString []byte
 
 // Marshal binary returns the binary representation of bs.
 func (bs ByteString) MarshalBinary() ([]byte, error) {
-	l := int32(len(bs))
-	if l == 0 {
-		l = -1
+	size := int32(len(bs))
+	target := make([]byte, size+4)
+
+	// At least initally, we don't distinguish between null values and arrays
+	// with length null. We could change this if it's required.
+	if size == 0 {
+		size = -1
+		binary.LittleEndian.PutUint32(target, uint32(size))
+		return target, nil
 	}
-	var buf bytes.Buffer
-	if err := binary.Write(&buf, binary.LittleEndian, l); err != nil {
-		return nil, err
+
+	// Encode string.
+	binary.LittleEndian.PutUint32(target, uint32(size))
+	copy(target[4:], bs)
+
+	return target, nil
+}
+
+// UnmarshalBinary reads from the head of data and sets bs. If there is not
+// enough data available, the ErrNotEnoughData error is returned.
+func (bs *ByteString) UnmarshalBinary(data []byte) error {
+	l := len(data)
+	if l < 4 {
+		return ErrNotEnoughData
 	}
-	if l == -1 {
-		return buf.Bytes(), nil
+	size := int32(binary.LittleEndian.Uint32(data[0:4]))
+
+	if size == -1 || size == 0 {
+		// At least initially, we don't distinguish between null values and
+		// arrays with length 0. We could change this if it's required.
+		bs = nil
+		return nil
 	}
-	if err := binary.Write(&buf, binary.LittleEndian, bs); err != nil {
-		return nil, err
+
+	stop := int(size) + 4
+	if stop < l {
+		return ErrNotEnoughData
 	}
-	return buf.Bytes(), nil
+
+	*bs = make([]byte, size)
+	copy(*bs, data[4:stop])
+	return nil
 }
 
 // BitLength returns the size in bits of bs when encoded to binary. The number
 // is at least 32, and always a multiplum of 8.
 func (bs ByteString) BitLength() int {
 	return 32 + 8*len(bs)
-}
-
-// String is a null-terminated string of UTF-8 characters.
-type String string
-
-// MarshalBinary returns the binary representation of s.
-func (s String) MarshalBinary() ([]byte, error) {
-	var buf bytes.Buffer
-	if err := binary.Write(&buf, binary.LittleEndian, ([]rune)(string(s))); err != nil {
-		return nil, err
-	}
-	if err := binary.Write(&buf, binary.LittleEndian, rune(0)); err != nil {
-		return nil, err
-	}
-	return buf.Bytes(), nil
-}
-
-// BitLength returns the size in bits of s when encoded to binary. The number
-// is always a multiplum of 32.
-func (s String) BitLength() int {
-	return (len(s) + 1) * 32
 }

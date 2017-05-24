@@ -9,20 +9,24 @@ import (
 )
 
 var goTypes = map[string]string{
-	"Boolean":    "bool",
-	"SByte":      "int8",
-	"Byte":       "uint8",
-	"Int16":      "int16",
-	"UInt16":     "uint16",
-	"Int32":      "int32",
-	"UInt32":     "uint32",
-	"Int64":      "int64",
-	"UInt64":     "uint64",
-	"Float":      "float32",
-	"Double":     "float64",
-	"CharArray":  "string", // prefixed with length.
-	"String":     "String", // zero-terminated.
-	"Char":       "rune",   // 32-bit UTF encoded.
+	"Boolean": "bool",
+	"SByte":   "int8",
+	"Byte":    "uint8",
+	"Int16":   "int16",
+	"UInt16":  "uint16",
+	"Int32":   "int32",
+	"UInt32":  "uint32",
+	"Int64":   "int64",
+	"UInt64":  "uint64",
+	"Float":   "float32",
+	"Double":  "float64",
+	"String":  "string",
+	// It appears CharArray is merely used as an "alias" for String in the XML
+	// specification. Looking at the PDF specification seconds this as it uses
+	// type String, opcua:String or xs:string to refer to fields that have type
+	// CharArray in the XML.
+	"CharArray":  "string",
+	"Char":       "rune",
 	"DateTime":   "time.Time",
 	"StatusCode": "enumStatusCode",
 }

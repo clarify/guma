@@ -8,6 +8,8 @@ import (
 	"reflect"
 	"time"
 
+	"runtime/debug"
+
 	"github.com/searis/guma/uatype"
 )
 
@@ -15,8 +17,8 @@ import (
 type BinaryEncoder struct {
 	w             io.Writer
 	n             int64
-	bitMarshaler  bitTranscoder
-	byteMarshaler byteTranscoder
+	bitMarshaler  bitCacheMarshaler
+	byteMarshaler byteMarshaler
 }
 
 // NewBinaryEncoder takes a writer object where OPC UA data will be written on
@@ -34,8 +36,9 @@ func (enc *BinaryEncoder) BytesWritten() int64 {
 // Encode encodes uatype structs into a binary representation used for transfer.
 func (enc *BinaryEncoder) Encode(v interface{}) (err error) {
 	defer func() {
-		if r := recover(); r != nil {
-			err = fmt.Errorf("recovered from panic: '%v'", r)
+		if e := recover(); e != nil {
+			debugLogger.Printf("recovered from panic: %s:\n%s", e, debug.Stack())
+			err = fmt.Errorf("recovered from panic: %s", e)
 		}
 	}()
 	switch err := enc.encode(v).(type) {
@@ -52,56 +55,52 @@ func (enc *BinaryEncoder) encode(v interface{}) error {
 	var m encoding.BinaryMarshaler
 
 	// Pick binary marshaler.
-	switch vi := v.(type) {
+	switch iv := v.(type) {
 	case int, uint:
 		// reject integers without a specified bit size.
 		return ErrUnknownType
 	case bool:
-		if vi {
-			(&enc.byteMarshaler).SetData(byte(1))
-		} else {
-			(&enc.byteMarshaler).SetData(byte(0))
-		}
+		enc.byteMarshaler.SetData(iv)
 		m = &enc.byteMarshaler
 	case uint8, int8, uint16, int16, int32, uint32, int64, uint64, float32, float64:
-		(&enc.byteMarshaler).SetData(v)
+		enc.byteMarshaler.SetData(v)
 		m = &enc.byteMarshaler
 	case string:
-		m = charArray(vi)
+		m = uaString(iv)
 	case time.Time:
-		m = dateTime(vi)
+		m = dateTime(iv)
 	case uatype.Bit:
 		var err error
-		if vi {
-			err = (&enc.bitMarshaler).SetBits(1, 1)
+		if iv {
+			err = enc.bitMarshaler.SetBits(1, 1)
 		} else {
-			err = (&enc.bitMarshaler).SetBits(0, 1)
+			err = enc.bitMarshaler.SetBits(0, 1)
 		}
 		if err != nil {
 			return err
 		}
 		m = &enc.bitMarshaler
 	case bitSlice:
-		if err := (&enc.bitMarshaler).SetBits(vi.Data, byte(vi.BitLength)); err != nil {
+		if err := enc.bitMarshaler.SetBits(iv.Data, byte(iv.BitLength)); err != nil {
 			return err
 		}
 		m = &enc.bitMarshaler
 	case encoding.BinaryMarshaler:
 		// Prefer BinaryMarshaler over BitLengther, if implemented.
-		m = vi
+		m = iv
 	case uatype.BitLengther:
-		nBits := vi.BitLength()
+		nBits := iv.BitLength()
 		if nBits < 8 {
 			// If the underlying type is not a byte, we wil panic.
-			if err := (&enc.bitMarshaler).SetBits(v.(byte), byte(nBits)); err != nil {
+			if err := enc.bitMarshaler.SetBits(v.(byte), byte(nBits)); err != nil {
 				return err
 			}
 			m = &enc.bitMarshaler
 		} else if nBits%8 != 0 {
 			return fmt.Errorf("bit length above 8 must be aligned to 8 bits; bit length was %d", nBits)
 		} else {
-			(&enc.byteMarshaler).SetData(v)
-			(&enc.byteMarshaler).SetSlice(0, uint(nBits/8))
+			enc.byteMarshaler.SetData(v)
+			enc.byteMarshaler.SetSlice(0, uint(nBits/8))
 			m = &enc.byteMarshaler
 		}
 	default:
@@ -176,7 +175,7 @@ func (enc *BinaryEncoder) encodeStruct(rv reflect.Value) error {
 			e := int(fields[prevIndices[f.LengthField]].Value.Int())
 			l := f.Value.Len()
 			if l != e {
-				debug.Printf("length (%d) != expected length (%d)", l, e)
+				debugLogger.Printf("length (%d) != expected length (%d)", l, e)
 				return wrapError(ErrInvalidLength, f.Name)
 			}
 		}
@@ -184,11 +183,13 @@ func (enc *BinaryEncoder) encodeStruct(rv reflect.Value) error {
 		var v interface{}
 
 		// Wrap with bitSlice if needed.
-		if f.BitSize != 0 {
+		if f.BitSize > 0 && f.BitSize <= 8 {
 			v = bitSlice{
 				Data:      f.Value.Interface().(byte),
 				BitLength: f.BitSize,
 			}
+		} else if f.BitSize > 8 {
+			return wrapError(ErrInvalidBitLength, f.Name)
 		} else {
 			v = f.Value.Interface()
 		}

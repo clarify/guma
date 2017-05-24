@@ -6,52 +6,40 @@ import (
 	"github.com/searis/guma/uatype"
 )
 
-func TestString(t *testing.T) {
-	type oneStringStruct struct {
-		Data0 uatype.String
+func TestByteString(t *testing.T) {
+	// FIXME: Move test to uatype package on reorg.
+	type oneByteStringStruct struct {
+		Data0 uatype.ByteString
 	}
 	cases := []TranscoderTest{
 		{
 			SubTests:     TestEncode | TestDecode,
-			Name:         `String("")`,
-			Unmarshaled:  uatype.String(""),
-			DecodeTarget: new(uatype.String),
+			Name:         `oneByteStringStruct{ByteString("foobar")}`,
+			Unmarshaled:  oneByteStringStruct{uatype.ByteString{'f', 'o', 'o', 'b', 'a', 'r'}},
+			DecodeTarget: new(oneByteStringStruct),
 			Marshaled: []byte{
-				0, 0, 0, 0,
+				6, 0, 0, 0,
+				'f',
+				'o',
+				'o',
+				'b',
+				'a',
+				'r',
 			},
 		},
 		{
 			SubTests:     TestEncode | TestDecode,
-			Name:         `String("foobar")`,
-			Unmarshaled:  uatype.String("foobar"),
-			DecodeTarget: new(uatype.String),
+			Name:         `ByteString(nil)`,
+			Unmarshaled:  uatype.ByteString(nil),
+			DecodeTarget: new(uatype.ByteString),
 			Marshaled: []byte{
-				'f', 0, 0, 0,
-				'o', 0, 0, 0,
-				'o', 0, 0, 0,
-				'b', 0, 0, 0,
-				'a', 0, 0, 0,
-				'r', 0, 0, 0,
-				0, 0, 0, 0,
+				0xFF, 0xFF, 0xFF, 0xFF,
 			},
 		},
 		{
-			SubTests:     TestEncode | TestDecode,
-			Name:         `oneStringStruct{String("foobar")}`,
-			Unmarshaled:  oneStringStruct{uatype.String("foobar")},
-			DecodeTarget: new(oneStringStruct),
-			Marshaled: []byte{
-				'f', 0, 0, 0,
-				'o', 0, 0, 0,
-				'o', 0, 0, 0,
-				'b', 0, 0, 0,
-				'a', 0, 0, 0,
-				'r', 0, 0, 0,
-				0, 0, 0, 0,
-			},
-		},
-		{
-			SubTests:     TestEncode | TestDecode,
+			// At the moment we don't distinguish between null and empty values
+			// for ByteString, so testing Encode only.
+			SubTests:     TestEncode,
 			Name:         `ByteString("")`,
 			Unmarshaled:  uatype.ByteString(""),
 			DecodeTarget: new(uatype.ByteString),
@@ -60,9 +48,10 @@ func TestString(t *testing.T) {
 			},
 		},
 		{
-			SubTests:    TestEncode | TestDecode,
-			Name:        `ByteString("foobar")`,
-			Unmarshaled: uatype.ByteString{'f', 'o', 'o', 'b', 'a', 'r'},
+			SubTests:     TestEncode | TestDecode,
+			Name:         `ByteString("foobar")`,
+			Unmarshaled:  uatype.ByteString{'f', 'o', 'o', 'b', 'a', 'r'},
+			DecodeTarget: new(uatype.ByteString),
 			Marshaled: []byte{
 				6, 0, 0, 0,
 				'f',
