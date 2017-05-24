@@ -92,26 +92,26 @@ func TestByteTranscoder(t *testing.T) {
 			Marshaled:    []byte{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
 		},
 		{
-			// Documenting current behavior: We raise an ugly panic error for
-			// when using a non-aligned bit-size as a struct-tag.
+			// Documenting current behavior where non-aligned bit-lengths >8 are
+			// not supported. In this sexample, for struct-field tags.
 			SubTests:    TestEncode,
 			Name:        "invalidInt32{0x01FF}",
 			Unmarshaled: invalidInt32{0x01FF},
-			EncodeError: "recovered from panic: 'interface conversion: interface {} is int32, not uint8'",
+			EncodeError: "EncoderError invalidInt32.Data: bit length not in range 1-8",
 		},
 		{
-			// Documenting current behavior: We don't allow integer
-			// shrinking/growing based on struct tags atm.
+			// Documenting current behavior where >8 bit-lengths are not
+			// supported for struct field tags.
 			SubTests:    TestEncode,
 			Name:        "shrinkUint32{0x0000FFFF}",
 			Unmarshaled: shrinkUint32{0x0000FFFF},
-			EncodeError: "recovered from panic: 'interface conversion: interface {} is uint32, not uint8'",
+			EncodeError: "EncoderError shrinkUint32.Data: bit length not in range 1-8",
 		},
 		{
 			SubTests:     TestEncode | TestDecode,
 			Name:         "signedInts{0x13,0x37,0xCA,0xFE,{0x07,0x11},{0x13, 0x37}}",
 			Unmarshaled:  signedInts{0x13, 0x37, 0xCA, 0xFE, [2]byte{0x07, 0x11}, [2]int32{0x13, 0x37}},
-			DecodeTarget: &signedInts{},
+			DecodeTarget: new(signedInts),
 			Marshaled: []byte{
 				0x13,
 				0x37, 0,

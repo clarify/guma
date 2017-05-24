@@ -1,6 +1,6 @@
 package guma
 
-var debug Logger = noLogger{}
+var debugLogger Logger = noLogger{}
 
 // Logger defines the interface that must be implemented when assigning a guma
 // debug logger.
@@ -20,8 +20,8 @@ func (d noLogger) Printf(format string, v ...interface{}) {}
 // by letting l be nil. By default, debug logging is turned off.
 func SetDebugLogger(l Logger) {
 	if l == nil {
-		debug = &noLogger{}
+		debugLogger = &noLogger{}
 	} else {
-		debug = l
+		debugLogger = l
 	}
 }

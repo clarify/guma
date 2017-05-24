@@ -704,7 +704,7 @@ type ReferenceNode struct {
 type Argument struct {
 	ExtensionObject
 
-	Name                String
+	Name                string
 	DataType            NodeId
 	ValueRank           int32
 	NoOfArrayDimensions int32
@@ -745,14 +745,14 @@ type TimeZoneDataType struct {
 type ApplicationDescription struct {
 	ExtensionObject
 
-	ApplicationUri      String
-	ProductUri          String
+	ApplicationUri      string
+	ProductUri          string
 	ApplicationName     LocalizedText
 	ApplicationType     enumApplicationType
-	GatewayServerUri    String
-	DiscoveryProfileUri String
+	GatewayServerUri    string
+	DiscoveryProfileUri string
 	NoOfDiscoveryUrls   int32
-	DiscoveryUrls       []String `opcua:"lengthField=NoOfDiscoveryUrls"`
+	DiscoveryUrls       []string `opcua:"lengthField=NoOfDiscoveryUrls"`
 }
 
 // RequestHeader the header passed with every server request.
@@ -763,7 +763,7 @@ type RequestHeader struct {
 	Timestamp           time.Time
 	RequestHandle       uint32
 	ReturnDiagnostics   uint32
-	AuditEntryId        String
+	AuditEntryId        string
 	TimeoutHint         uint32
 	AdditionalHeader    ExtensionObject
 }
@@ -777,7 +777,7 @@ type ResponseHeader struct {
 	ServiceResult      enumStatusCode
 	ServiceDiagnostics *DiagnosticInfo
 	NoOfStringTable    int32
-	StringTable        []String `opcua:"lengthField=NoOfStringTable"`
+	StringTable        []string `opcua:"lengthField=NoOfStringTable"`
 	AdditionalHeader   ExtensionObject
 }
 
@@ -793,11 +793,11 @@ type FindServersRequest struct {
 	ExtensionObject
 
 	RequestHeader  RequestHeader
-	EndpointUrl    String
+	EndpointUrl    string
 	NoOfLocaleIds  int32
-	LocaleIds      []String `opcua:"lengthField=NoOfLocaleIds"`
+	LocaleIds      []string `opcua:"lengthField=NoOfLocaleIds"`
 	NoOfServerUris int32
-	ServerUris     []String `opcua:"lengthField=NoOfServerUris"`
+	ServerUris     []string `opcua:"lengthField=NoOfServerUris"`
 }
 
 // FindServersResponse finds the servers known to the discovery server.
@@ -813,10 +813,10 @@ type ServerOnNetwork struct {
 	ExtensionObject
 
 	RecordId               uint32
-	ServerName             String
-	DiscoveryUrl           String
+	ServerName             string
+	DiscoveryUrl           string
 	NoOfServerCapabilities int32
-	ServerCapabilities     []String `opcua:"lengthField=NoOfServerCapabilities"`
+	ServerCapabilities     []string `opcua:"lengthField=NoOfServerCapabilities"`
 }
 
 type FindServersOnNetworkRequest struct {
@@ -826,7 +826,7 @@ type FindServersOnNetworkRequest struct {
 	StartingRecordId           uint32
 	MaxRecordsToReturn         uint32
 	NoOfServerCapabilityFilter int32
-	ServerCapabilityFilter     []String `opcua:"lengthField=NoOfServerCapabilityFilter"`
+	ServerCapabilityFilter     []string `opcua:"lengthField=NoOfServerCapabilityFilter"`
 }
 
 type FindServersOnNetworkResponse struct {
@@ -842,25 +842,25 @@ type FindServersOnNetworkResponse struct {
 type UserTokenPolicy struct {
 	ExtensionObject
 
-	PolicyId          String
+	PolicyId          string
 	TokenType         enumUserTokenType
-	IssuedTokenType   String
-	IssuerEndpointUrl String
-	SecurityPolicyUri String
+	IssuedTokenType   string
+	IssuerEndpointUrl string
+	SecurityPolicyUri string
 }
 
 // EndpointDescription the description of a endpoint that can be used to access a server.
 type EndpointDescription struct {
 	ExtensionObject
 
-	EndpointUrl            String
+	EndpointUrl            string
 	Server                 ApplicationDescription
 	ServerCertificate      ByteString
 	SecurityMode           enumMessageSecurityMode
-	SecurityPolicyUri      String
+	SecurityPolicyUri      string
 	NoOfUserIdentityTokens int32
 	UserIdentityTokens     []UserTokenPolicy `opcua:"lengthField=NoOfUserIdentityTokens"`
-	TransportProfileUri    String
+	TransportProfileUri    string
 	SecurityLevel          uint8
 }
 
@@ -869,11 +869,11 @@ type GetEndpointsRequest struct {
 	ExtensionObject
 
 	RequestHeader   RequestHeader
-	EndpointUrl     String
+	EndpointUrl     string
 	NoOfLocaleIds   int32
-	LocaleIds       []String `opcua:"lengthField=NoOfLocaleIds"`
+	LocaleIds       []string `opcua:"lengthField=NoOfLocaleIds"`
 	NoOfProfileUris int32
-	ProfileUris     []String `opcua:"lengthField=NoOfProfileUris"`
+	ProfileUris     []string `opcua:"lengthField=NoOfProfileUris"`
 }
 
 // GetEndpointsResponse gets the endpoints used by the server.
@@ -889,15 +889,15 @@ type GetEndpointsResponse struct {
 type RegisteredServer struct {
 	ExtensionObject
 
-	ServerUri         String
-	ProductUri        String
+	ServerUri         string
+	ProductUri        string
 	NoOfServerNames   int32
 	ServerNames       []LocalizedText `opcua:"lengthField=NoOfServerNames"`
 	ServerType        enumApplicationType
-	GatewayServerUri  String
+	GatewayServerUri  string
 	NoOfDiscoveryUrls int32
-	DiscoveryUrls     []String `opcua:"lengthField=NoOfDiscoveryUrls"`
-	SemaphoreFilePath String
+	DiscoveryUrls     []string `opcua:"lengthField=NoOfDiscoveryUrls"`
+	SemaphoreFilePath string
 	IsOnline          bool
 }
 
@@ -925,9 +925,9 @@ type DiscoveryConfiguration struct {
 type MdnsDiscoveryConfiguration struct {
 	DiscoveryConfiguration
 
-	MdnsServerName         String
+	MdnsServerName         string
 	NoOfServerCapabilities int32
-	ServerCapabilities     []String `opcua:"lengthField=NoOfServerCapabilities"`
+	ServerCapabilities     []string `opcua:"lengthField=NoOfServerCapabilities"`
 }
 
 type RegisterServer2Request struct {
@@ -1007,7 +1007,7 @@ type SignedSoftwareCertificate struct {
 type SignatureData struct {
 	ExtensionObject
 
-	Algorithm String
+	Algorithm string
 	Signature ByteString
 }
 
@@ -1017,9 +1017,9 @@ type CreateSessionRequest struct {
 
 	RequestHeader           RequestHeader
 	ClientDescription       ApplicationDescription
-	ServerUri               String
-	EndpointUrl             String
-	SessionName             String
+	ServerUri               string
+	EndpointUrl             string
+	SessionName             string
 	ClientNonce             ByteString
 	ClientCertificate       ByteString
 	RequestedSessionTimeout float64
@@ -1048,31 +1048,31 @@ type CreateSessionResponse struct {
 type UserIdentityToken struct {
 	ExtensionObject
 
-	PolicyId String
+	PolicyId string
 }
 
 // AnonymousIdentityToken is a token representing an anonymous user.
 type AnonymousIdentityToken struct {
 	UserIdentityToken
 
-	PolicyId String
+	PolicyId string
 }
 
 // UserNameIdentityToken is a token representing a user identified by a user name and password.
 type UserNameIdentityToken struct {
 	UserIdentityToken
 
-	PolicyId            String
-	UserName            String
+	PolicyId            string
+	UserName            string
 	Password            ByteString
-	EncryptionAlgorithm String
+	EncryptionAlgorithm string
 }
 
 // X509IdentityToken is a token representing a user identified by an X509 certificate.
 type X509IdentityToken struct {
 	UserIdentityToken
 
-	PolicyId        String
+	PolicyId        string
 	CertificateData ByteString
 }
 
@@ -1080,9 +1080,9 @@ type X509IdentityToken struct {
 type IssuedIdentityToken struct {
 	UserIdentityToken
 
-	PolicyId            String
+	PolicyId            string
 	TokenData           ByteString
-	EncryptionAlgorithm String
+	EncryptionAlgorithm string
 }
 
 // ActivateSessionRequest activates a session with the server.
@@ -1094,7 +1094,7 @@ type ActivateSessionRequest struct {
 	NoOfClientSoftwareCertificates int32
 	ClientSoftwareCertificates     []SignedSoftwareCertificate `opcua:"lengthField=NoOfClientSoftwareCertificates"`
 	NoOfLocaleIds                  int32
-	LocaleIds                      []String `opcua:"lengthField=NoOfLocaleIds"`
+	LocaleIds                      []string `opcua:"lengthField=NoOfLocaleIds"`
 	UserIdentityToken              ExtensionObject
 	UserTokenSignature             SignatureData
 }
@@ -1314,7 +1314,7 @@ type AddReferencesItem struct {
 	SourceNodeId    NodeId
 	ReferenceTypeId NodeId
 	IsForward       bool
-	TargetServerUri String
+	TargetServerUri string
 	TargetNodeId    ExpandedNodeId
 	TargetNodeClass enumNodeClass
 }
@@ -1601,7 +1601,7 @@ type QueryDataDescription struct {
 
 	RelativePath RelativePath
 	AttributeId  uint32
-	IndexRange   String
+	IndexRange   string
 }
 
 type NodeTypeDescription struct {
@@ -1667,10 +1667,10 @@ type AttributeOperand struct {
 	FilterOperand
 
 	NodeId      NodeId
-	Alias       String
+	Alias       string
 	BrowsePath  RelativePath
 	AttributeId uint32
-	IndexRange  String
+	IndexRange  string
 }
 
 type SimpleAttributeOperand struct {
@@ -1680,7 +1680,7 @@ type SimpleAttributeOperand struct {
 	NoOfBrowsePath   int32
 	BrowsePath       []QualifiedName `opcua:"lengthField=NoOfBrowsePath"`
 	AttributeId      uint32
-	IndexRange       String
+	IndexRange       string
 }
 
 type ContentFilterElementResult struct {
@@ -1760,7 +1760,7 @@ type ReadValueId struct {
 
 	NodeId       NodeId
 	AttributeId  uint32
-	IndexRange   String
+	IndexRange   string
 	DataEncoding QualifiedName
 }
 
@@ -1788,7 +1788,7 @@ type HistoryReadValueId struct {
 	ExtensionObject
 
 	NodeId            NodeId
-	IndexRange        String
+	IndexRange        string
 	DataEncoding      QualifiedName
 	ContinuationPoint ByteString
 }
@@ -1855,7 +1855,7 @@ type ModificationInfo struct {
 
 	ModificationTime time.Time
 	UpdateType       enumHistoryUpdateType
-	UserName         String
+	UserName         string
 }
 
 type HistoryModifiedData struct {
@@ -1900,7 +1900,7 @@ type WriteValue struct {
 
 	NodeId      NodeId
 	AttributeId uint32
-	IndexRange  String
+	IndexRange  string
 	Value       DataValue
 }
 
@@ -2471,18 +2471,18 @@ type DeleteSubscriptionsResponse struct {
 type BuildInfo struct {
 	ExtensionObject
 
-	ProductUri       String
-	ManufacturerName String
-	ProductName      String
-	SoftwareVersion  String
-	BuildNumber      String
+	ProductUri       string
+	ManufacturerName string
+	ProductName      string
+	SoftwareVersion  string
+	BuildNumber      string
 	BuildDate        time.Time
 }
 
 type RedundantServerDataType struct {
 	ExtensionObject
 
-	ServerId     String
+	ServerId     string
 	ServiceLevel uint8
 	ServerState  enumServerState
 }
@@ -2491,13 +2491,13 @@ type EndpointUrlListDataType struct {
 	ExtensionObject
 
 	NoOfEndpointUrlList int32
-	EndpointUrlList     []String `opcua:"lengthField=NoOfEndpointUrlList"`
+	EndpointUrlList     []string `opcua:"lengthField=NoOfEndpointUrlList"`
 }
 
 type NetworkGroupDataType struct {
 	ExtensionObject
 
-	ServerUri        String
+	ServerUri        string
 	NoOfNetworkPaths int32
 	NetworkPaths     []EndpointUrlListDataType `opcua:"lengthField=NoOfNetworkPaths"`
 }
@@ -2543,12 +2543,12 @@ type SessionDiagnosticsDataType struct {
 	ExtensionObject
 
 	SessionId                          NodeId
-	SessionName                        String
+	SessionName                        string
 	ClientDescription                  ApplicationDescription
-	ServerUri                          String
-	EndpointUrl                        String
+	ServerUri                          string
+	EndpointUrl                        string
 	NoOfLocaleIds                      int32
-	LocaleIds                          []String `opcua:"lengthField=NoOfLocaleIds"`
+	LocaleIds                          []string `opcua:"lengthField=NoOfLocaleIds"`
 	ActualSessionTimeout               float64
 	MaxResponseMessageSize             uint32
 	ClientConnectionTime               time.Time
@@ -2592,14 +2592,14 @@ type SessionSecurityDiagnosticsDataType struct {
 	ExtensionObject
 
 	SessionId               NodeId
-	ClientUserIdOfSession   String
+	ClientUserIdOfSession   string
 	NoOfClientUserIdHistory int32
-	ClientUserIdHistory     []String `opcua:"lengthField=NoOfClientUserIdHistory"`
-	AuthenticationMechanism String
-	Encoding                String
-	TransportProtocol       String
+	ClientUserIdHistory     []string `opcua:"lengthField=NoOfClientUserIdHistory"`
+	AuthenticationMechanism string
+	Encoding                string
+	TransportProtocol       string
 	SecurityMode            enumMessageSecurityMode
-	SecurityPolicyUri       String
+	SecurityPolicyUri       string
 	ClientCertificate       ByteString
 }
 
@@ -2678,7 +2678,7 @@ type Range struct {
 type EUInformation struct {
 	ExtensionObject
 
-	NamespaceUri String
+	NamespaceUri string
 	UnitId       int32
 	DisplayName  LocalizedText
 	Description  LocalizedText
@@ -2720,10 +2720,10 @@ type ProgramDiagnosticDataType struct {
 	ExtensionObject
 
 	CreateSessionId               NodeId
-	CreateClientName              String
+	CreateClientName              string
 	InvocationCreationTime        time.Time
 	LastTransitionTime            time.Time
-	LastMethodCall                String
+	LastMethodCall                string
 	LastMethodSessionId           NodeId
 	NoOfLastMethodInputArguments  int32
 	LastMethodInputArguments      []Argument `opcua:"lengthField=NoOfLastMethodInputArguments"`
@@ -2736,7 +2736,7 @@ type ProgramDiagnosticDataType struct {
 type Annotation struct {
 	ExtensionObject
 
-	Message        String
-	UserName       String
+	Message        string
+	UserName       string
 	AnnotationTime time.Time
 }

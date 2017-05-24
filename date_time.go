@@ -24,3 +24,25 @@ func (t dateTime) MarshalBinary() ([]byte, error) {
 	binary.Write(&buf, binary.LittleEndian, i)
 	return buf.Bytes(), nil
 }
+
+// UnmarshalBinary decodes a 64-bit Windows NT timestamp into a Go time.Time
+// struct.
+func (t *dateTime) UnmarshalBinary(data []byte) error {
+	var i int64
+
+	buf := bytes.NewBuffer(data[0:8])
+	if err := binary.Read(buf, binary.LittleEndian, &i); err != nil {
+		return err
+	}
+	// NB! secondsToUnixEpoch * int64(1e9) would overflow.
+	i -= secondsToUnixEpoch * int64(1e7)
+	// milliseconds (e-7) -> nanoseconds (e-9).
+	nsec := i * 100
+
+	*t = dateTime(time.Unix(0, nsec).UTC())
+	return nil
+}
+
+func (t dateTime) BitLength() int {
+	return 8
+}

@@ -9,9 +9,11 @@ import (
 // Common errors that may be returned as the cause for EncoderError and
 // DecoderError.
 var (
-	ErrUnknownType   = errors.New("can not handle type")
-	ErrInvalidTag    = errors.New("invalid struct tag")
-	ErrInvalidLength = errors.New("length don't match length field value")
+	ErrInvalidBitLength = errors.New("bit length not in range 1-8")
+	ErrInvalidLength    = errors.New("length don't match length field value")
+	ErrInvalidTag       = errors.New("invalid struct tag")
+	ErrNotSetable       = errors.New("value must be a pointer")
+	ErrUnknownType      = errors.New("can not handle type")
 )
 
 // EncoderError provides a way of getting the logical path to where in a nested
@@ -24,6 +26,18 @@ type EncoderError struct {
 // Error returns a human readable description of the error.
 func (err EncoderError) Error() string {
 	return fmt.Sprintf("EncoderError %s%s", err.typeName, err.transcoderError)
+}
+
+// DecoderError provides a way of getting the logical path to where in a nested
+// data structure a decoder error occurred.
+type DecoderError struct {
+	transcoderError
+	typeName string
+}
+
+// Error returns a human readable description of the error.
+func (err DecoderError) Error() string {
+	return fmt.Sprintf("DecoderError %s%s", err.typeName, err.transcoderError)
 }
 
 type transcoderError struct {
