@@ -1,9 +1,11 @@
-package guma
+package binary
 
 import (
 	"bytes"
 	"errors"
 	"fmt"
+
+	"github.com/searis/guma/uatype"
 )
 
 // Common errors that may be returned as the cause for EncoderError and
@@ -14,6 +16,7 @@ var (
 	ErrInvalidTag       = errors.New("invalid struct tag")
 	ErrNotSetable       = errors.New("value must be a pointer")
 	ErrUnknownType      = errors.New("can not handle type")
+	ErrNotEnoughData    = uatype.ErrNotEnoughData
 )
 
 // EncoderError provides a way of getting the logical path to where in a nested

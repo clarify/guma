@@ -1,4 +1,4 @@
-package guma
+package binary
 
 import (
 	"encoding"
@@ -6,64 +6,69 @@ import (
 	"fmt"
 	"io"
 	"reflect"
-	"time"
-
 	"runtime/debug"
+	"time"
 
 	"github.com/searis/guma/uatype"
 )
 
-// A BinaryEncoder writes OPC UA Binary content to an output stream.
-type BinaryEncoder struct {
+// bitSlice is a helper struct that can be used to marshal slices of 1-8 bits.
+type bitSlice struct {
+	Data      byte
+	BitLength byte
+}
+
+// A Encoder writes OPC UA Binary content to an output stream.
+type Encoder struct {
 	w             io.Writer
 	n             int64
 	bitMarshaler  bitCacheMarshaler
 	byteMarshaler byteMarshaler
 }
 
-// NewBinaryEncoder takes a writer object where OPC UA data will be written on
-// calls to Encode.
-func NewBinaryEncoder(w io.Writer) *BinaryEncoder {
-	return &BinaryEncoder{w: w}
+// NewEncoder takes a writer object where OPC UA data will be written on calls
+// to Encode.
+func NewEncoder(w io.Writer) *Encoder {
+	return &Encoder{w: w}
 }
 
 // BytesWritten returns the number of bytes written since the BinaryEncoder was
 // initialized.
-func (enc *BinaryEncoder) BytesWritten() int64 {
+func (enc *Encoder) BytesWritten() int64 {
 	return enc.n
 }
 
 // Encode encodes uatype structs into a binary representation used for transfer.
-func (enc *BinaryEncoder) Encode(v interface{}) (err error) {
+func (enc *Encoder) Encode(v interface{}) (err error) {
 	defer func() {
 		if e := recover(); e != nil {
 			debugLogger.Printf("recovered from panic: %s:\n%s", e, debug.Stack())
 			err = fmt.Errorf("recovered from panic: %s", e)
 		}
 	}()
-	switch err := enc.encode(v).(type) {
+
+	rv := reflect.ValueOf(v)
+
+	switch err := enc.encode(rv).(type) {
 	case transcoderError:
-		typeName := reflect.TypeOf(v).Name()
+		typeName := rv.Type().Name()
 		return EncoderError{err, typeName}
 	default:
 		return err
 	}
 }
 
-func (enc *BinaryEncoder) encode(v interface{}) error {
+func (enc *Encoder) encode(rv reflect.Value) error {
 	var err error
 	var m encoding.BinaryMarshaler
 
 	// Pick binary marshaler.
-	switch iv := v.(type) {
-	case int, uint:
-		// reject integers without a specified bit size.
-		return ErrUnknownType
+	switch iv := rv.Interface().(type) {
 	case bool:
 		enc.byteMarshaler.SetData(iv)
 		m = &enc.byteMarshaler
 	case uint8, int8, uint16, int16, int32, uint32, int64, uint64, float32, float64:
-		enc.byteMarshaler.SetData(v)
+		enc.byteMarshaler.SetData(iv)
 		m = &enc.byteMarshaler
 	case string:
 		m = uaString(iv)
@@ -88,26 +93,32 @@ func (enc *BinaryEncoder) encode(v interface{}) error {
 	case encoding.BinaryMarshaler:
 		// Prefer BinaryMarshaler over BitLengther, if implemented.
 		m = iv
-	case uatype.BitLengther:
+	case BitLengther:
 		nBits := iv.BitLength()
 		if nBits < 8 {
 			// If the underlying type is not a byte, we wil panic.
-			if err := enc.bitMarshaler.SetBits(v.(byte), byte(nBits)); err != nil {
+			if err := enc.bitMarshaler.SetBits((interface{})(iv).(byte), byte(nBits)); err != nil {
 				return err
 			}
 			m = &enc.bitMarshaler
 		} else if nBits%8 != 0 {
 			return fmt.Errorf("bit length above 8 must be aligned to 8 bits; bit length was %d", nBits)
 		} else {
-			enc.byteMarshaler.SetData(v)
+			enc.byteMarshaler.SetData(iv)
 			enc.byteMarshaler.SetSlice(0, uint(nBits/8))
 			m = &enc.byteMarshaler
 		}
 	default:
-		rv := reflect.ValueOf(v)
-		m = enc.reflectMarshaler(rv)
-		if m == nil {
+		switch rv.Kind() {
+		case reflect.Slice, reflect.Array:
+			m = listMarshaler(&enc.byteMarshaler, rv)
+			if m == nil {
+				return enc.encodeList(rv)
+			}
+		case reflect.Struct:
 			return enc.encodeStruct(rv)
+		default:
+			return ErrUnknownType
 		}
 	}
 
@@ -123,29 +134,17 @@ func (enc *BinaryEncoder) encode(v interface{}) error {
 	}
 	return nil
 }
-
-// reflectMarshaler attempts to find a suitable marshaler via refelection.
-// Nested types such as structs do not have marshalers.
-func (enc *BinaryEncoder) reflectMarshaler(rv reflect.Value) encoding.BinaryMarshaler {
-	switch rv.Kind() {
-	case reflect.Array:
-		enc.byteMarshaler.SetData(rv.Interface())
-		return &enc.byteMarshaler
-	case reflect.Slice:
-		// Length field should already have been encoded.
-		enc.byteMarshaler.SetData(rv.Interface())
-		return &enc.byteMarshaler
+func (enc *Encoder) encodeList(rv reflect.Value) error {
+	l := rv.Len()
+	for i := 0; i < l; i++ {
+		if err := enc.encode(rv.Index(i)); err != nil {
+			return wrapError(err, i)
+		}
 	}
-
 	return nil
 }
 
-// encodeStruct calls encode on each field that's not marked for exclusion.
-func (enc *BinaryEncoder) encodeStruct(rv reflect.Value) error {
-	if rv.Kind() != reflect.Struct {
-		return ErrUnknownType
-	}
-
+func (enc *Encoder) encodeStruct(rv reflect.Value) error {
 	fields, err := gatherFields(nil, rv)
 	if err != nil {
 		return err
@@ -180,22 +179,21 @@ func (enc *BinaryEncoder) encodeStruct(rv reflect.Value) error {
 			}
 		}
 
-		var v interface{}
-
-		// Wrap with bitSlice if needed.
+		// Get/wrap value to encode.
+		var re reflect.Value
 		if f.BitSize > 0 && f.BitSize <= 8 {
-			v = bitSlice{
+			re = reflect.ValueOf(bitSlice{
 				Data:      f.Value.Interface().(byte),
 				BitLength: f.BitSize,
-			}
+			})
 		} else if f.BitSize > 8 {
 			return wrapError(ErrInvalidBitLength, f.Name)
 		} else {
-			v = f.Value.Interface()
+			re = f.Value
 		}
 
 		// Encode value.
-		err := enc.encode(v)
+		err := enc.encode(re)
 		if err != nil {
 			return wrapError(err, f.Name)
 		}
@@ -204,8 +202,14 @@ func (enc *BinaryEncoder) encodeStruct(rv reflect.Value) error {
 	return nil
 }
 
-// bitSlice is a helper struct that can be used to marshal slices of 1-8 bits.
-type bitSlice struct {
-	Data      byte
-	BitLength byte
+// listMarshaler is intended to return a marshaler that would run slightly
+// faster than encodeList. When no optimization is found, nil is returned.
+func listMarshaler(bm *byteMarshaler, rv reflect.Value) encoding.BinaryMarshaler {
+	// TODO: Prove this optimizations with micro-benchmarks.
+	switch rv.Index(0).Interface().(type) {
+	case bool, int8, uint8, int16, uint16, int32, uint32, float32, int64, uint64, float64:
+		bm.SetData(rv.Interface())
+		return bm
+	}
+	return nil
 }

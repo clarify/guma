@@ -1,4 +1,4 @@
-package guma
+package binary
 
 import (
 	"bytes"

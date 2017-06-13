@@ -1,11 +1,11 @@
-package guma_test
+package binary_test
 
 import (
 	"bytes"
 	"reflect"
 	"testing"
 
-	"github.com/searis/guma"
+	"github.com/searis/guma/uatype/encoding/binary"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -39,12 +39,12 @@ func (tt *TranscoderTest) Run(t *testing.T) {
 }
 
 func (tt *TranscoderTest) testEncode(t *testing.T) {
-	guma.SetDebugLogger(testLogger{t})
+	binary.SetDebugLogger(testLogger{t})
 
 	t.Run(tt.Name+"/Encode", func(t *testing.T) {
 		t.Parallel()
 		var buf bytes.Buffer
-		enc := guma.NewBinaryEncoder(&buf)
+		enc := binary.NewEncoder(&buf)
 		err := enc.Encode(tt.Unmarshaled)
 		if tt.EncodeError != "" {
 			assert.EqualError(t, err, tt.EncodeError, "enc.Encode(tt.Unmarshaled)")
@@ -58,9 +58,9 @@ func (tt *TranscoderTest) testEncode(t *testing.T) {
 
 func (tt *TranscoderTest) testDecode(t *testing.T) {
 	t.Run(tt.Name+"/Decode", func(t *testing.T) {
-		//t.Parallel()
+		t.Parallel()
 		buf := bytes.NewBuffer(tt.Marshaled)
-		dec := guma.NewBinaryDecoder(buf)
+		dec := binary.NewDecoder(buf)
 		err := dec.Decode(tt.DecodeTarget)
 		if tt.DecodeError != "" {
 			assert.EqualError(t, err, tt.DecodeError, "enc.Decode(NewBuffer(tt.Marshaled))")

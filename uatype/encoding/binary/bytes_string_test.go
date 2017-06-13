@@ -1,4 +1,4 @@
-package guma_test
+package binary_test
 
 import (
 	"testing"
@@ -7,7 +7,6 @@ import (
 )
 
 func TestByteString(t *testing.T) {
-	// FIXME: Move test to uatype package on reorg.
 	type oneByteStringStruct struct {
 		Data0 uatype.ByteString
 	}

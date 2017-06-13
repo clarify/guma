@@ -10,28 +10,16 @@ import (
 	"errors"
 )
 
-// Errors raised by BinaryUnmarshaler implementations.
 var (
 	ErrNotEnoughData = errors.New("not enough data")
 )
-
-// BitLengther is implemented by types that should be encoded into, or has been
-// decoded from, a certain number of bits.
-type BitLengther interface {
-	BitLength() int
-}
-
-// Size returns the binary encoded size of b in whole bytes (rounded down).
-func Size(b BitLengther) int {
-	return b.BitLength() / 8
-}
 
 // A Bit can either be set (true) or not set (false).
 type Bit bool
 
 // BitLength returns the number of bits that should be used to encode and decode
 // values.
-func BitLength() int {
+func (b Bit) BitLength() int {
 	return 1
 }
 

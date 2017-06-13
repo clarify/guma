@@ -1,4 +1,4 @@
-package guma_test
+package binary_test
 
 import (
 	"testing"

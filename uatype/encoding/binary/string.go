@@ -1,9 +1,7 @@
-package guma
+package binary
 
 import (
 	"encoding/binary"
-
-	"github.com/searis/guma/uatype"
 )
 
 // uaString handles encoding and decoding of an OPC UA String.
@@ -36,7 +34,7 @@ func (s *uaString) UnmarshalBinary(data []byte) error {
 	l := len(data)
 	if l < 4 {
 		// FIXME: sort out import dependency on reorg.
-		return uatype.ErrNotEnoughData
+		return ErrNotEnoughData
 	}
 	size := int32(binary.LittleEndian.Uint32(data[0:4]))
 	if size == -1 || size == 0 {
@@ -44,8 +42,8 @@ func (s *uaString) UnmarshalBinary(data []byte) error {
 		return nil
 	}
 	stop := int(size) + 4
-	if stop < l {
-		return uatype.ErrNotEnoughData
+	if stop > l {
+		return ErrNotEnoughData
 	}
 
 	*s = uaString(data[4:stop])
