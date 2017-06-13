@@ -1,4 +1,4 @@
-package guma
+package binary
 
 import (
 	"encoding"
@@ -7,34 +7,55 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/searis/guma/uatype"
+
 	"io/ioutil"
 
+	"bytes"
 	"runtime/debug"
-
-	"github.com/searis/guma/uatype"
 )
 
-// A BinaryDecoder reads OPC UA Binary content from an input stream.
-type BinaryDecoder struct {
+// bitExtractor is a helper struct that can be used to unmarshal slices of 1-8
+// bits.
+type bitExtractor struct {
+	Target    *byte
+	BitLength byte
+}
+
+// BitLengther is implemented by types that should be encoded into, or has been
+// decoded from, a certain number of bits.
+type BitLengther interface {
+	BitLength() int
+}
+
+// Unmarshal parses the OPC UA binary encoded data into the value pointed to by
+// v.
+func Unmarshal(data []byte, v interface{}) error {
+	dec := NewDecoder(bytes.NewReader(data))
+	return dec.Decode(v)
+}
+
+// A Decoder reads and decodes OPC UA Binary content from an input stream.
+type Decoder struct {
 	r              io.Reader
 	data           []byte
 	n              int
 	bitUnmarshaler bitCacheUnmarshaler
 }
 
-// NewBinaryDecoder initializes a binary encoder for r.
-func NewBinaryDecoder(r io.Reader) *BinaryDecoder {
-	return &BinaryDecoder{r: r}
+// NewDecoder initializes a Decoder for r.
+func NewDecoder(r io.Reader) *Decoder {
+	return &Decoder{r: r}
 }
 
 // BytesRead return the number of bytes read since initialization.
-func (dec BinaryDecoder) BytesRead() int {
+func (dec Decoder) BytesRead() int {
 	return dec.n
 }
 
-// Decode fills an uatype instance v from the binary representation used for
-// transfer. v must be a pointer value.
-func (dec *BinaryDecoder) Decode(v interface{}) (err error) {
+// Decode reads the next OPC UA binary encoded value from it's input stream and
+// stores it in the value pointed to by v.
+func (dec *Decoder) Decode(v interface{}) (err error) {
 	defer func() {
 		if e := recover(); e != nil {
 			debugLogger.Printf("recovered from panic: %s:\n%s", e, debug.Stack())
@@ -43,7 +64,7 @@ func (dec *BinaryDecoder) Decode(v interface{}) (err error) {
 	}()
 
 	// As an initial implementation we read all binary data directly into memory
-	// without any steaming.
+	// without any steaming. We might improve on this later if needed.
 	if dec.data, err = ioutil.ReadAll(dec.r); err != nil {
 		return err
 	}
@@ -62,16 +83,13 @@ func (dec *BinaryDecoder) Decode(v interface{}) (err error) {
 	}
 }
 
-func (dec *BinaryDecoder) decode(rv reflect.Value) error {
+func (dec *Decoder) decode(rv reflect.Value) error {
 	var u encoding.BinaryUnmarshaler
 	var size, maxSize int
 	var data []byte
 
 	// Pick binary marshaler.
 	switch iv := rv.Interface().(type) {
-	case *int, *uint:
-		// Reject integers without a specified bit size.
-		return ErrUnknownType
 	case *bool, *uint8, *int8:
 		u = byteUnmarshaler{iv}
 		size = 1
@@ -87,12 +105,12 @@ func (dec *BinaryDecoder) decode(rv reflect.Value) error {
 	case *time.Time:
 		u = (*dateTime)(iv)
 		size = 8
-	case *string:
-		u = (*uaString)(iv)
 	case *uatype.Bit:
 		dec.bitUnmarshaler.SetBoolTarget((*bool)(iv))
 		u = &dec.bitUnmarshaler
 		maxSize = 1
+	case *string:
+		u = (*uaString)(iv)
 	case bitExtractor:
 		if err := dec.bitUnmarshaler.SetTarget(iv.Target, iv.BitLength); err != nil {
 			return err
@@ -102,11 +120,11 @@ func (dec *BinaryDecoder) decode(rv reflect.Value) error {
 	case encoding.BinaryUnmarshaler:
 		// Prefer BinaryUnmarshaler over BitLengther, if implemented.
 		u = iv
-	case uatype.BitLengther:
+	case BitLengther:
 		nBits := iv.BitLength()
 		if nBits < 8 {
-			// If the underlying type is not a byte, we wil panic.
-			if err := dec.bitUnmarshaler.SetTarget(rv.Interface().(*byte), byte(nBits)); err != nil {
+			// If the underlying type is not a pointer to a byte, we wil panic.
+			if err := dec.bitUnmarshaler.SetTarget((interface{})(iv).(*byte), byte(nBits)); err != nil {
 				return err
 			}
 			u = &dec.bitUnmarshaler
@@ -135,6 +153,9 @@ func (dec *BinaryDecoder) decode(rv reflect.Value) error {
 
 	// Limit input data if the (max) size is known.
 	if size != 0 {
+		if size > len(dec.data) {
+			return ErrNotEnoughData
+		}
 		data = dec.data[:size]
 	} else if maxSize != 0 && len(dec.data) > maxSize {
 		data = dec.data[:maxSize]
@@ -155,7 +176,7 @@ func (dec *BinaryDecoder) decode(rv reflect.Value) error {
 	return nil
 }
 
-func (dec *BinaryDecoder) decodeList(rv reflect.Value) error {
+func (dec *Decoder) decodeList(rv reflect.Value) error {
 	l := rv.Len()
 	for i := 0; i < l; i++ {
 		if err := dec.decode(rv.Index(i).Addr()); err != nil {
@@ -165,7 +186,7 @@ func (dec *BinaryDecoder) decodeList(rv reflect.Value) error {
 	return nil
 }
 
-func (dec *BinaryDecoder) decodeStruct(rv reflect.Value) error {
+func (dec *Decoder) decodeStruct(rv reflect.Value) error {
 	fields, err := gatherFields(nil, rv)
 	if err != nil {
 		return err
@@ -223,15 +244,10 @@ func (dec *BinaryDecoder) decodeStruct(rv reflect.Value) error {
 
 }
 
-// bit Extractor is a helper struct that can be used to unmarshal slices of
-// 1-8 bits.
-type bitExtractor struct {
-	Target    *byte
-	BitLength byte
-}
-
-// listUnmarshaler returns an unmarshaler and binary size for simple values only.
+// listUnmarshaler is intended to return a marshaler that would run slightly
+// faster than decodeList. When no optimization is found, nil is returned.
 func listUnmarshaler(rv reflect.Value) (encoding.BinaryUnmarshaler, int) {
+	// TODO: Prove this optimizations with micro-benchmarks.
 	len := rv.Len()
 	if len == 0 {
 		return nopUnmarshaler{}, 0
@@ -246,9 +262,6 @@ func listUnmarshaler(rv reflect.Value) (encoding.BinaryUnmarshaler, int) {
 	case int64, uint64, float64:
 		return byteUnmarshaler{rv.Addr().Interface()}, 8 * len
 	}
-	// TODO: Possible to optimize further by returning an unmarshaler that
-	// supports list unmarshaling for other simple values such as strings or
-	// time.
 	return nil, 0
 }
 
@@ -266,7 +279,7 @@ func marshaledSize(v interface{}) int {
 	}
 
 	// Get size for any BitLengther implementations.
-	if bl, ok := v.(uatype.BitLengther); ok {
+	if bl, ok := v.(BitLengther); ok {
 		return bl.BitLength() / 8
 	}
 

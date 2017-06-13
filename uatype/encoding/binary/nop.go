@@ -1,4 +1,4 @@
-package guma
+package binary
 
 //nopMarshaler is a no operation BinartyMarshaler.
 type nopMarshaler struct{}
@@ -12,4 +12,8 @@ type nopUnmarshaler struct{}
 
 func (n nopUnmarshaler) UnmarshalBinary([]byte) error {
 	return nil
+}
+
+func (n nopUnmarshaler) BitLength() int {
+	return 0
 }
