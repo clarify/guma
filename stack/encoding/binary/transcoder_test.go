@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/searis/guma/uatype/encoding/binary"
+	"github.com/searis/guma/stack/encoding/binary"
 	"github.com/stretchr/testify/assert"
 )
 

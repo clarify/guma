@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/searis/guma/uatype"
+	"github.com/searis/guma/stack/uatype"
 )
 
 // Common errors that may be returned as the cause for EncoderError and
