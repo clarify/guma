@@ -9,7 +9,7 @@ import (
 	"runtime/debug"
 	"time"
 
-	"github.com/searis/guma/uatype"
+	"github.com/searis/guma/stack/uatype"
 )
 
 // bitSlice is a helper struct that can be used to marshal slices of 1-8 bits.

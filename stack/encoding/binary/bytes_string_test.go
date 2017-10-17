@@ -3,7 +3,7 @@ package binary_test
 import (
 	"testing"
 
-	"github.com/searis/guma/uatype"
+	"github.com/searis/guma/stack/uatype"
 )
 
 func TestByteString(t *testing.T) {

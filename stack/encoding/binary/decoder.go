@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/searis/guma/uatype"
+	"github.com/searis/guma/stack/uatype"
 
 	"io/ioutil"
 
