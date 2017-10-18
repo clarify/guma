@@ -77,3 +77,68 @@ func (nid NodeId) Description() string {
 	id, _ := nid.Uint16Identifier()
 	return nodeInfoMap[id].description
 }
+
+// NewTwoByteNodeID returns a NodeId of type TwoByte
+func NewTwoByteNodeID(id uint16) NodeId {
+	return NodeId{
+		NodeIdType: NodeIdTypeTwoByte,
+		TwoByte: TwoByteNodeId{
+			Identifier: uint8(id),
+		},
+	}
+}
+
+// NewFourByteNodeID returns a NodeId of type FourByte
+func NewFourByteNodeID(ns uint8, id uint16) NodeId {
+	return NodeId{
+		NodeIdType: NodeIdTypeFourByte,
+		FourByte: FourByteNodeId{
+			NamespaceIndex: ns,
+			Identifier:     id,
+		},
+	}
+}
+
+// NewNumericNodeID returns a NodeId of type Numeric
+func NewNumericNodeID(ns uint16, id uint32) NodeId {
+	return NodeId{
+		NodeIdType: NodeIdTypeNumeric,
+		Numeric: NumericNodeId{
+			NamespaceIndex: ns,
+			Identifier:     id,
+		},
+	}
+}
+
+// NewStringNodeID returns a NodeId of type String
+func NewStringNodeID(ns uint16, id string) NodeId {
+	return NodeId{
+		NodeIdType: NodeIdTypeString,
+		String: StringNodeId{
+			NamespaceIndex: ns,
+			Identifier:     id,
+		},
+	}
+}
+
+// NewGuidNodeID returns a NodeId of type GUID
+func NewGuidNodeID(ns uint16, id Guid) NodeId {
+	return NodeId{
+		NodeIdType: NodeIdTypeGuid,
+		Guid: GuidNodeId{
+			NamespaceIndex: ns,
+			Identifier:     id,
+		},
+	}
+}
+
+// NewByteStringNodeID returns a NodeId of type ByteString
+func NewByteStringNodeID(ns uint16, id ByteString) NodeId {
+	return NodeId{
+		NodeIdType: NodeIdTypeByteString,
+		ByteString: ByteStringNodeId{
+			NamespaceIndex: ns,
+			Identifier:     id,
+		},
+	}
+}
