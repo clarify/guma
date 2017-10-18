@@ -6,6 +6,7 @@ import (
 	"io"
 	"reflect"
 	"time"
+	"unsafe"
 
 	"github.com/searis/guma/stack/uatype"
 
@@ -123,8 +124,10 @@ func (dec *Decoder) decode(rv reflect.Value) error {
 	case BitLengther:
 		nBits := iv.BitLength()
 		if nBits < 8 {
-			// If the underlying type is not a pointer to a byte, we wil panic.
-			if err := dec.bitUnmarshaler.SetTarget((interface{})(iv).(*byte), byte(nBits)); err != nil {
+			if rv.Elem().Kind() != reflect.Uint8 {
+				return fmt.Errorf("Not uint8")
+			}
+			if err := dec.bitUnmarshaler.SetTarget((*byte)(unsafe.Pointer(rv.Pointer())), byte(nBits)); err != nil {
 				return err
 			}
 			u = &dec.bitUnmarshaler
@@ -145,6 +148,19 @@ func (dec *Decoder) decode(rv reflect.Value) error {
 			}
 		case reflect.Struct:
 			return dec.decodeStruct(re)
+		case reflect.Int8, reflect.Uint8:
+			u = byteUnmarshaler{re}
+			size = 1
+		case reflect.Int16, reflect.Uint16:
+			u = byteUnmarshaler{re}
+			size = 2
+		case reflect.Int32, reflect.Uint32:
+			u = byteUnmarshaler{iv}
+			size = 4
+		case reflect.Int64, reflect.Uint64:
+			u = byteUnmarshaler{re}
+			size = 8
+
 		default:
 			return ErrUnknownType
 		}
@@ -197,11 +213,53 @@ func (dec *Decoder) decodeStruct(rv reflect.Value) error {
 	for i, f := range fields {
 
 		// Continue if switch field value does not match.
-		if f.SwitchValue != 0 {
+		if f.SwitchValue != -1 {
 			if f.SwitchField == "" {
 				return wrapError(ErrInvalidTag, f.Name)
 			}
-			v := fields[prevIndices[f.SwitchField]].Value.Int()
+			var v int64
+			switch fields[prevIndices[f.SwitchField]].Value.Kind() {
+			case reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Int:
+				v = fields[prevIndices[f.SwitchField]].Value.Int()
+			case reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uint:
+				v = int64(fields[prevIndices[f.SwitchField]].Value.Uint())
+			default:
+				return wrapError(ErrInvalidTag, fmt.Errorf("Invalid SwitchValue [%s] for field [%s]", fields[prevIndices[f.SwitchField]].Value.Kind(), f.Name))
+			}
+
+			if f.SwitchOperand != "" {
+				switch f.SwitchOperand {
+				case "Equals":
+					if v == f.SwitchValue {
+						goto process
+					}
+				case "GreaterThan":
+					if v > f.SwitchValue {
+						goto process
+					}
+				case "LessThan":
+					if v < f.SwitchValue {
+						goto process
+					}
+				case "GreaterThanOrEqual":
+					if v >= f.SwitchValue {
+						goto process
+					}
+				case "LessThanOrEqual":
+					if v <= f.SwitchValue {
+						goto process
+					}
+				case "NotEqual":
+					if v != f.SwitchValue {
+						goto process
+					}
+				default:
+					return wrapError(ErrInvalidTag, fmt.Errorf("Invalid SwithcOperand [%s] for field [%s]", f.SwitchOperand, f.Name))
+				}
+				continue
+			}
+			// There might be switchValiues without any defined Operator, this means that we should
+			// continue if the value and field does not match
 			if v != f.SwitchValue {
 				continue
 			}
@@ -210,12 +268,14 @@ func (dec *Decoder) decodeStruct(rv reflect.Value) error {
 				continue
 			}
 		}
-
+	process:
 		// Allocate space for slices.
 		if f.LengthField != "" {
 			l := int(fields[prevIndices[f.LengthField]].Value.Int())
+
 			et := f.Value.Type().Elem()
-			f.Value.Set(reflect.MakeSlice(et, l, l))
+
+			f.Value.Set(reflect.MakeSlice(reflect.SliceOf(et), l, l))
 		}
 
 		// Wrap or reference field value before decoding.
@@ -228,6 +288,7 @@ func (dec *Decoder) decodeStruct(rv reflect.Value) error {
 		} else if f.BitSize > 8 {
 			return wrapError(ErrInvalidBitLength, f.Name)
 		} else if f.Value.Kind() == reflect.Ptr {
+			f.Value.Set(reflect.New(f.Value.Type().Elem()))
 			decodeValue = f.Value
 		} else {
 			decodeValue = f.Value.Addr()

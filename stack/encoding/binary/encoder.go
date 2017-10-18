@@ -97,7 +97,10 @@ func (enc *Encoder) encode(rv reflect.Value) error {
 		nBits := iv.BitLength()
 		if nBits < 8 {
 			// If the underlying type is not a byte, we wil panic.
-			if err := enc.bitMarshaler.SetBits((interface{})(iv).(byte), byte(nBits)); err != nil {
+			if rv.Kind() != reflect.Uint8 {
+				return fmt.Errorf("bit lenght below 8 must have an underlying byte type, type was %s", rv.Type().Name())
+			}
+			if err := enc.bitMarshaler.SetBits(uint8(rv.Uint()), byte(nBits)); err != nil {
 				return err
 			}
 			m = &enc.bitMarshaler
@@ -117,6 +120,9 @@ func (enc *Encoder) encode(rv reflect.Value) error {
 			}
 		case reflect.Struct:
 			return enc.encodeStruct(rv)
+		case reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Int, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uint:
+			enc.byteMarshaler.SetData(iv)
+			m = &enc.byteMarshaler
 		default:
 			return ErrUnknownType
 		}
@@ -155,11 +161,53 @@ func (enc *Encoder) encodeStruct(rv reflect.Value) error {
 	for i, f := range fields {
 
 		// Continue if switch field value does not match.
-		if f.SwitchValue != 0 {
+		if f.SwitchValue != -1 {
 			if f.SwitchField == "" {
 				return wrapError(ErrInvalidTag, f.Name)
 			}
-			v := fields[prevIndices[f.SwitchField]].Value.Int()
+			var v int64
+			switch fields[prevIndices[f.SwitchField]].Value.Kind() {
+			case reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Int:
+				v = fields[prevIndices[f.SwitchField]].Value.Int()
+			case reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uint:
+				v = int64(fields[prevIndices[f.SwitchField]].Value.Uint())
+			default:
+				return wrapError(ErrInvalidTag, fmt.Errorf("Invalid SwitchValue [%s] for field [%s]", fields[prevIndices[f.SwitchField]].Value.Kind(), f.Name))
+			}
+
+			if f.SwitchOperand != "" {
+				switch f.SwitchOperand {
+				case "Equals":
+					if v == f.SwitchValue {
+						goto process
+					}
+				case "GreaterThan":
+					if v > f.SwitchValue {
+						goto process
+					}
+				case "LessThan":
+					if v < f.SwitchValue {
+						goto process
+					}
+				case "GreaterThanOrEqual":
+					if v >= f.SwitchValue {
+						goto process
+					}
+				case "LessThanOrEqual":
+					if v <= f.SwitchValue {
+						goto process
+					}
+				case "NotEqual":
+					if v != f.SwitchValue {
+						goto process
+					}
+				default:
+					return wrapError(ErrInvalidTag, fmt.Errorf("Invalid SwithcOperand [%s] for field [%s]", f.SwitchOperand, f.Name))
+				}
+				continue
+			}
+			// There might be switchValiues without any defined Operator, this means that we should
+			// continue if the value and field does not match
 			if v != f.SwitchValue {
 				continue
 			}
@@ -168,6 +216,7 @@ func (enc *Encoder) encodeStruct(rv reflect.Value) error {
 				continue
 			}
 		}
+	process:
 
 		// Assert that length field is set correctly.
 		if f.LengthField != "" {
@@ -206,6 +255,9 @@ func (enc *Encoder) encodeStruct(rv reflect.Value) error {
 // faster than encodeList. When no optimization is found, nil is returned.
 func listMarshaler(bm *byteMarshaler, rv reflect.Value) encoding.BinaryMarshaler {
 	// TODO: Prove this optimizations with micro-benchmarks.
+	if rv.Len() == 0 {
+		return nil
+	}
 	switch rv.Index(0).Interface().(type) {
 	case bool, int8, uint8, int16, uint16, int32, uint32, float32, int64, uint64, float64:
 		bm.SetData(rv.Interface())
