@@ -20,12 +20,19 @@ type Response struct {
 	Body   io.Reader
 }
 
-// Conn is a OPCUA specific request/reponse driven interface.
-type Conn interface {
-	// Send transmits a request via the connection. If a message cannot be
-	// successfully sent over the connection, Send returns an error.
+// Channel is a OPCUA specific request/reponse driven interface.
+type Channel interface {
+	// Send transmits a request via the channel. If a message cannot be
+	// successfully sent over the channel, Send returns an error.
 	Send(r *Request) (*Response, error)
 
-	// Close terminates the connection after performing necessary clean up.
+	// Close closes the channel after performing necessary clean up.
+	// Underlying sockets must still be closed by provider
 	Close() error
+}
+
+// Conn is a OPCUA transport layer interface.
+type Conn interface {
+	Send(mt MessageType, r io.Reader, secChanID uint32) error
+	Receive() (io.Reader, error)
 }
