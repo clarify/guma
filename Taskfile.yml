@@ -1,10 +1,10 @@
 download-schemas:
   cmds:
     - generate/scripts/download-schemas.bash
-    # Prevent task from running again by creating a lock file in the past.
-    - touch -t 197001010101 .download-schemas.lock
+    # Patch schemas
+    - patch schemas/1.03/Opc.Ua.Types.bsd.xml misc/opc_ua_types_1_03.patch
   sources:
-    - .download-schemas.lock
+    - misc/opc_ua_types_1_03.patch
   generates:
     - schemas/1.03/*
 generate-tools:
