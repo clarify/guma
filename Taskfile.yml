@@ -17,4 +17,4 @@ generate:
     - download-schemas
     - generate-tools
   cmds:
-    - go generate ./uatype
+    - go generate ./stack/uatype
