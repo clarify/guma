@@ -30,7 +30,7 @@ type Guid [16]byte
 // -1 is used to indicate a null string.
 type ByteString []byte
 
-// Marshal binary returns the binary representation of bs.
+// MarshalBinary returns the binary representation of bs.
 func (bs ByteString) MarshalBinary() ([]byte, error) {
 	size := int32(len(bs))
 	target := make([]byte, size+4)
