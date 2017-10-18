@@ -1,4 +1,4 @@
-//go:generate opcua-xml2code -o uatype_auto.go -td ../schemas/1.03/Opc.Ua.Types.bsd.xml
+//go:generate opcua-xml2code -o uatype_auto.go -td ../../schemas/1.03/Opc.Ua.Types.bsd.xml
 //go:generate goimports -w uatype_auto.go
 
 // Package uatype provides mostly auto-generated types used for marshalling and
