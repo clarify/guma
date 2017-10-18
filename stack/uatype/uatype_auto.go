@@ -403,7 +403,7 @@ type DiagnosticInfo struct {
 	AdditionalInfoSpecified      Bit
 	InnerStatusCodeSpecified     Bit
 	InnerDiagnosticInfoSpecified Bit
-	Reserved1                    byte            `opcua:"bits=2"`
+	Reserved1                    Bit
 	SymbolicId                   int32           `opcua:"switchField=SymbolicIdSpecified"`
 	NamespaceURI                 int32           `opcua:"switchField=NamespaceURISpecified"`
 	Locale                       int32           `opcua:"switchField=LocaleSpecified"`
@@ -447,13 +447,10 @@ type DataValue struct {
 
 // ExtensionObject is a serialized object prefixed with its data type identifier.
 type ExtensionObject struct {
-	TypeIdSpecified Bit
-	BinaryBody      Bit
-	XmlBody         Bit
-	Reserved1       byte           `opcua:"bits=5"`
-	TypeId          ExpandedNodeId `opcua:"switchField=TypeIdSpecified"`
-	BodyLength      int32
-	Body            []uint8 `opcua:"lengthField=BodyLength"`
+	TypeId     ExpandedNodeId
+	Encoding   uint8
+	BodyLength int32   `opcua:"switchField=Encoding,switchValue=0,switchOperand=NotEqual"`
+	Body       []uint8 `opcua:"lengthField=BodyLength,switchField=Encoding,switchValue=0,switchOperand=NotEqual"`
 }
 
 // Variant is a union of several types.
@@ -492,8 +489,6 @@ type Variant struct {
 }
 
 type TrustListDataType struct {
-	ExtensionObject
-
 	SpecifiedLists          uint32
 	NoOfTrustedCertificates int32
 	TrustedCertificates     []ByteString `opcua:"lengthField=NoOfTrustedCertificates"`
@@ -507,8 +502,6 @@ type TrustListDataType struct {
 
 // Node specifies the attributes which belong to all nodes.
 type Node struct {
-	ExtensionObject
-
 	NodeId         NodeId
 	NodeClass      enumNodeClass
 	BrowseName     QualifiedName
@@ -693,8 +686,6 @@ type DataTypeNode struct {
 
 // ReferenceNode specifies a reference which belongs to a node.
 type ReferenceNode struct {
-	ExtensionObject
-
 	ReferenceTypeId NodeId
 	IsInverse       bool
 	TargetId        ExpandedNodeId
@@ -702,8 +693,6 @@ type ReferenceNode struct {
 
 // Argument is an argument for a method.
 type Argument struct {
-	ExtensionObject
-
 	Name                string
 	DataType            NodeId
 	ValueRank           int32
@@ -714,8 +703,6 @@ type Argument struct {
 
 // EnumValueType is a mapping between a value of an enumerated type and a name and description.
 type EnumValueType struct {
-	ExtensionObject
-
 	Value       int64
 	DisplayName LocalizedText
 	Description LocalizedText
@@ -723,28 +710,21 @@ type EnumValueType struct {
 
 // OptionSet this abstract Structured DataType is the base DataType for all DataTypes representing a bit mask.
 type OptionSet struct {
-	ExtensionObject
-
 	Value     ByteString
 	ValidBits ByteString
 }
 
 // Union this abstract DataType is the base DataType for all union DataTypes.
 type Union struct {
-	ExtensionObject
 }
 
 type TimeZoneDataType struct {
-	ExtensionObject
-
 	Offset                 int16
 	DaylightSavingInOffset bool
 }
 
 // ApplicationDescription describes an application and how to find it.
 type ApplicationDescription struct {
-	ExtensionObject
-
 	ApplicationUri      string
 	ProductUri          string
 	ApplicationName     LocalizedText
@@ -757,8 +737,6 @@ type ApplicationDescription struct {
 
 // RequestHeader the header passed with every server request.
 type RequestHeader struct {
-	ExtensionObject
-
 	AuthenticationToken NodeId
 	Timestamp           time.Time
 	RequestHandle       uint32
@@ -770,8 +748,6 @@ type RequestHeader struct {
 
 // ResponseHeader the header passed with every server response.
 type ResponseHeader struct {
-	ExtensionObject
-
 	Timestamp          time.Time
 	RequestHandle      uint32
 	ServiceResult      enumStatusCode
@@ -783,15 +759,11 @@ type ResponseHeader struct {
 
 // ServiceFault the response returned by all services when there is a service level error.
 type ServiceFault struct {
-	ExtensionObject
-
 	ResponseHeader ResponseHeader
 }
 
 // FindServersRequest finds the servers known to the discovery server.
 type FindServersRequest struct {
-	ExtensionObject
-
 	RequestHeader  RequestHeader
 	EndpointUrl    string
 	NoOfLocaleIds  int32
@@ -802,16 +774,12 @@ type FindServersRequest struct {
 
 // FindServersResponse finds the servers known to the discovery server.
 type FindServersResponse struct {
-	ExtensionObject
-
 	ResponseHeader ResponseHeader
 	NoOfServers    int32
 	Servers        []ApplicationDescription `opcua:"lengthField=NoOfServers"`
 }
 
 type ServerOnNetwork struct {
-	ExtensionObject
-
 	RecordId               uint32
 	ServerName             string
 	DiscoveryUrl           string
@@ -820,8 +788,6 @@ type ServerOnNetwork struct {
 }
 
 type FindServersOnNetworkRequest struct {
-	ExtensionObject
-
 	RequestHeader              RequestHeader
 	StartingRecordId           uint32
 	MaxRecordsToReturn         uint32
@@ -830,8 +796,6 @@ type FindServersOnNetworkRequest struct {
 }
 
 type FindServersOnNetworkResponse struct {
-	ExtensionObject
-
 	ResponseHeader       ResponseHeader
 	LastCounterResetTime time.Time
 	NoOfServers          int32
@@ -840,8 +804,6 @@ type FindServersOnNetworkResponse struct {
 
 // UserTokenPolicy describes a user token that can be used with a server.
 type UserTokenPolicy struct {
-	ExtensionObject
-
 	PolicyId          string
 	TokenType         enumUserTokenType
 	IssuedTokenType   string
@@ -851,8 +813,6 @@ type UserTokenPolicy struct {
 
 // EndpointDescription the description of a endpoint that can be used to access a server.
 type EndpointDescription struct {
-	ExtensionObject
-
 	EndpointUrl            string
 	Server                 ApplicationDescription
 	ServerCertificate      ByteString
@@ -866,8 +826,6 @@ type EndpointDescription struct {
 
 // GetEndpointsRequest gets the endpoints used by the server.
 type GetEndpointsRequest struct {
-	ExtensionObject
-
 	RequestHeader   RequestHeader
 	EndpointUrl     string
 	NoOfLocaleIds   int32
@@ -878,8 +836,6 @@ type GetEndpointsRequest struct {
 
 // GetEndpointsResponse gets the endpoints used by the server.
 type GetEndpointsResponse struct {
-	ExtensionObject
-
 	ResponseHeader ResponseHeader
 	NoOfEndpoints  int32
 	Endpoints      []EndpointDescription `opcua:"lengthField=NoOfEndpoints"`
@@ -887,8 +843,6 @@ type GetEndpointsResponse struct {
 
 // RegisteredServer the information required to register a server with a discovery server.
 type RegisteredServer struct {
-	ExtensionObject
-
 	ServerUri         string
 	ProductUri        string
 	NoOfServerNames   int32
@@ -903,22 +857,17 @@ type RegisteredServer struct {
 
 // RegisterServerRequest registers a server with the discovery server.
 type RegisterServerRequest struct {
-	ExtensionObject
-
 	RequestHeader RequestHeader
 	Server        RegisteredServer
 }
 
 // RegisterServerResponse registers a server with the discovery server.
 type RegisterServerResponse struct {
-	ExtensionObject
-
 	ResponseHeader ResponseHeader
 }
 
 // DiscoveryConfiguration is a base type for discovery configuration information.
 type DiscoveryConfiguration struct {
-	ExtensionObject
 }
 
 // MdnsDiscoveryConfiguration the discovery information needed for mDNS registration.
@@ -931,8 +880,6 @@ type MdnsDiscoveryConfiguration struct {
 }
 
 type RegisterServer2Request struct {
-	ExtensionObject
-
 	RequestHeader              RequestHeader
 	Server                     RegisteredServer
 	NoOfDiscoveryConfiguration int32
@@ -940,8 +887,6 @@ type RegisterServer2Request struct {
 }
 
 type RegisterServer2Response struct {
-	ExtensionObject
-
 	ResponseHeader           ResponseHeader
 	NoOfConfigurationResults int32
 	ConfigurationResults     []enumStatusCode `opcua:"lengthField=NoOfConfigurationResults"`
@@ -951,8 +896,6 @@ type RegisterServer2Response struct {
 
 // ChannelSecurityToken the token that identifies a set of keys for an active secure channel.
 type ChannelSecurityToken struct {
-	ExtensionObject
-
 	ChannelId       uint32
 	TokenId         uint32
 	CreatedAt       time.Time
@@ -961,8 +904,6 @@ type ChannelSecurityToken struct {
 
 // OpenSecureChannelRequest creates a secure channel with a server.
 type OpenSecureChannelRequest struct {
-	ExtensionObject
-
 	RequestHeader         RequestHeader
 	ClientProtocolVersion uint32
 	RequestType           enumSecurityTokenRequestType
@@ -973,8 +914,6 @@ type OpenSecureChannelRequest struct {
 
 // OpenSecureChannelResponse creates a secure channel with a server.
 type OpenSecureChannelResponse struct {
-	ExtensionObject
-
 	ResponseHeader        ResponseHeader
 	ServerProtocolVersion uint32
 	SecurityToken         ChannelSecurityToken
@@ -983,22 +922,16 @@ type OpenSecureChannelResponse struct {
 
 // CloseSecureChannelRequest closes a secure channel.
 type CloseSecureChannelRequest struct {
-	ExtensionObject
-
 	RequestHeader RequestHeader
 }
 
 // CloseSecureChannelResponse closes a secure channel.
 type CloseSecureChannelResponse struct {
-	ExtensionObject
-
 	ResponseHeader ResponseHeader
 }
 
 // SignedSoftwareCertificate is a software certificate with a digital signature.
 type SignedSoftwareCertificate struct {
-	ExtensionObject
-
 	CertificateData ByteString
 	Signature       ByteString
 }
@@ -1013,8 +946,6 @@ type SignatureData struct {
 
 // CreateSessionRequest creates a new session with the server.
 type CreateSessionRequest struct {
-	ExtensionObject
-
 	RequestHeader           RequestHeader
 	ClientDescription       ApplicationDescription
 	ServerUri               string
@@ -1028,8 +959,6 @@ type CreateSessionRequest struct {
 
 // CreateSessionResponse creates a new session with the server.
 type CreateSessionResponse struct {
-	ExtensionObject
-
 	ResponseHeader                 ResponseHeader
 	SessionId                      NodeId
 	AuthenticationToken            NodeId
@@ -1087,8 +1016,6 @@ type IssuedIdentityToken struct {
 
 // ActivateSessionRequest activates a session with the server.
 type ActivateSessionRequest struct {
-	ExtensionObject
-
 	RequestHeader                  RequestHeader
 	ClientSignature                SignatureData
 	NoOfClientSoftwareCertificates int32
@@ -1101,8 +1028,6 @@ type ActivateSessionRequest struct {
 
 // ActivateSessionResponse activates a session with the server.
 type ActivateSessionResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	ServerNonce         ByteString
 	NoOfResults         int32
@@ -1113,31 +1038,23 @@ type ActivateSessionResponse struct {
 
 // CloseSessionRequest closes a session with the server.
 type CloseSessionRequest struct {
-	ExtensionObject
-
 	RequestHeader       RequestHeader
 	DeleteSubscriptions bool
 }
 
 // CloseSessionResponse closes a session with the server.
 type CloseSessionResponse struct {
-	ExtensionObject
-
 	ResponseHeader ResponseHeader
 }
 
 // CancelRequest cancels an outstanding request.
 type CancelRequest struct {
-	ExtensionObject
-
 	RequestHeader RequestHeader
 	RequestHandle uint32
 }
 
 // CancelResponse cancels an outstanding request.
 type CancelResponse struct {
-	ExtensionObject
-
 	ResponseHeader ResponseHeader
 	CancelCount    uint32
 }
@@ -1268,8 +1185,6 @@ type ViewAttributes struct {
 
 // AddNodesItem is a request to add a node to the server address space.
 type AddNodesItem struct {
-	ExtensionObject
-
 	ParentNodeId       ExpandedNodeId
 	ReferenceTypeId    NodeId
 	RequestedNewNodeId ExpandedNodeId
@@ -1281,16 +1196,12 @@ type AddNodesItem struct {
 
 // AddNodesResult is a result of an add node operation.
 type AddNodesResult struct {
-	ExtensionObject
-
 	StatusCode  enumStatusCode
 	AddedNodeId NodeId
 }
 
 // AddNodesRequest adds one or more nodes to the server address space.
 type AddNodesRequest struct {
-	ExtensionObject
-
 	RequestHeader  RequestHeader
 	NoOfNodesToAdd int32
 	NodesToAdd     []AddNodesItem `opcua:"lengthField=NoOfNodesToAdd"`
@@ -1298,8 +1209,6 @@ type AddNodesRequest struct {
 
 // AddNodesResponse adds one or more nodes to the server address space.
 type AddNodesResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []AddNodesResult `opcua:"lengthField=NoOfResults"`
@@ -1309,8 +1218,6 @@ type AddNodesResponse struct {
 
 // AddReferencesItem is a request to add a reference to the server address space.
 type AddReferencesItem struct {
-	ExtensionObject
-
 	SourceNodeId    NodeId
 	ReferenceTypeId NodeId
 	IsForward       bool
@@ -1321,8 +1228,6 @@ type AddReferencesItem struct {
 
 // AddReferencesRequest adds one or more references to the server address space.
 type AddReferencesRequest struct {
-	ExtensionObject
-
 	RequestHeader       RequestHeader
 	NoOfReferencesToAdd int32
 	ReferencesToAdd     []AddReferencesItem `opcua:"lengthField=NoOfReferencesToAdd"`
@@ -1330,8 +1235,6 @@ type AddReferencesRequest struct {
 
 // AddReferencesResponse adds one or more references to the server address space.
 type AddReferencesResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
@@ -1341,16 +1244,12 @@ type AddReferencesResponse struct {
 
 // DeleteNodesItem is a request to delete a node to the server address space.
 type DeleteNodesItem struct {
-	ExtensionObject
-
 	NodeId                 NodeId
 	DeleteTargetReferences bool
 }
 
 // DeleteNodesRequest delete one or more nodes from the server address space.
 type DeleteNodesRequest struct {
-	ExtensionObject
-
 	RequestHeader     RequestHeader
 	NoOfNodesToDelete int32
 	NodesToDelete     []DeleteNodesItem `opcua:"lengthField=NoOfNodesToDelete"`
@@ -1358,8 +1257,6 @@ type DeleteNodesRequest struct {
 
 // DeleteNodesResponse delete one or more nodes from the server address space.
 type DeleteNodesResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
@@ -1369,8 +1266,6 @@ type DeleteNodesResponse struct {
 
 // DeleteReferencesItem is a request to delete a node from the server address space.
 type DeleteReferencesItem struct {
-	ExtensionObject
-
 	SourceNodeId        NodeId
 	ReferenceTypeId     NodeId
 	IsForward           bool
@@ -1380,8 +1275,6 @@ type DeleteReferencesItem struct {
 
 // DeleteReferencesRequest delete one or more references from the server address space.
 type DeleteReferencesRequest struct {
-	ExtensionObject
-
 	RequestHeader          RequestHeader
 	NoOfReferencesToDelete int32
 	ReferencesToDelete     []DeleteReferencesItem `opcua:"lengthField=NoOfReferencesToDelete"`
@@ -1389,8 +1282,6 @@ type DeleteReferencesRequest struct {
 
 // DeleteReferencesResponse delete one or more references from the server address space.
 type DeleteReferencesResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
@@ -1400,8 +1291,6 @@ type DeleteReferencesResponse struct {
 
 // ViewDescription the view to browse.
 type ViewDescription struct {
-	ExtensionObject
-
 	ViewId      NodeId
 	Timestamp   time.Time
 	ViewVersion uint32
@@ -1409,8 +1298,6 @@ type ViewDescription struct {
 
 // BrowseDescription is a request to browse the the references from a node.
 type BrowseDescription struct {
-	ExtensionObject
-
 	NodeId          NodeId
 	BrowseDirection enumBrowseDirection
 	ReferenceTypeId NodeId
@@ -1421,8 +1308,6 @@ type BrowseDescription struct {
 
 // ReferenceDescription the description of a reference.
 type ReferenceDescription struct {
-	ExtensionObject
-
 	ReferenceTypeId NodeId
 	IsForward       bool
 	NodeId          ExpandedNodeId
@@ -1434,8 +1319,6 @@ type ReferenceDescription struct {
 
 // BrowseResult the result of a browse operation.
 type BrowseResult struct {
-	ExtensionObject
-
 	StatusCode        enumStatusCode
 	ContinuationPoint ByteString
 	NoOfReferences    int32
@@ -1444,8 +1327,6 @@ type BrowseResult struct {
 
 // BrowseRequest browse the references for one or more nodes from the server address space.
 type BrowseRequest struct {
-	ExtensionObject
-
 	RequestHeader                 RequestHeader
 	View                          ViewDescription
 	RequestedMaxReferencesPerNode uint32
@@ -1455,8 +1336,6 @@ type BrowseRequest struct {
 
 // BrowseResponse browse the references for one or more nodes from the server address space.
 type BrowseResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []BrowseResult `opcua:"lengthField=NoOfResults"`
@@ -1466,8 +1345,6 @@ type BrowseResponse struct {
 
 // BrowseNextRequest continues one or more browse operations.
 type BrowseNextRequest struct {
-	ExtensionObject
-
 	RequestHeader             RequestHeader
 	ReleaseContinuationPoints bool
 	NoOfContinuationPoints    int32
@@ -1476,8 +1353,6 @@ type BrowseNextRequest struct {
 
 // BrowseNextResponse continues one or more browse operations.
 type BrowseNextResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []BrowseResult `opcua:"lengthField=NoOfResults"`
@@ -1487,8 +1362,6 @@ type BrowseNextResponse struct {
 
 // RelativePathElement is an element in a relative path.
 type RelativePathElement struct {
-	ExtensionObject
-
 	ReferenceTypeId NodeId
 	IsInverse       bool
 	IncludeSubtypes bool
@@ -1497,32 +1370,24 @@ type RelativePathElement struct {
 
 // RelativePath is a relative path constructed from reference types and browse names.
 type RelativePath struct {
-	ExtensionObject
-
 	NoOfElements int32
 	Elements     []RelativePathElement `opcua:"lengthField=NoOfElements"`
 }
 
 // BrowsePath is a request to translate a path into a node id.
 type BrowsePath struct {
-	ExtensionObject
-
 	StartingNode NodeId
 	RelativePath RelativePath
 }
 
 // BrowsePathTarget the target of the translated path.
 type BrowsePathTarget struct {
-	ExtensionObject
-
 	TargetId           ExpandedNodeId
 	RemainingPathIndex uint32
 }
 
 // BrowsePathResult the result of a translate opearation.
 type BrowsePathResult struct {
-	ExtensionObject
-
 	StatusCode  enumStatusCode
 	NoOfTargets int32
 	Targets     []BrowsePathTarget `opcua:"lengthField=NoOfTargets"`
@@ -1530,8 +1395,6 @@ type BrowsePathResult struct {
 
 // TranslateBrowsePathsToNodeIdsRequest translates one or more paths in the server address space.
 type TranslateBrowsePathsToNodeIdsRequest struct {
-	ExtensionObject
-
 	RequestHeader   RequestHeader
 	NoOfBrowsePaths int32
 	BrowsePaths     []BrowsePath `opcua:"lengthField=NoOfBrowsePaths"`
@@ -1539,8 +1402,6 @@ type TranslateBrowsePathsToNodeIdsRequest struct {
 
 // TranslateBrowsePathsToNodeIdsResponse translates one or more paths in the server address space.
 type TranslateBrowsePathsToNodeIdsResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []BrowsePathResult `opcua:"lengthField=NoOfResults"`
@@ -1550,8 +1411,6 @@ type TranslateBrowsePathsToNodeIdsResponse struct {
 
 // RegisterNodesRequest registers one or more nodes for repeated use within a session.
 type RegisterNodesRequest struct {
-	ExtensionObject
-
 	RequestHeader       RequestHeader
 	NoOfNodesToRegister int32
 	NodesToRegister     []NodeId `opcua:"lengthField=NoOfNodesToRegister"`
@@ -1559,8 +1418,6 @@ type RegisterNodesRequest struct {
 
 // RegisterNodesResponse registers one or more nodes for repeated use within a session.
 type RegisterNodesResponse struct {
-	ExtensionObject
-
 	ResponseHeader        ResponseHeader
 	NoOfRegisteredNodeIds int32
 	RegisteredNodeIds     []NodeId `opcua:"lengthField=NoOfRegisteredNodeIds"`
@@ -1568,8 +1425,6 @@ type RegisterNodesResponse struct {
 
 // UnregisterNodesRequest unregisters one or more previously registered nodes.
 type UnregisterNodesRequest struct {
-	ExtensionObject
-
 	RequestHeader         RequestHeader
 	NoOfNodesToUnregister int32
 	NodesToUnregister     []NodeId `opcua:"lengthField=NoOfNodesToUnregister"`
@@ -1577,14 +1432,10 @@ type UnregisterNodesRequest struct {
 
 // UnregisterNodesResponse unregisters one or more previously registered nodes.
 type UnregisterNodesResponse struct {
-	ExtensionObject
-
 	ResponseHeader ResponseHeader
 }
 
 type EndpointConfiguration struct {
-	ExtensionObject
-
 	OperationTimeout      int32
 	UseBinaryEncoding     bool
 	MaxStringLength       int32
@@ -1597,16 +1448,12 @@ type EndpointConfiguration struct {
 }
 
 type QueryDataDescription struct {
-	ExtensionObject
-
 	RelativePath RelativePath
 	AttributeId  uint32
 	IndexRange   string
 }
 
 type NodeTypeDescription struct {
-	ExtensionObject
-
 	TypeDefinitionNode ExpandedNodeId
 	IncludeSubTypes    bool
 	NoOfDataToReturn   int32
@@ -1614,8 +1461,6 @@ type NodeTypeDescription struct {
 }
 
 type QueryDataSet struct {
-	ExtensionObject
-
 	NodeId             ExpandedNodeId
 	TypeDefinitionNode ExpandedNodeId
 	NoOfValues         int32
@@ -1623,8 +1468,6 @@ type QueryDataSet struct {
 }
 
 type NodeReference struct {
-	ExtensionObject
-
 	NodeId                NodeId
 	ReferenceTypeId       NodeId
 	IsForward             bool
@@ -1633,22 +1476,17 @@ type NodeReference struct {
 }
 
 type ContentFilterElement struct {
-	ExtensionObject
-
 	FilterOperator     enumFilterOperator
 	NoOfFilterOperands int32
 	FilterOperands     []ExtensionObject `opcua:"lengthField=NoOfFilterOperands"`
 }
 
 type ContentFilter struct {
-	ExtensionObject
-
 	NoOfElements int32
 	Elements     []ContentFilterElement `opcua:"lengthField=NoOfElements"`
 }
 
 type FilterOperand struct {
-	ExtensionObject
 }
 
 type ElementOperand struct {
@@ -1684,8 +1522,6 @@ type SimpleAttributeOperand struct {
 }
 
 type ContentFilterElementResult struct {
-	ExtensionObject
-
 	StatusCode                 enumStatusCode
 	NoOfOperandStatusCodes     int32
 	OperandStatusCodes         []enumStatusCode `opcua:"lengthField=NoOfOperandStatusCodes"`
@@ -1694,8 +1530,6 @@ type ContentFilterElementResult struct {
 }
 
 type ContentFilterResult struct {
-	ExtensionObject
-
 	NoOfElementResults         int32
 	ElementResults             []ContentFilterElementResult `opcua:"lengthField=NoOfElementResults"`
 	NoOfElementDiagnosticInfos int32
@@ -1703,8 +1537,6 @@ type ContentFilterResult struct {
 }
 
 type ParsingResult struct {
-	ExtensionObject
-
 	StatusCode              enumStatusCode
 	NoOfDataStatusCodes     int32
 	DataStatusCodes         []enumStatusCode `opcua:"lengthField=NoOfDataStatusCodes"`
@@ -1713,8 +1545,6 @@ type ParsingResult struct {
 }
 
 type QueryFirstRequest struct {
-	ExtensionObject
-
 	RequestHeader         RequestHeader
 	View                  ViewDescription
 	NoOfNodeTypes         int32
@@ -1725,8 +1555,6 @@ type QueryFirstRequest struct {
 }
 
 type QueryFirstResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfQueryDataSets   int32
 	QueryDataSets       []QueryDataSet `opcua:"lengthField=NoOfQueryDataSets"`
@@ -1739,16 +1567,12 @@ type QueryFirstResponse struct {
 }
 
 type QueryNextRequest struct {
-	ExtensionObject
-
 	RequestHeader            RequestHeader
 	ReleaseContinuationPoint bool
 	ContinuationPoint        ByteString
 }
 
 type QueryNextResponse struct {
-	ExtensionObject
-
 	ResponseHeader           ResponseHeader
 	NoOfQueryDataSets        int32
 	QueryDataSets            []QueryDataSet `opcua:"lengthField=NoOfQueryDataSets"`
@@ -1756,8 +1580,6 @@ type QueryNextResponse struct {
 }
 
 type ReadValueId struct {
-	ExtensionObject
-
 	NodeId       NodeId
 	AttributeId  uint32
 	IndexRange   string
@@ -1765,8 +1587,6 @@ type ReadValueId struct {
 }
 
 type ReadRequest struct {
-	ExtensionObject
-
 	RequestHeader      RequestHeader
 	MaxAge             float64
 	TimestampsToReturn enumTimestampsToReturn
@@ -1775,8 +1595,6 @@ type ReadRequest struct {
 }
 
 type ReadResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []DataValue `opcua:"lengthField=NoOfResults"`
@@ -1785,8 +1603,6 @@ type ReadResponse struct {
 }
 
 type HistoryReadValueId struct {
-	ExtensionObject
-
 	NodeId            NodeId
 	IndexRange        string
 	DataEncoding      QualifiedName
@@ -1794,15 +1610,12 @@ type HistoryReadValueId struct {
 }
 
 type HistoryReadResult struct {
-	ExtensionObject
-
 	StatusCode        enumStatusCode
 	ContinuationPoint ByteString
 	HistoryData       ExtensionObject
 }
 
 type HistoryReadDetails struct {
-	ExtensionObject
 }
 
 type ReadEventDetails struct {
@@ -1844,15 +1657,11 @@ type ReadAtTimeDetails struct {
 }
 
 type HistoryData struct {
-	ExtensionObject
-
 	NoOfDataValues int32
 	DataValues     []DataValue `opcua:"lengthField=NoOfDataValues"`
 }
 
 type ModificationInfo struct {
-	ExtensionObject
-
 	ModificationTime time.Time
 	UpdateType       enumHistoryUpdateType
 	UserName         string
@@ -1868,15 +1677,11 @@ type HistoryModifiedData struct {
 }
 
 type HistoryEvent struct {
-	ExtensionObject
-
 	NoOfEvents int32
 	Events     []HistoryEventFieldList `opcua:"lengthField=NoOfEvents"`
 }
 
 type HistoryReadRequest struct {
-	ExtensionObject
-
 	RequestHeader             RequestHeader
 	HistoryReadDetails        ExtensionObject
 	TimestampsToReturn        enumTimestampsToReturn
@@ -1886,8 +1691,6 @@ type HistoryReadRequest struct {
 }
 
 type HistoryReadResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []HistoryReadResult `opcua:"lengthField=NoOfResults"`
@@ -1896,8 +1699,6 @@ type HistoryReadResponse struct {
 }
 
 type WriteValue struct {
-	ExtensionObject
-
 	NodeId      NodeId
 	AttributeId uint32
 	IndexRange  string
@@ -1905,16 +1706,12 @@ type WriteValue struct {
 }
 
 type WriteRequest struct {
-	ExtensionObject
-
 	RequestHeader    RequestHeader
 	NoOfNodesToWrite int32
 	NodesToWrite     []WriteValue `opcua:"lengthField=NoOfNodesToWrite"`
 }
 
 type WriteResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
@@ -1923,8 +1720,6 @@ type WriteResponse struct {
 }
 
 type HistoryUpdateDetails struct {
-	ExtensionObject
-
 	NodeId NodeId
 }
 
@@ -1982,8 +1777,6 @@ type DeleteEventDetails struct {
 }
 
 type HistoryUpdateResult struct {
-	ExtensionObject
-
 	StatusCode           enumStatusCode
 	NoOfOperationResults int32
 	OperationResults     []enumStatusCode `opcua:"lengthField=NoOfOperationResults"`
@@ -1992,16 +1785,12 @@ type HistoryUpdateResult struct {
 }
 
 type HistoryUpdateRequest struct {
-	ExtensionObject
-
 	RequestHeader            RequestHeader
 	NoOfHistoryUpdateDetails int32
 	HistoryUpdateDetails     []ExtensionObject `opcua:"lengthField=NoOfHistoryUpdateDetails"`
 }
 
 type HistoryUpdateResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []HistoryUpdateResult `opcua:"lengthField=NoOfResults"`
@@ -2010,8 +1799,6 @@ type HistoryUpdateResponse struct {
 }
 
 type CallMethodRequest struct {
-	ExtensionObject
-
 	ObjectId           NodeId
 	MethodId           NodeId
 	NoOfInputArguments int32
@@ -2019,8 +1806,6 @@ type CallMethodRequest struct {
 }
 
 type CallMethodResult struct {
-	ExtensionObject
-
 	StatusCode                       enumStatusCode
 	NoOfInputArgumentResults         int32
 	InputArgumentResults             []enumStatusCode `opcua:"lengthField=NoOfInputArgumentResults"`
@@ -2031,16 +1816,12 @@ type CallMethodResult struct {
 }
 
 type CallRequest struct {
-	ExtensionObject
-
 	RequestHeader     RequestHeader
 	NoOfMethodsToCall int32
 	MethodsToCall     []CallMethodRequest `opcua:"lengthField=NoOfMethodsToCall"`
 }
 
 type CallResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []CallMethodResult `opcua:"lengthField=NoOfResults"`
@@ -2049,7 +1830,6 @@ type CallResponse struct {
 }
 
 type MonitoringFilter struct {
-	ExtensionObject
 }
 
 type DataChangeFilter struct {
@@ -2069,8 +1849,6 @@ type EventFilter struct {
 }
 
 type AggregateConfiguration struct {
-	ExtensionObject
-
 	UseServerCapabilitiesDefaults bool
 	TreatUncertainAsBad           bool
 	PercentDataBad                uint8
@@ -2088,7 +1866,6 @@ type AggregateFilter struct {
 }
 
 type MonitoringFilterResult struct {
-	ExtensionObject
 }
 
 type EventFilterResult struct {
@@ -2110,8 +1887,6 @@ type AggregateFilterResult struct {
 }
 
 type MonitoringParameters struct {
-	ExtensionObject
-
 	ClientHandle     uint32
 	SamplingInterval float64
 	Filter           ExtensionObject
@@ -2120,16 +1895,12 @@ type MonitoringParameters struct {
 }
 
 type MonitoredItemCreateRequest struct {
-	ExtensionObject
-
 	ItemToMonitor       ReadValueId
 	MonitoringMode      enumMonitoringMode
 	RequestedParameters MonitoringParameters
 }
 
 type MonitoredItemCreateResult struct {
-	ExtensionObject
-
 	StatusCode              enumStatusCode
 	MonitoredItemId         uint32
 	RevisedSamplingInterval float64
@@ -2138,8 +1909,6 @@ type MonitoredItemCreateResult struct {
 }
 
 type CreateMonitoredItemsRequest struct {
-	ExtensionObject
-
 	RequestHeader      RequestHeader
 	SubscriptionId     uint32
 	TimestampsToReturn enumTimestampsToReturn
@@ -2148,8 +1917,6 @@ type CreateMonitoredItemsRequest struct {
 }
 
 type CreateMonitoredItemsResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []MonitoredItemCreateResult `opcua:"lengthField=NoOfResults"`
@@ -2158,15 +1925,11 @@ type CreateMonitoredItemsResponse struct {
 }
 
 type MonitoredItemModifyRequest struct {
-	ExtensionObject
-
 	MonitoredItemId     uint32
 	RequestedParameters MonitoringParameters
 }
 
 type MonitoredItemModifyResult struct {
-	ExtensionObject
-
 	StatusCode              enumStatusCode
 	RevisedSamplingInterval float64
 	RevisedQueueSize        uint32
@@ -2174,8 +1937,6 @@ type MonitoredItemModifyResult struct {
 }
 
 type ModifyMonitoredItemsRequest struct {
-	ExtensionObject
-
 	RequestHeader      RequestHeader
 	SubscriptionId     uint32
 	TimestampsToReturn enumTimestampsToReturn
@@ -2184,8 +1945,6 @@ type ModifyMonitoredItemsRequest struct {
 }
 
 type ModifyMonitoredItemsResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []MonitoredItemModifyResult `opcua:"lengthField=NoOfResults"`
@@ -2194,8 +1953,6 @@ type ModifyMonitoredItemsResponse struct {
 }
 
 type SetMonitoringModeRequest struct {
-	ExtensionObject
-
 	RequestHeader        RequestHeader
 	SubscriptionId       uint32
 	MonitoringMode       enumMonitoringMode
@@ -2204,8 +1961,6 @@ type SetMonitoringModeRequest struct {
 }
 
 type SetMonitoringModeResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
@@ -2214,8 +1969,6 @@ type SetMonitoringModeResponse struct {
 }
 
 type SetTriggeringRequest struct {
-	ExtensionObject
-
 	RequestHeader     RequestHeader
 	SubscriptionId    uint32
 	TriggeringItemId  uint32
@@ -2226,8 +1979,6 @@ type SetTriggeringRequest struct {
 }
 
 type SetTriggeringResponse struct {
-	ExtensionObject
-
 	ResponseHeader            ResponseHeader
 	NoOfAddResults            int32
 	AddResults                []enumStatusCode `opcua:"lengthField=NoOfAddResults"`
@@ -2240,8 +1991,6 @@ type SetTriggeringResponse struct {
 }
 
 type DeleteMonitoredItemsRequest struct {
-	ExtensionObject
-
 	RequestHeader        RequestHeader
 	SubscriptionId       uint32
 	NoOfMonitoredItemIds int32
@@ -2249,8 +1998,6 @@ type DeleteMonitoredItemsRequest struct {
 }
 
 type DeleteMonitoredItemsResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
@@ -2259,8 +2006,6 @@ type DeleteMonitoredItemsResponse struct {
 }
 
 type CreateSubscriptionRequest struct {
-	ExtensionObject
-
 	RequestHeader               RequestHeader
 	RequestedPublishingInterval float64
 	RequestedLifetimeCount      uint32
@@ -2271,8 +2016,6 @@ type CreateSubscriptionRequest struct {
 }
 
 type CreateSubscriptionResponse struct {
-	ExtensionObject
-
 	ResponseHeader            ResponseHeader
 	SubscriptionId            uint32
 	RevisedPublishingInterval float64
@@ -2281,8 +2024,6 @@ type CreateSubscriptionResponse struct {
 }
 
 type ModifySubscriptionRequest struct {
-	ExtensionObject
-
 	RequestHeader               RequestHeader
 	SubscriptionId              uint32
 	RequestedPublishingInterval float64
@@ -2293,8 +2034,6 @@ type ModifySubscriptionRequest struct {
 }
 
 type ModifySubscriptionResponse struct {
-	ExtensionObject
-
 	ResponseHeader            ResponseHeader
 	RevisedPublishingInterval float64
 	RevisedLifetimeCount      uint32
@@ -2302,8 +2041,6 @@ type ModifySubscriptionResponse struct {
 }
 
 type SetPublishingModeRequest struct {
-	ExtensionObject
-
 	RequestHeader       RequestHeader
 	PublishingEnabled   bool
 	NoOfSubscriptionIds int32
@@ -2311,8 +2048,6 @@ type SetPublishingModeRequest struct {
 }
 
 type SetPublishingModeResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
@@ -2321,8 +2056,6 @@ type SetPublishingModeResponse struct {
 }
 
 type NotificationMessage struct {
-	ExtensionObject
-
 	SequenceNumber       uint32
 	PublishTime          time.Time
 	NoOfNotificationData int32
@@ -2330,7 +2063,6 @@ type NotificationMessage struct {
 }
 
 type NotificationData struct {
-	ExtensionObject
 }
 
 type DataChangeNotification struct {
@@ -2343,8 +2075,6 @@ type DataChangeNotification struct {
 }
 
 type MonitoredItemNotification struct {
-	ExtensionObject
-
 	ClientHandle uint32
 	Value        DataValue
 }
@@ -2357,16 +2087,12 @@ type EventNotificationList struct {
 }
 
 type EventFieldList struct {
-	ExtensionObject
-
 	ClientHandle    uint32
 	NoOfEventFields int32
 	EventFields     []Variant `opcua:"lengthField=NoOfEventFields"`
 }
 
 type HistoryEventFieldList struct {
-	ExtensionObject
-
 	NoOfEventFields int32
 	EventFields     []Variant `opcua:"lengthField=NoOfEventFields"`
 }
@@ -2379,23 +2105,17 @@ type StatusChangeNotification struct {
 }
 
 type SubscriptionAcknowledgement struct {
-	ExtensionObject
-
 	SubscriptionId uint32
 	SequenceNumber uint32
 }
 
 type PublishRequest struct {
-	ExtensionObject
-
 	RequestHeader                    RequestHeader
 	NoOfSubscriptionAcknowledgements int32
 	SubscriptionAcknowledgements     []SubscriptionAcknowledgement `opcua:"lengthField=NoOfSubscriptionAcknowledgements"`
 }
 
 type PublishResponse struct {
-	ExtensionObject
-
 	ResponseHeader               ResponseHeader
 	SubscriptionId               uint32
 	NoOfAvailableSequenceNumbers int32
@@ -2409,31 +2129,23 @@ type PublishResponse struct {
 }
 
 type RepublishRequest struct {
-	ExtensionObject
-
 	RequestHeader            RequestHeader
 	SubscriptionId           uint32
 	RetransmitSequenceNumber uint32
 }
 
 type RepublishResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NotificationMessage NotificationMessage
 }
 
 type TransferResult struct {
-	ExtensionObject
-
 	StatusCode                   enumStatusCode
 	NoOfAvailableSequenceNumbers int32
 	AvailableSequenceNumbers     []uint32 `opcua:"lengthField=NoOfAvailableSequenceNumbers"`
 }
 
 type TransferSubscriptionsRequest struct {
-	ExtensionObject
-
 	RequestHeader       RequestHeader
 	NoOfSubscriptionIds int32
 	SubscriptionIds     []uint32 `opcua:"lengthField=NoOfSubscriptionIds"`
@@ -2441,8 +2153,6 @@ type TransferSubscriptionsRequest struct {
 }
 
 type TransferSubscriptionsResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []TransferResult `opcua:"lengthField=NoOfResults"`
@@ -2451,16 +2161,12 @@ type TransferSubscriptionsResponse struct {
 }
 
 type DeleteSubscriptionsRequest struct {
-	ExtensionObject
-
 	RequestHeader       RequestHeader
 	NoOfSubscriptionIds int32
 	SubscriptionIds     []uint32 `opcua:"lengthField=NoOfSubscriptionIds"`
 }
 
 type DeleteSubscriptionsResponse struct {
-	ExtensionObject
-
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
 	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
@@ -2469,8 +2175,6 @@ type DeleteSubscriptionsResponse struct {
 }
 
 type BuildInfo struct {
-	ExtensionObject
-
 	ProductUri       string
 	ManufacturerName string
 	ProductName      string
@@ -2480,31 +2184,23 @@ type BuildInfo struct {
 }
 
 type RedundantServerDataType struct {
-	ExtensionObject
-
 	ServerId     string
 	ServiceLevel uint8
 	ServerState  enumServerState
 }
 
 type EndpointUrlListDataType struct {
-	ExtensionObject
-
 	NoOfEndpointUrlList int32
 	EndpointUrlList     []string `opcua:"lengthField=NoOfEndpointUrlList"`
 }
 
 type NetworkGroupDataType struct {
-	ExtensionObject
-
 	ServerUri        string
 	NoOfNetworkPaths int32
 	NetworkPaths     []EndpointUrlListDataType `opcua:"lengthField=NoOfNetworkPaths"`
 }
 
 type SamplingIntervalDiagnosticsDataType struct {
-	ExtensionObject
-
 	SamplingInterval           float64
 	MonitoredItemCount         uint32
 	MaxMonitoredItemCount      uint32
@@ -2512,8 +2208,6 @@ type SamplingIntervalDiagnosticsDataType struct {
 }
 
 type ServerDiagnosticsSummaryDataType struct {
-	ExtensionObject
-
 	ServerViewCount               uint32
 	CurrentSessionCount           uint32
 	CumulatedSessionCount         uint32
@@ -2529,8 +2223,6 @@ type ServerDiagnosticsSummaryDataType struct {
 }
 
 type ServerStatusDataType struct {
-	ExtensionObject
-
 	StartTime           time.Time
 	CurrentTime         time.Time
 	State               enumServerState
@@ -2540,8 +2232,6 @@ type ServerStatusDataType struct {
 }
 
 type SessionDiagnosticsDataType struct {
-	ExtensionObject
-
 	SessionId                          NodeId
 	SessionName                        string
 	ClientDescription                  ApplicationDescription
@@ -2589,8 +2279,6 @@ type SessionDiagnosticsDataType struct {
 }
 
 type SessionSecurityDiagnosticsDataType struct {
-	ExtensionObject
-
 	SessionId               NodeId
 	ClientUserIdOfSession   string
 	NoOfClientUserIdHistory int32
@@ -2604,22 +2292,16 @@ type SessionSecurityDiagnosticsDataType struct {
 }
 
 type ServiceCounterDataType struct {
-	ExtensionObject
-
 	TotalCount uint32
 	ErrorCount uint32
 }
 
 type StatusResult struct {
-	ExtensionObject
-
 	StatusCode     enumStatusCode
 	DiagnosticInfo *DiagnosticInfo
 }
 
 type SubscriptionDiagnosticsDataType struct {
-	ExtensionObject
-
 	SessionId                    NodeId
 	SubscriptionId               uint32
 	Priority                     uint8
@@ -2654,30 +2336,22 @@ type SubscriptionDiagnosticsDataType struct {
 }
 
 type ModelChangeStructureDataType struct {
-	ExtensionObject
-
 	Affected     NodeId
 	AffectedType NodeId
 	Verb         uint8
 }
 
 type SemanticChangeStructureDataType struct {
-	ExtensionObject
-
 	Affected     NodeId
 	AffectedType NodeId
 }
 
 type Range struct {
-	ExtensionObject
-
 	Low  float64
 	High float64
 }
 
 type EUInformation struct {
-	ExtensionObject
-
 	NamespaceUri string
 	UnitId       int32
 	DisplayName  LocalizedText
@@ -2685,22 +2359,16 @@ type EUInformation struct {
 }
 
 type ComplexNumberType struct {
-	ExtensionObject
-
 	Real      float32
 	Imaginary float32
 }
 
 type DoubleComplexNumberType struct {
-	ExtensionObject
-
 	Real      float64
 	Imaginary float64
 }
 
 type AxisInformation struct {
-	ExtensionObject
-
 	EngineeringUnits EUInformation
 	EURange          Range
 	Title            LocalizedText
@@ -2710,15 +2378,11 @@ type AxisInformation struct {
 }
 
 type XVType struct {
-	ExtensionObject
-
 	X     float64
 	Value float32
 }
 
 type ProgramDiagnosticDataType struct {
-	ExtensionObject
-
 	CreateSessionId               NodeId
 	CreateClientName              string
 	InvocationCreationTime        time.Time
@@ -2734,8 +2398,6 @@ type ProgramDiagnosticDataType struct {
 }
 
 type Annotation struct {
-	ExtensionObject
-
 	Message        string
 	UserName       string
 	AnnotationTime time.Time

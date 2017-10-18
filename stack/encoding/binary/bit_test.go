@@ -149,10 +149,7 @@ func TestBitTranscoder(t *testing.T) {
 			SubTests:    testutil.TestEncode,
 			Name:        "bitOverflow{0x3F,0x01,0x00,0x3}",
 			Unmarshaled: bitOverflow{O, I, I, 0x3F, 0x00, 0x02},
-			// FIXME: Currently bit overflow situations does not result in an
-			// error due to OPC UA Bug 3252:
-			// https://opcfoundation-onlineapplications.org/mantis/view.php?id=3252
-			Marshaled: []byte{0xFE, 0x80},
+			EncodeError: "EncoderError bitOverflow.Data1: bitCacheMarshaler: MarshalBinary: cursor position 9 > 8",
 		},
 		{
 			// Documenting current behavior: we can't distinguish between bit
