@@ -4,6 +4,8 @@ import (
 	b "encoding/binary"
 	"testing"
 	"time"
+
+	"github.com/searis/guma/internal/testutil"
 )
 
 func TestTime(t *testing.T) {
@@ -11,9 +13,9 @@ func TestTime(t *testing.T) {
 	unixEpochBytes := make([]byte, 8, 8)
 	b.LittleEndian.PutUint64(unixEpochBytes, uint64(hundredNanoSecondsToUnixEpoch))
 
-	cases := []TranscoderTest{
+	cases := []testutil.TranscoderTest{
 		{
-			SubTests:     TestEncode | TestDecode,
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
 			Name:         `1601-01-01T00:00:01.00`,
 			Unmarshaled:  time.Date(1601, 1, 1, 0, 0, 0, 0, time.UTC),
 			DecodeTarget: new(time.Time),
@@ -22,7 +24,7 @@ func TestTime(t *testing.T) {
 			},
 		},
 		{
-			SubTests:     TestEncode | TestDecode,
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
 			Name:         `1970-01-01T00:00:00.00`,
 			Unmarshaled:  time.Date(1970, 1, 1, 0, 0, 0, 0, time.UTC),
 			DecodeTarget: new(time.Time),

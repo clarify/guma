@@ -1,4 +1,4 @@
-package binary_test
+package testutil
 
 import "testing"
 

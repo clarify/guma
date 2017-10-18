@@ -3,6 +3,7 @@ package binary_test
 import (
 	"testing"
 
+	"github.com/searis/guma/internal/testutil"
 	"github.com/searis/guma/stack/uatype"
 )
 
@@ -10,9 +11,9 @@ func TestByteString(t *testing.T) {
 	type oneByteStringStruct struct {
 		Data0 uatype.ByteString
 	}
-	cases := []TranscoderTest{
+	cases := []testutil.TranscoderTest{
 		{
-			SubTests:     TestEncode | TestDecode,
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
 			Name:         `oneByteStringStruct{ByteString("foobar")}`,
 			Unmarshaled:  oneByteStringStruct{uatype.ByteString{'f', 'o', 'o', 'b', 'a', 'r'}},
 			DecodeTarget: new(oneByteStringStruct),
@@ -27,7 +28,7 @@ func TestByteString(t *testing.T) {
 			},
 		},
 		{
-			SubTests:     TestEncode | TestDecode,
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
 			Name:         `ByteString(nil)`,
 			Unmarshaled:  uatype.ByteString(nil),
 			DecodeTarget: new(uatype.ByteString),
@@ -38,7 +39,7 @@ func TestByteString(t *testing.T) {
 		{
 			// At the moment we don't distinguish between null and empty values
 			// for ByteString, so testing Encode only.
-			SubTests:     TestEncode,
+			SubTests:     testutil.TestEncode,
 			Name:         `ByteString("")`,
 			Unmarshaled:  uatype.ByteString(""),
 			DecodeTarget: new(uatype.ByteString),
@@ -47,7 +48,7 @@ func TestByteString(t *testing.T) {
 			},
 		},
 		{
-			SubTests:     TestEncode | TestDecode,
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
 			Name:         `ByteString("foobar")`,
 			Unmarshaled:  uatype.ByteString{'f', 'o', 'o', 'b', 'a', 'r'},
 			DecodeTarget: new(uatype.ByteString),

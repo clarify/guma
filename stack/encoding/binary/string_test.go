@@ -2,15 +2,17 @@ package binary_test
 
 import (
 	"testing"
+
+	"github.com/searis/guma/internal/testutil"
 )
 
 func TestString(t *testing.T) {
 	type oneStringStruct struct {
 		Data0 string
 	}
-	cases := []TranscoderTest{
+	cases := []testutil.TranscoderTest{
 		{
-			SubTests:     TestEncode | TestDecode,
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
 			Name:         `""`,
 			Unmarshaled:  "",
 			DecodeTarget: new(string),
@@ -19,14 +21,14 @@ func TestString(t *testing.T) {
 			},
 		},
 		{
-			SubTests:     TestDecode,
+			SubTests:     testutil.TestDecode,
 			Name:         "ErrNotEnoughData",
 			DecodeTarget: new(string),
 			DecodeError:  "not enough data",
 			Marshaled:    []byte{0x42},
 		},
 		{
-			SubTests:     TestEncode | TestDecode,
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
 			Name:         `"A世界"`,
 			Unmarshaled:  "A世界",
 			DecodeTarget: new(string),
@@ -42,7 +44,7 @@ func TestString(t *testing.T) {
 			},
 		},
 		{
-			SubTests:     TestEncode | TestDecode,
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
 			Name:         `oneStringStruct{"foobar"}`,
 			Unmarshaled:  oneStringStruct{"foobar"},
 			DecodeTarget: new(oneStringStruct),
@@ -57,7 +59,7 @@ func TestString(t *testing.T) {
 			},
 		},
 		{
-			SubTests:     TestEncode | TestDecode,
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
 			Name:         `["","A世界","foobar"]`,
 			Unmarshaled:  []string{"", "A世界", "foobar"},
 			DecodeTarget: newStringSlice(3),

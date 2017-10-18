@@ -2,6 +2,8 @@ package binary_test
 
 import (
 	"testing"
+
+	"github.com/searis/guma/internal/testutil"
 )
 
 func TestNumbers(t *testing.T) {
@@ -18,37 +20,37 @@ func TestNumbers(t *testing.T) {
 		F64 float64
 	}
 
-	cases := []TranscoderTest{
+	cases := []testutil.TranscoderTest{
 		{
-			SubTests:     TestEncode | TestDecode,
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
 			Name:         "uint8(0xFF)",
 			Unmarshaled:  uint8(0xFF),
 			DecodeTarget: new(uint8),
 			Marshaled:    []byte{0xFF},
 		},
 		{
-			SubTests:     TestEncode | TestDecode,
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
 			Name:         "int8(-1)",
 			Unmarshaled:  int8(-1),
 			DecodeTarget: new(int8),
 			Marshaled:    []byte{0xFF},
 		},
 		{
-			SubTests:     TestEncode | TestDecode,
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
 			Name:         "int16(0x0042)",
 			Unmarshaled:  int16(0x0042),
 			DecodeTarget: new(int16),
 			Marshaled:    []byte{0x42, 0x00},
 		},
 		{
-			SubTests:     TestDecode,
+			SubTests:     testutil.TestDecode,
 			Name:         "ErrNotEnoughData",
 			DecodeTarget: new(int16),
 			DecodeError:  "not enough data",
 			Marshaled:    []byte{0x42},
 		},
 		{
-			SubTests: TestEncode | TestDecode,
+			SubTests: testutil.TestEncode | testutil.TestDecode,
 			Name:     "allNumbers",
 			Unmarshaled: allNumbers{
 				I8:  -0x12,
@@ -77,7 +79,7 @@ func TestNumbers(t *testing.T) {
 			},
 		},
 		{
-			SubTests:     TestEncode | TestDecode,
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
 			Name:         "[]int8{1,-2,3}",
 			Unmarshaled:  []int8{1, -2, 3},
 			DecodeTarget: newInt8Slice(3),
@@ -88,7 +90,7 @@ func TestNumbers(t *testing.T) {
 			},
 		},
 		{
-			SubTests:     TestEncode | TestDecode,
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
 			Name:         "[]int16{1,-2,3}",
 			Unmarshaled:  []int16{1, -2, 3},
 			DecodeTarget: newInt16Slice(3),
@@ -99,7 +101,7 @@ func TestNumbers(t *testing.T) {
 			},
 		},
 		{
-			SubTests:     TestEncode | TestDecode,
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
 			Name:         "[]int32{1,-2,3}",
 			Unmarshaled:  []int32{1, -2, 3},
 			DecodeTarget: newInt32Slice(3),

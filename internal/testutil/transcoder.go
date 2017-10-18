@@ -1,7 +1,8 @@
-package binary_test
+package testutil
 
 import (
 	"bytes"
+
 	"reflect"
 	"testing"
 
