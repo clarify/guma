@@ -53,6 +53,7 @@ func (bs ByteString) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary reads from the head of data and sets bs. If there is not
 // enough data available, the ErrNotEnoughData error is returned.
 func (bs *ByteString) UnmarshalBinary(data []byte) error {
+
 	l := len(data)
 	if l < 4 {
 		return ErrNotEnoughData
