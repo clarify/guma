@@ -39,10 +39,7 @@ func (m *bitCacheMarshaler) MarshalBinary() ([]byte, error) {
 		return nil, nil
 	}
 	if m.cursor > 8 {
-		// FIXME: If OPC UA bug 3252 is fixed, we should be able to raise an
-		// error here.
-		// - https://opcfoundation-onlineapplications.org/mantis/view.php?id=3252
-		debugLogger.Printf("bitCacheMarshaler: MarshalBinary: ignoring cursor position > 8; cursor position is %d", m.cursor)
+		return nil, fmt.Errorf("bitCacheMarshaler: MarshalBinary: cursor position %d > 8", m.cursor)
 	}
 	ret := []byte{m.cache}
 	m.cache = 0

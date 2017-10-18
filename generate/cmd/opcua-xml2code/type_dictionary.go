@@ -168,9 +168,10 @@ type structField struct {
 	Length   int    `xml:"Length,attr,omitempty"`
 
 	// Fields used for generating struct tags:
-	LengthField string `xml:"LengthField,attr,omitempty"`
-	SwitchField string `xml:"SwitchField,attr,omitempty"`
-	SwitchValue string `xml:"SwitchValue,attr,omitempty"`
+	LengthField   string `xml:"LengthField,attr,omitempty"`
+	SwitchField   string `xml:"SwitchField,attr,omitempty"`
+	SwitchValue   string `xml:"SwitchValue,attr,omitempty"`
+	SwitchOperand string `xml:"SwitchOperand,attr,omitempty"`
 }
 
 func (f structField) Code() string {
@@ -212,6 +213,9 @@ func (f structField) GoTags() string {
 	}
 	if len(f.SwitchValue) > 0 {
 		tags = append(tags, fmt.Sprintf("switchValue=%s", f.SwitchValue))
+	}
+	if len(f.SwitchOperand) > 0 {
+		tags = append(tags, fmt.Sprintf("switchOperand=%s", f.SwitchOperand))
 	}
 
 	if len(tags) > 0 {

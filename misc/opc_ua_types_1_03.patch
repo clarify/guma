@@ -1,0 +1,711 @@
+97c97
+<     <opc:Field Name="Reserved1" TypeName="opc:Bit" Length="2" />
+---
+>     <opc:Field Name="Reserved1" TypeName="opc:Bit" Length="1" />
+141,147c141,144
+<     <opc:Field Name="TypeIdSpecified" TypeName="opc:Bit" />
+<     <opc:Field Name="BinaryBody" TypeName="opc:Bit" />
+<     <opc:Field Name="XmlBody" TypeName="opc:Bit" />
+<     <opc:Field Name="Reserved1" TypeName="opc:Bit" Length="5" />
+<     <opc:Field Name="TypeId" TypeName="ua:ExpandedNodeId" SwitchField="TypeIdSpecified" />
+<     <opc:Field Name="BodyLength" TypeName="opc:Int32" />
+<     <opc:Field Name="Body" TypeName="opc:Byte" LengthField="BodyLength" />
+---
+>     <opc:Field Name="TypeId" TypeName="ua:ExpandedNodeId" />
+>     <opc:Field Name="Encoding" TypeName="opc:Byte" />
+>     <opc:Field Name="BodyLength" TypeName="opc:Int32" SwitchField="Encoding" SwitchValue="0" SwitchOperand="NotEqual" />
+>     <opc:Field Name="Body" TypeName="opc:Byte" LengthField="BodyLength" SwitchField="Encoding" SwitchValue="0" SwitchOperand="NotEqual" />
+190c187
+<     
+---
+> 
+228c225
+<   <opc:StructuredType Name="TrustListDataType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="TrustListDataType">
+261c258
+<   <opc:StructuredType Name="Node" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="Node">
+425c422
+<   <opc:StructuredType Name="ReferenceNode" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ReferenceNode">
+432c429
+<   <opc:StructuredType Name="Argument" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="Argument">
+442c439
+<   <opc:StructuredType Name="EnumValueType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="EnumValueType">
+449c446
+<   <opc:StructuredType Name="OptionSet" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="OptionSet">
+455c452
+<   <opc:StructuredType Name="Union" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="Union">
+491c488
+<   <opc:StructuredType Name="TimeZoneDataType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="TimeZoneDataType">
+508c505
+<   <opc:StructuredType Name="ApplicationDescription" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ApplicationDescription">
+520c517
+<   <opc:StructuredType Name="RequestHeader" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="RequestHeader">
+531c528
+<   <opc:StructuredType Name="ResponseHeader" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ResponseHeader">
+542c539
+<   <opc:StructuredType Name="ServiceFault" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ServiceFault">
+547c544
+<   <opc:StructuredType Name="FindServersRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="FindServersRequest">
+557c554
+<   <opc:StructuredType Name="FindServersResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="FindServersResponse">
+564c561
+<   <opc:StructuredType Name="ServerOnNetwork" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ServerOnNetwork">
+572c569
+<   <opc:StructuredType Name="FindServersOnNetworkRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="FindServersOnNetworkRequest">
+580c577,578
+<   <opc:StructuredType Name="FindServersOnNetworkResponse" BaseType="ua:ExtensionObject">
+---
+> 
+>   <opc:StructuredType Name="FindServersOnNetworkResponse">
+607c605
+<   <opc:StructuredType Name="UserTokenPolicy" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="UserTokenPolicy">
+616c614
+<   <opc:StructuredType Name="EndpointDescription" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="EndpointDescription">
+629c627
+<   <opc:StructuredType Name="GetEndpointsRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="GetEndpointsRequest">
+639c637
+<   <opc:StructuredType Name="GetEndpointsResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="GetEndpointsResponse">
+646c644
+<   <opc:StructuredType Name="RegisteredServer" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="RegisteredServer">
+660c658
+<   <opc:StructuredType Name="RegisterServerRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="RegisterServerRequest">
+666c664
+<   <opc:StructuredType Name="RegisterServerResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="RegisterServerResponse">
+671c669
+<   <opc:StructuredType Name="DiscoveryConfiguration" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="DiscoveryConfiguration">
+682c680
+<   <opc:StructuredType Name="RegisterServer2Request" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="RegisterServer2Request">
+689c687
+<   <opc:StructuredType Name="RegisterServer2Response" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="RegisterServer2Response">
+703c701
+<   <opc:StructuredType Name="ChannelSecurityToken" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ChannelSecurityToken">
+711c709
+<   <opc:StructuredType Name="OpenSecureChannelRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="OpenSecureChannelRequest">
+721c719
+<   <opc:StructuredType Name="OpenSecureChannelResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="OpenSecureChannelResponse">
+729c727
+<   <opc:StructuredType Name="CloseSecureChannelRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="CloseSecureChannelRequest">
+734c732
+<   <opc:StructuredType Name="CloseSecureChannelResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="CloseSecureChannelResponse">
+739c737
+<   <opc:StructuredType Name="SignedSoftwareCertificate" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="SignedSoftwareCertificate">
+755c753
+<   <opc:StructuredType Name="CreateSessionRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="CreateSessionRequest">
+768c766
+<   <opc:StructuredType Name="CreateSessionResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="CreateSessionResponse">
+815c813
+<   <opc:StructuredType Name="ActivateSessionRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ActivateSessionRequest">
+827c825
+<   <opc:StructuredType Name="ActivateSessionResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ActivateSessionResponse">
+837c835
+<   <opc:StructuredType Name="CloseSessionRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="CloseSessionRequest">
+843c841
+<   <opc:StructuredType Name="CloseSessionResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="CloseSessionResponse">
+848c846
+<   <opc:StructuredType Name="CancelRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="CancelRequest">
+854c852
+<   <opc:StructuredType Name="CancelResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="CancelResponse">
+1002c1000
+<   <opc:StructuredType Name="AddNodesItem" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="AddNodesItem">
+1013c1011
+<   <opc:StructuredType Name="AddNodesResult" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="AddNodesResult">
+1019c1017
+<   <opc:StructuredType Name="AddNodesRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="AddNodesRequest">
+1026c1024
+<   <opc:StructuredType Name="AddNodesResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="AddNodesResponse">
+1035c1033
+<   <opc:StructuredType Name="AddReferencesItem" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="AddReferencesItem">
+1045c1043
+<   <opc:StructuredType Name="AddReferencesRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="AddReferencesRequest">
+1052c1050
+<   <opc:StructuredType Name="AddReferencesResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="AddReferencesResponse">
+1061c1059
+<   <opc:StructuredType Name="DeleteNodesItem" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="DeleteNodesItem">
+1067c1065
+<   <opc:StructuredType Name="DeleteNodesRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="DeleteNodesRequest">
+1074c1072
+<   <opc:StructuredType Name="DeleteNodesResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="DeleteNodesResponse">
+1083c1081
+<   <opc:StructuredType Name="DeleteReferencesItem" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="DeleteReferencesItem">
+1092c1090
+<   <opc:StructuredType Name="DeleteReferencesRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="DeleteReferencesRequest">
+1099c1097
+<   <opc:StructuredType Name="DeleteReferencesResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="DeleteReferencesResponse">
+1143c1141
+<   <opc:StructuredType Name="ViewDescription" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ViewDescription">
+1150c1148
+<   <opc:StructuredType Name="BrowseDescription" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="BrowseDescription">
+1174c1172
+<   <opc:StructuredType Name="ReferenceDescription" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ReferenceDescription">
+1189c1187
+<   <opc:StructuredType Name="BrowseResult" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="BrowseResult">
+1197c1195
+<   <opc:StructuredType Name="BrowseRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="BrowseRequest">
+1206c1204
+<   <opc:StructuredType Name="BrowseResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="BrowseResponse">
+1215c1213
+<   <opc:StructuredType Name="BrowseNextRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="BrowseNextRequest">
+1223c1221
+<   <opc:StructuredType Name="BrowseNextResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="BrowseNextResponse">
+1232c1230
+<   <opc:StructuredType Name="RelativePathElement" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="RelativePathElement">
+1240c1238
+<   <opc:StructuredType Name="RelativePath" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="RelativePath">
+1246c1244
+<   <opc:StructuredType Name="BrowsePath" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="BrowsePath">
+1252c1250
+<   <opc:StructuredType Name="BrowsePathTarget" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="BrowsePathTarget">
+1258c1256
+<   <opc:StructuredType Name="BrowsePathResult" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="BrowsePathResult">
+1265c1263
+<   <opc:StructuredType Name="TranslateBrowsePathsToNodeIdsRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="TranslateBrowsePathsToNodeIdsRequest">
+1272c1270
+<   <opc:StructuredType Name="TranslateBrowsePathsToNodeIdsResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="TranslateBrowsePathsToNodeIdsResponse">
+1281c1279
+<   <opc:StructuredType Name="RegisterNodesRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="RegisterNodesRequest">
+1288c1286
+<   <opc:StructuredType Name="RegisterNodesResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="RegisterNodesResponse">
+1295c1293
+<   <opc:StructuredType Name="UnregisterNodesRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="UnregisterNodesRequest">
+1302c1300
+<   <opc:StructuredType Name="UnregisterNodesResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="UnregisterNodesResponse">
+1323c1321
+<   <opc:StructuredType Name="EndpointConfiguration" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="EndpointConfiguration">
+1335c1333
+<   <opc:StructuredType Name="QueryDataDescription" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="QueryDataDescription">
+1341c1339
+<   <opc:StructuredType Name="NodeTypeDescription" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="NodeTypeDescription">
+1369c1367
+<   <opc:StructuredType Name="QueryDataSet" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="QueryDataSet">
+1376c1374
+<   <opc:StructuredType Name="NodeReference" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="NodeReference">
+1384c1382
+<   <opc:StructuredType Name="ContentFilterElement" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ContentFilterElement">
+1390c1388
+<   <opc:StructuredType Name="ContentFilter" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ContentFilter">
+1395c1393
+<   <opc:StructuredType Name="FilterOperand" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="FilterOperand">
+1422c1420
+<   <opc:StructuredType Name="ContentFilterElementResult" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ContentFilterElementResult">
+1430c1428
+<   <opc:StructuredType Name="ContentFilterResult" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ContentFilterResult">
+1437c1435
+<   <opc:StructuredType Name="ParsingResult" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ParsingResult">
+1445c1443
+<   <opc:StructuredType Name="QueryFirstRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="QueryFirstRequest">
+1455c1453
+<   <opc:StructuredType Name="QueryFirstResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="QueryFirstResponse">
+1467c1465
+<   <opc:StructuredType Name="QueryNextRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="QueryNextRequest">
+1473c1471
+<   <opc:StructuredType Name="QueryNextResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="QueryNextResponse">
+1488c1486
+<   <opc:StructuredType Name="ReadValueId" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ReadValueId">
+1495c1493
+<   <opc:StructuredType Name="ReadRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ReadRequest">
+1503c1501
+<   <opc:StructuredType Name="ReadResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ReadResponse">
+1511c1509
+<   <opc:StructuredType Name="HistoryReadValueId" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="HistoryReadValueId">
+1518c1516
+<   <opc:StructuredType Name="HistoryReadResult" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="HistoryReadResult">
+1524c1522
+<   <opc:StructuredType Name="HistoryReadDetails" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="HistoryReadDetails">
+1557c1555
+<   <opc:StructuredType Name="HistoryData" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="HistoryData">
+1562c1560
+<   <opc:StructuredType Name="ModificationInfo" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ModificationInfo">
+1575c1573
+<   <opc:StructuredType Name="HistoryEvent" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="HistoryEvent">
+1580c1578
+<   <opc:StructuredType Name="HistoryReadRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="HistoryReadRequest">
+1589c1587
+<   <opc:StructuredType Name="HistoryReadResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="HistoryReadResponse">
+1597c1595
+<   <opc:StructuredType Name="WriteValue" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="WriteValue">
+1604c1602
+<   <opc:StructuredType Name="WriteRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="WriteRequest">
+1610c1608
+<   <opc:StructuredType Name="WriteResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="WriteResponse">
+1618c1616
+<   <opc:StructuredType Name="HistoryUpdateDetails" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="HistoryUpdateDetails">
+1677c1675
+<   <opc:StructuredType Name="HistoryUpdateResult" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="HistoryUpdateResult">
+1685c1683
+<   <opc:StructuredType Name="HistoryUpdateRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="HistoryUpdateRequest">
+1691c1689
+<   <opc:StructuredType Name="HistoryUpdateResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="HistoryUpdateResponse">
+1699c1697
+<   <opc:StructuredType Name="CallMethodRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="CallMethodRequest">
+1706c1704
+<   <opc:StructuredType Name="CallMethodResult" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="CallMethodResult">
+1716c1714
+<   <opc:StructuredType Name="CallRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="CallRequest">
+1722c1720
+<   <opc:StructuredType Name="CallResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="CallResponse">
+1748c1746
+<   <opc:StructuredType Name="MonitoringFilter" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="MonitoringFilter">
+1763c1761
+<   <opc:StructuredType Name="AggregateConfiguration" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="AggregateConfiguration">
+1778c1776
+<   <opc:StructuredType Name="MonitoringFilterResult" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="MonitoringFilterResult">
+1795c1793
+<   <opc:StructuredType Name="MonitoringParameters" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="MonitoringParameters">
+1803c1801
+<   <opc:StructuredType Name="MonitoredItemCreateRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="MonitoredItemCreateRequest">
+1809c1807
+<   <opc:StructuredType Name="MonitoredItemCreateResult" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="MonitoredItemCreateResult">
+1817c1815
+<   <opc:StructuredType Name="CreateMonitoredItemsRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="CreateMonitoredItemsRequest">
+1825c1823
+<   <opc:StructuredType Name="CreateMonitoredItemsResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="CreateMonitoredItemsResponse">
+1833c1831
+<   <opc:StructuredType Name="MonitoredItemModifyRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="MonitoredItemModifyRequest">
+1838c1836
+<   <opc:StructuredType Name="MonitoredItemModifyResult" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="MonitoredItemModifyResult">
+1845c1843
+<   <opc:StructuredType Name="ModifyMonitoredItemsRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ModifyMonitoredItemsRequest">
+1853c1851
+<   <opc:StructuredType Name="ModifyMonitoredItemsResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ModifyMonitoredItemsResponse">
+1861c1859
+<   <opc:StructuredType Name="SetMonitoringModeRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="SetMonitoringModeRequest">
+1869c1867
+<   <opc:StructuredType Name="SetMonitoringModeResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="SetMonitoringModeResponse">
+1877c1875
+<   <opc:StructuredType Name="SetTriggeringRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="SetTriggeringRequest">
+1887c1885
+<   <opc:StructuredType Name="SetTriggeringResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="SetTriggeringResponse">
+1899c1897
+<   <opc:StructuredType Name="DeleteMonitoredItemsRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="DeleteMonitoredItemsRequest">
+1906c1904
+<   <opc:StructuredType Name="DeleteMonitoredItemsResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="DeleteMonitoredItemsResponse">
+1914c1912
+<   <opc:StructuredType Name="CreateSubscriptionRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="CreateSubscriptionRequest">
+1924c1922
+<   <opc:StructuredType Name="CreateSubscriptionResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="CreateSubscriptionResponse">
+1932c1930
+<   <opc:StructuredType Name="ModifySubscriptionRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ModifySubscriptionRequest">
+1942c1940
+<   <opc:StructuredType Name="ModifySubscriptionResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ModifySubscriptionResponse">
+1949c1947
+<   <opc:StructuredType Name="SetPublishingModeRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="SetPublishingModeRequest">
+1956c1954
+<   <opc:StructuredType Name="SetPublishingModeResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="SetPublishingModeResponse">
+1964c1962
+<   <opc:StructuredType Name="NotificationMessage" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="NotificationMessage">
+1971c1969
+<   <opc:StructuredType Name="NotificationData" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="NotificationData">
+1981c1979
+<   <opc:StructuredType Name="MonitoredItemNotification" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="MonitoredItemNotification">
+1991c1989
+<   <opc:StructuredType Name="EventFieldList" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="EventFieldList">
+1997c1995
+<   <opc:StructuredType Name="HistoryEventFieldList" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="HistoryEventFieldList">
+2007c2005
+<   <opc:StructuredType Name="SubscriptionAcknowledgement" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="SubscriptionAcknowledgement">
+2012c2010
+<   <opc:StructuredType Name="PublishRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="PublishRequest">
+2018c2016
+<   <opc:StructuredType Name="PublishResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="PublishResponse">
+2031c2029
+<   <opc:StructuredType Name="RepublishRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="RepublishRequest">
+2037c2035
+<   <opc:StructuredType Name="RepublishResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="RepublishResponse">
+2042c2040
+<   <opc:StructuredType Name="TransferResult" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="TransferResult">
+2048c2046
+<   <opc:StructuredType Name="TransferSubscriptionsRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="TransferSubscriptionsRequest">
+2055c2053
+<   <opc:StructuredType Name="TransferSubscriptionsResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="TransferSubscriptionsResponse">
+2063c2061
+<   <opc:StructuredType Name="DeleteSubscriptionsRequest" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="DeleteSubscriptionsRequest">
+2069c2067
+<   <opc:StructuredType Name="DeleteSubscriptionsResponse" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="DeleteSubscriptionsResponse">
+2077c2075
+<   <opc:StructuredType Name="BuildInfo" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="BuildInfo">
+2106c2104
+<   <opc:StructuredType Name="RedundantServerDataType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="RedundantServerDataType">
+2112c2110
+<   <opc:StructuredType Name="EndpointUrlListDataType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="EndpointUrlListDataType">
+2117c2115
+<   <opc:StructuredType Name="NetworkGroupDataType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="NetworkGroupDataType">
+2123c2121
+<   <opc:StructuredType Name="SamplingIntervalDiagnosticsDataType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="SamplingIntervalDiagnosticsDataType">
+2130c2128
+<   <opc:StructuredType Name="ServerDiagnosticsSummaryDataType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ServerDiagnosticsSummaryDataType">
+2145c2143
+<   <opc:StructuredType Name="ServerStatusDataType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ServerStatusDataType">
+2154c2152
+<   <opc:StructuredType Name="SessionDiagnosticsDataType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="SessionDiagnosticsDataType">
+2201c2199
+<   <opc:StructuredType Name="SessionSecurityDiagnosticsDataType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="SessionSecurityDiagnosticsDataType">
+2214c2212
+<   <opc:StructuredType Name="ServiceCounterDataType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ServiceCounterDataType">
+2219c2217
+<   <opc:StructuredType Name="StatusResult" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="StatusResult">
+2224c2222
+<   <opc:StructuredType Name="SubscriptionDiagnosticsDataType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="SubscriptionDiagnosticsDataType">
+2266c2264
+<   <opc:StructuredType Name="ModelChangeStructureDataType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ModelChangeStructureDataType">
+2272c2270
+<   <opc:StructuredType Name="SemanticChangeStructureDataType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="SemanticChangeStructureDataType">
+2277c2275
+<   <opc:StructuredType Name="Range" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="Range">
+2282c2280
+<   <opc:StructuredType Name="EUInformation" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="EUInformation">
+2295c2293
+<   <opc:StructuredType Name="ComplexNumberType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ComplexNumberType">
+2300c2298
+<   <opc:StructuredType Name="DoubleComplexNumberType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="DoubleComplexNumberType">
+2305c2303
+<   <opc:StructuredType Name="AxisInformation" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="AxisInformation">
+2314c2312
+<   <opc:StructuredType Name="XVType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="XVType">
+2319c2317
+<   <opc:StructuredType Name="ProgramDiagnosticDataType" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="ProgramDiagnosticDataType">
+2334c2332
+<   <opc:StructuredType Name="Annotation" BaseType="ua:ExtensionObject">
+---
+>   <opc:StructuredType Name="Annotation">
+2348c2346
+< </opc:TypeDictionary>
+\ No newline at end of file
+---
+> </opc:TypeDictionary>
