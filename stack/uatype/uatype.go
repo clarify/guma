@@ -58,7 +58,6 @@ func (bs *ByteString) UnmarshalBinary(data []byte) error {
 		return ErrNotEnoughData
 	}
 	size := int32(binary.LittleEndian.Uint32(data[0:4]))
-
 	if size == -1 || size == 0 {
 		// At least initially, we don't distinguish between null values and
 		// arrays with length 0. We could change this if it's required.
@@ -67,7 +66,7 @@ func (bs *ByteString) UnmarshalBinary(data []byte) error {
 	}
 
 	stop := int(size) + 4
-	if stop < l {
+	if stop > l {
 		return ErrNotEnoughData
 	}
 

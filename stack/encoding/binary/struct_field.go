@@ -7,12 +7,13 @@ import (
 )
 
 type structField struct {
-	Name        string
-	Value       reflect.Value
-	BitSize     byte   // read from `opcua:"bits=x"`
-	SwitchValue int64  // read from `opcua:"switchValue=x"`
-	SwitchField string // retrieved based on `opcua:"switchField=x"`
-	LengthField string // retrieved based on `opcua:"lengthField=x"`
+	Name          string
+	Value         reflect.Value
+	BitSize       byte   // read from `opcua:"bits=x"`
+	SwitchValue   int64  // read from `opcua:"switchValue=x"`
+	SwitchField   string // retrieved based on `opcua:"switchField=x"`
+	LengthField   string // retrieved based on `opcua:"lengthField=x"`
+	SwitchOperand string // retrieved based on `opcua:"switchOperand=x"`
 }
 
 func gatherFields(fields []structField, rv reflect.Value) ([]structField, error) {
@@ -46,8 +47,9 @@ func gatherFields(fields []structField, rv reflect.Value) ([]structField, error)
 
 func readStructField(parent reflect.Value, rf reflect.StructField) (*structField, error) {
 	sf := structField{
-		Name:  rf.Name,
-		Value: parent.FieldByIndex(rf.Index),
+		Name:        rf.Name,
+		Value:       parent.FieldByIndex(rf.Index),
+		SwitchValue: -1,
 	}
 	tag, ok := rf.Tag.Lookup("opcua")
 	if ok && tag != "" {
@@ -60,10 +62,11 @@ func readStructField(parent reflect.Value, rf reflect.StructField) (*structField
 
 func readTag(sf *structField, tag string) error {
 	const (
-		bitsPrefix        = "bits="
-		lengthFieldPrefix = "lengthField="
-		switchFieldPrefix = "switchField="
-		switchValuePrefix = "switchValue="
+		bitsPrefix          = "bits="
+		lengthFieldPrefix   = "lengthField="
+		switchFieldPrefix   = "switchField="
+		switchValuePrefix   = "switchValue="
+		switchOperandPrefix = "switchOperand="
 	)
 
 	for _, s := range strings.Split(tag, ",") {
@@ -83,6 +86,8 @@ func readTag(sf *structField, tag string) error {
 				return ErrInvalidTag
 			}
 			sf.SwitchValue = int64(i)
+		} else if strings.HasPrefix(s, switchOperandPrefix) {
+			sf.SwitchOperand = s[len(switchOperandPrefix):]
 		} else {
 			return ErrInvalidTag
 		}
