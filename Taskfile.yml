@@ -18,3 +18,4 @@ generate:
     - generate-tools
   cmds:
     - go generate ./stack/uatype
+    - go generate ./stack

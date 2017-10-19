@@ -44,7 +44,7 @@ func main() {
 		Channel: channel,
 	}
 
-	resp, err := client.CreateSession(&uatype.CreateSessionRequest{
+	resp, err := client.CreateSession(uatype.CreateSessionRequest{
 		RequestHeader: uatype.RequestHeader{
 			Timestamp: time.Now(),
 		},
@@ -76,7 +76,7 @@ func main() {
 
 	fmt.Println("---------- SENDING ACT SESSION ---------------")
 
-	actresp, err := client.ActivateSession(&uatype.ActivateSessionRequest{
+	actresp, err := client.ActivateSession(uatype.ActivateSessionRequest{
 		RequestHeader: uatype.RequestHeader{
 			Timestamp:           time.Now(),
 			AuthenticationToken: resp.AuthenticationToken,
@@ -87,7 +87,7 @@ func main() {
 
 	fmt.Println("---------- SENDING BROWSE ---------------")
 
-	bres, err := client.Browse(&uatype.BrowseRequest{
+	bres, err := client.Browse(uatype.BrowseRequest{
 		RequestHeader: uatype.RequestHeader{
 			Timestamp: time.Now(),
 		},
