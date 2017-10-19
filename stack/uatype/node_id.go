@@ -1,5 +1,5 @@
 //go:generate csv2code -o node_id_auto.go -csv ../../schemas/1.03/NodeIds.csv node_id_auto.go.tmpl
-//go:generate opcua-xml2code -o node_id_info_auto.go ../../schemas/1.03/Opc.Ua.NodeSet.xml
+//go:generate opcua-xml2code -t=nodes -o node_id_info_auto.go ../../schemas/1.03/Opc.Ua.NodeSet.xml
 //go:generate gofmt -s -w node_id_auto.go
 
 package uatype
