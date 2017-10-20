@@ -2,9 +2,9 @@ download-schemas:
   cmds:
     - generate/scripts/download-schemas.bash
     # Patch schemas
-    - patch schemas/1.03/Opc.Ua.Types.bsd.xml misc/opc_ua_types_1_03.patch
+    - for i in misc/patches/1.03/*.patch; do patch schemas/1.03/Opc.Ua.Types.bsd.xml $i; done
   sources:
-    - misc/opc_ua_types_1_03.patch
+    - misc/patches/1.03/*.patch
   generates:
     - schemas/1.03/*
 generate-tools:
