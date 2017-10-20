@@ -938,8 +938,6 @@ type SignedSoftwareCertificate struct {
 
 // SignatureData is a digital signature.
 type SignatureData struct {
-	ExtensionObject
-
 	Algorithm string
 	Signature ByteString
 }
