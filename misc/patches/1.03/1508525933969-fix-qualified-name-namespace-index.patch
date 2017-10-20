@@ -1,0 +1,4 @@
+109c109
+<     <opc:Field Name="NamespaceIndex" TypeName="opc:Int32" />
+---
+>     <opc:Field Name="NamespaceIndex" TypeName="opc:UInt16" />

@@ -415,7 +415,7 @@ type DiagnosticInfo struct {
 
 // QualifiedName is a string qualified with a namespace index.
 type QualifiedName struct {
-	NamespaceIndex int32
+	NamespaceIndex uint16
 	Name           string
 }
 
