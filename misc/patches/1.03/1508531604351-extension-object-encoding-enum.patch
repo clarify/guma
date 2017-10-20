@@ -1,0 +1,12 @@
+138a139,145
+>   <opc:EnumeratedType Name="ExtensionObjectEncoding" LengthInBits="8">
+>     <opc:Documentation>The possible encodings for an ExtensionObject.</opc:Documentation>
+>     <opc:EnumeratedValue Name="None" Value="0" />
+>     <opc:EnumeratedValue Name="ByteString" Value="1" />
+>     <opc:EnumeratedValue Name="XmlElement" Value="2" />
+>   </opc:EnumeratedType>
+> 
+142c149
+<     <opc:Field Name="Encoding" TypeName="opc:Byte" />
+---
+>     <opc:Field Name="Encoding" TypeName="opc:ExtensionObjectEncoding" />

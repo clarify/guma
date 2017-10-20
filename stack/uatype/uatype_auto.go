@@ -21,6 +21,15 @@ const (
 	NodeIdTypeByteString enumNodeIdType = 5
 )
 
+type enumExtensionObjectEncoding byte
+
+// The possible encodings for an ExtensionObject.
+const (
+	ExtensionObjectEncodingNone       enumExtensionObjectEncoding = 0
+	ExtensionObjectEncodingByteString enumExtensionObjectEncoding = 1
+	ExtensionObjectEncodingXmlElement enumExtensionObjectEncoding = 2
+)
+
 type enumNamingRuleType uint32
 
 const (
@@ -448,7 +457,7 @@ type DataValue struct {
 // ExtensionObject is a serialized object prefixed with its data type identifier.
 type ExtensionObject struct {
 	TypeId     ExpandedNodeId
-	Encoding   uint8
+	Encoding   enumExtensionObjectEncoding
 	BodyLength int32   `opcua:"switchField=Encoding,switchValue=0,switchOperand=NotEqual"`
 	Body       []uint8 `opcua:"lengthField=BodyLength,switchField=Encoding,switchValue=0,switchOperand=NotEqual"`
 }
