@@ -11,7 +11,7 @@ func TestMessage(t *testing.T) {
 	cases := []testutil.TranscoderTest{
 		{
 			SubTests: testutil.TestEncode | testutil.TestDecode,
-			Name:     `"HELLO MESSAGE"`,
+			Name:     `"HelloMessage"`,
 			Unmarshaled: tcp.HelloMessage{
 				Version:           tcp.DefaultVersion,
 				ReceiveBufferSize: tcp.DefaultReceiveBufferSize,

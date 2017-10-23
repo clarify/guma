@@ -5,28 +5,21 @@
 package uatype
 
 import (
-	"errors"
 	"fmt"
 )
 
-// Errors raised by unsuccessful NodeId information lookups.
-var (
-	ErrNodeIdNotNumeric = errors.New("not a numeric identifier")
-)
-
-// Uint16Identifier returns the identifier of two-byte, four-byte or numeric
-// node IDs as uint16. Calling this method on other types of node IDs will
-// result in an ErrNodeIdNotNumeric.
-func (nid NodeId) Uint16Identifier() (uint16, error) {
+// Uint returns the identifier of two-byte, four-byte or numeric node IDs as
+// uint16. Calling this method on other types of node IDs will return 0.
+func (nid NodeId) Uint() uint16 {
 	switch nid.NodeIdType {
 	case NodeIdTypeTwoByte:
-		return uint16(nid.TwoByte.Identifier), nil
+		return uint16(nid.TwoByte.Identifier)
 	case NodeIdTypeFourByte:
-		return uint16(nid.FourByte.Identifier), nil
+		return uint16(nid.FourByte.Identifier)
 	case NodeIdTypeNumeric:
-		return uint16(nid.Numeric.Identifier), nil
+		return uint16(nid.Numeric.Identifier)
 	default:
-		return 0, ErrNodeIdNotNumeric
+		return 0
 	}
 }
 
@@ -41,8 +34,8 @@ type nodeInfo struct {
 // Class will return the node class of two-byte, four-byte or numeric node IDs.
 // Other node ID types will always return NodeClassUnspecified.
 func (nid NodeId) Class() enumNodeClass {
-	id, err := nid.Uint16Identifier()
-	if err != nil {
+	id := nid.Uint()
+	if id == 0 {
 		return NodeClassUnspecified
 	}
 	return nodeInfoMap[id].class
@@ -61,7 +54,7 @@ func (nid NodeId) DisplayName() string {
 		return fmt.Sprintf("GUID:%s", nid.Guid.Identifier)
 	default:
 		// Ignore the error since a zero lookups should give the empty string.
-		id, _ := nid.Uint16Identifier()
+		id := nid.Uint()
 		if s := nodeInfoMap[id].displayName; s != "" {
 			return s
 		}
@@ -74,7 +67,7 @@ func (nid NodeId) DisplayName() string {
 // IDs or the empty string.
 func (nid NodeId) Description() string {
 	// Ignore the error since a zero lookups should give the empty string.
-	id, _ := nid.Uint16Identifier()
+	id := nid.Uint()
 	return nodeInfoMap[id].description
 }
 

@@ -8,6 +8,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/searis/guma/stack/transport"
@@ -29,7 +30,11 @@ const (
 // Conn is a tcp implementation of the transport.Conn interface.
 // If no values are provided when creating the Conn struct sane defaults will be used.
 type Conn struct {
-	conn              net.Conn
+	mSend    sync.Mutex
+	mReceive sync.Mutex
+	conn     net.Conn
+
+	// TODO: Remove public config in favour of "Dialer" type.
 	ReceiveBufferSize uint32
 	SendBufferSize    uint32
 	MaxMessageSize    uint32
@@ -38,9 +43,11 @@ type Conn struct {
 	rcvBuffer         *bytes.Buffer
 }
 
-// Connect establishes a connection to the given endpoint.
-// Parameters defined in the Conn struct will be negotiated with the server during the
-// HEL <-> ACK handshake.
+// Connect establishes a connection to the given endpoint. Parameters defined in
+// the Conn struct will be negotiated with the server during the HEL <-> ACK
+// handshake.
+//
+// TODO: Remove in favour of "Dialer" type.
 func (t *Conn) Connect(endpoint string) error {
 	//todo parse endpoint, split addr and port
 
@@ -71,21 +78,25 @@ func (t *Conn) Connect(endpoint string) error {
 
 // Send transmits a message of type mt to the connected endpoint. All bytes available in the io.Reader
 // will be transmitted before this method returns. If no secChanID is given the value 0 will be used.
-func (t *Conn) Send(mt transport.MessageType, r io.Reader, secChanID uint32) error {
+func (t *Conn) Send(mt transport.MessageType, r io.Reader) error {
 	if t.conn == nil {
 		return fmt.Errorf("not connected")
 	}
+	t.mSend.Lock()
+	defer t.mSend.Unlock()
+	return t.send(mt, r)
+}
+
+func (t *Conn) send(mt transport.MessageType, r io.Reader) error {
 	data, err := ioutil.ReadAll(r)
 	if err != nil {
 		return err
 	}
 	//Todo: implement chunking if len(data) > t.ReceiveBufferSize
-	fmt.Printf("About to send %s size: %d bytes on secID: %d\n\n", mt, len(data), secChanID)
 	header := MessageHeader{
-		Type:            mt,
-		ChunkType:       ChunkTypeFinal,
-		Size:            uint32(MessageHeaderByteSize + len(data)),
-		SecureChannelID: secChanID,
+		Type:      mt,
+		ChunkType: ChunkTypeFinal,
+		Size:      uint32(MessageHeaderByteSize + len(data)),
 	}
 	var buf bytes.Buffer
 	enc := binary.NewEncoder(&buf)
@@ -106,13 +117,20 @@ func (t *Conn) Send(mt transport.MessageType, r io.Reader, secChanID uint32) err
 	return nil
 }
 
-// Receive will receive a message from the connected endpoint and return a io.Reader where a complete
-// message can be read. If the message is divided into multiple chunks this method will receive and
-// assemble them all before returning.
+// Receive will receive a message from the connected endpoint and return a
+// io.Reader where a complete message can be read. If the message is divided
+// into multiple chunks this method will receive and assemble them all before
+// returning.
 func (t *Conn) Receive() (io.Reader, error) {
 	if t.conn == nil {
 		return nil, fmt.Errorf("not connected")
 	}
+	t.mReceive.Lock()
+	defer t.mReceive.Unlock()
+	return t.receive()
+}
+
+func (t *Conn) receive() (io.Reader, error) {
 	// Read header
 	header, err := t.readHeader()
 	if err != nil {
@@ -121,7 +139,6 @@ func (t *Conn) Receive() (io.Reader, error) {
 	fmt.Println(header)
 
 	hbuf := make([]byte, header.Size)
-	//TODO: Implement timeout
 	_, err = t.conn.Read(hbuf)
 	if err != nil && err != io.EOF {
 		return nil, err
@@ -143,7 +160,7 @@ func (t *Conn) Receive() (io.Reader, error) {
 			t.rcvBuffer = bytes.NewBuffer(hbuf)
 		} else {
 			t.rcvBuffer.Write(hbuf)
-			return t.Receive()
+			return t.receive()
 		}
 
 	}
@@ -152,6 +169,8 @@ func (t *Conn) Receive() (io.Reader, error) {
 }
 
 func (t *Conn) readHeader() (MessageHeader, error) {
+	// FIXME: If we fix binary.Decoder to only read out data as it needs it,
+	// we could slightly simplify this code by decoding directly from t.conn.
 	res := MessageHeader{}
 
 	hbuf := make([]byte, MessageHeaderByteSize)
@@ -159,12 +178,12 @@ func (t *Conn) readHeader() (MessageHeader, error) {
 	if err != nil {
 		return res, err
 	}
-
 	if n != MessageHeaderByteSize {
 		return res, fmt.Errorf("Invalid header size")
 	}
 
-	err = res.UnmarshalBinary(hbuf)
+	dec := binary.NewDecoder(bytes.NewReader(hbuf))
+	err = dec.Decode(&res)
 	if err != nil {
 		return res, err
 	}
@@ -186,7 +205,7 @@ func (t *Conn) sendHello(endpoint string) error {
 	if err != nil {
 		return err
 	}
-	t.Send(transport.MessageTypeHello, bytes.NewReader(data), 0)
+	t.send(transport.MessageTypeHello, bytes.NewReader(data))
 	return nil
 }
 

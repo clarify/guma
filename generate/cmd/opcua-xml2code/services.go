@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"log"
 	"strings"
 	"text/template"
@@ -17,25 +16,33 @@ var servicesTmlp = template.Must(template.New("services.tmpl").Parse(`
 {{if .Include}}
 func (c *Client) {{.GoName}}(req uatype.{{.GoReq}}) (*uatype.{{.GoResp}}, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
 	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: {{.NodeID}},
+		NodeID: uatype.NewFourByteNodeID(0, {{.RequestNodeID}}),
 		Body: &buf,
 	})
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.{{.GoResp}}{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case {{.ResponseNodeID}}:
+		res := &uatype.{{.GoResp}}{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case {{.FaultNodeID}}:
+		fault := uatype.{{.GoFault}}{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }{{end}}
 {{end}}`))
 
@@ -59,15 +66,35 @@ func (o operation) GoName() string {
 }
 
 func (o operation) GoReq() string {
+	// This might break for future versions of OPC UA, but works for 1.03.
+	// Instead of fetching the propper Request type from the message definition
+	// section of the XML, we simply deduce it from the input message name.
 	return strings.Replace(o.Input.Name, "Message", "Request", 1)
 }
 
 func (o operation) GoResp() string {
-	return strings.Replace(o.Input.Name, "Message", "Response", 1)
+	// This might break for future versions of OPC UA, but works for 1.03.
+	// Instead of fetching the propper Response type from the message definition
+	// section of the XML, we simply deduce it from the output message name.
+	return strings.Replace(o.Output.Name, "Message", "", 1)
 }
 
-func (o operation) NodeID() string {
-	return fmt.Sprintf("uatype.NewFourByteNodeID(0, uatype.NodeId%sRequest_Encoding_DefaultBinary)", o.Name)
+func (o operation) GoFault() string {
+	// This might break for future versions of OPC UA, but works for 1.03,
+	// where all fault message definitions uses the ServiceFault response type.
+	return "ServiceFault"
+}
+
+func (o operation) RequestNodeID() string {
+	return "uatype.NodeId" + o.Name + "Request_Encoding_DefaultBinary"
+}
+
+func (o operation) ResponseNodeID() string {
+	return "uatype.NodeId" + o.Name + "Response_Encoding_DefaultBinary"
+}
+
+func (o operation) FaultNodeID() string {
+	return "uatype.NodeIdServiceFault_Encoding_DefaultBinary"
 }
 
 func (o operation) Include() bool {

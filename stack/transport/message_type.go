@@ -38,8 +38,8 @@ func (m MessageType) MarshalBinary() ([]byte, error) {
 	return []byte(m), nil
 }
 
-// BitLength returnes the total bit size of the MessageType
-// It implements the Bitlenghter interface used for binary encoding / decoding
+// BitLength returns the total bit size of the MessageType It implements the
+// BitLenghter interface used for binary encoding / decoding
 func (m *MessageType) BitLength() int {
 	return 8 * 3
 }
