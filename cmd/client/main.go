@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
 	"time"
 
 	"github.com/davecgh/go-spew/spew"
@@ -31,12 +33,15 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	signalChan := make(chan os.Signal, 1)
+	cleanupDone := make(chan bool)
+	signal.Notify(signalChan, os.Interrupt)
 	go func() {
-		for {
-			select {
-			case err := <-ec:
-				log.Println(err)
-			}
+		for _ = range signalChan {
+			fmt.Println("\nReceived an interrupt, stopping services...\n")
+			channel.Close()
+			cleanupDone <- true
 		}
 	}()
 
@@ -81,6 +86,18 @@ func main() {
 			Timestamp:           time.Now(),
 			AuthenticationToken: resp.AuthenticationToken,
 		},
+		UserIdentityToken: uatype.ExtensionObject{
+			TypeId: uatype.ExpandedNodeId{
+				NodeIdType: uatype.NodeIdTypeFourByte,
+				FourByte: uatype.FourByteNodeId{
+					NamespaceIndex: 0,
+					Identifier:     uatype.NodeIdAnonymousIdentityToken_Encoding_DefaultBinary,
+				},
+			},
+			Encoding:   1,
+			BodyLength: 13,
+			Body:       []byte{9, 0, 0, 0, 'a', 'n', 'o', 'n', 'y', 'm', 'o', 'u', 's'},
+		},
 	})
 
 	fmt.Printf("<< Received data:\n%s", typeFmt.Sdump(actresp))
@@ -89,16 +106,105 @@ func main() {
 
 	bres, err := client.Browse(uatype.BrowseRequest{
 		RequestHeader: uatype.RequestHeader{
+			Timestamp:           time.Now(),
+			AuthenticationToken: resp.AuthenticationToken,
+		},
+		NoOfNodesToBrowse: 1,
+		View: uatype.ViewDescription{
 			Timestamp: time.Now(),
 		},
+		RequestedMaxReferencesPerNode: 10000,
 		NodesToBrowse: []uatype.BrowseDescription{
 			uatype.BrowseDescription{
-				NodeId: uatype.NewFourByteNodeID(0, 84),
+				BrowseDirection: uatype.BrowseDirectionBoth,
+				NodeId:          uatype.NewFourByteNodeID(0, 2004),
+				ResultMask:      63,
 			},
 		},
 	})
+	if err != nil {
+		fmt.Printf("<< Received data:\n%s", typeFmt.Sdump(bres))
+		log.Fatal(err)
+	}
 
-	fmt.Printf("<< Received data:\n%s", typeFmt.Sdump(bres))
+	subres, err := client.CreateSubscription(uatype.CreateSubscriptionRequest{
+		RequestHeader: uatype.RequestHeader{
+			Timestamp:           time.Now(),
+			AuthenticationToken: resp.AuthenticationToken,
+		},
+		RequestedPublishingInterval: 1000 * 10,
+		RequestedLifetimeCount:      9,
+		RequestedMaxKeepAliveCount:  3,
+		MaxNotificationsPerPublish:  0,
+		PublishingEnabled:           true,
+		Priority:                    0,
+	})
+
+	_ = subres
+
+	mon, err := client.CreateMonitoredItems(uatype.CreateMonitoredItemsRequest{
+		RequestHeader: uatype.RequestHeader{
+			Timestamp:           time.Now(),
+			AuthenticationToken: resp.AuthenticationToken,
+		},
+		SubscriptionId:    subres.SubscriptionId,
+		NoOfItemsToCreate: 1,
+		ItemsToCreate: []uatype.MonitoredItemCreateRequest{
+			uatype.MonitoredItemCreateRequest{
+				ItemToMonitor: uatype.ReadValueId{
+					NodeId:      uatype.NewFourByteNodeID(0, 2007),
+					AttributeId: 5,
+				},
+				MonitoringMode: uatype.MonitoringModeReporting,
+				//				RequestedParameters: uatype.MonitoringParameters{},
+			},
+		},
+	})
+	fmt.Printf("<< Received data:\n%s", typeFmt.Sdump(mon))
+	for i := 0; i < 4; i++ {
+		go func() {
+			req := uatype.PublishRequest{
+				RequestHeader: uatype.RequestHeader{
+					Timestamp:           time.Now(),
+					AuthenticationToken: resp.AuthenticationToken,
+				},
+				/*NoOfSubscriptionAcknowledgements: 1,
+				SubscriptionAcknowledgements: []uatype.SubscriptionAcknowledgement{
+					uatype.SubscriptionAcknowledgement{
+						SubscriptionId: subres.SubscriptionId,
+						SequenceNumber: 1,
+					},
+					},*/
+			}
+			pres, err := client.Publish(req)
+			if err != nil {
+				log.Println(err)
+			}
+
+			req.NoOfSubscriptionAcknowledgements = pres.NoOfAvailableSequenceNumbers
+			for _, seq := range pres.AvailableSequenceNumbers {
+				req.SubscriptionAcknowledgements = append(req.SubscriptionAcknowledgements, uatype.SubscriptionAcknowledgement{
+					SubscriptionId: subres.SubscriptionId,
+					SequenceNumber: seq,
+				})
+			}
+			fmt.Printf("<< Received data:\n%s", typeFmt.Sdump(pres))
+			pres, err = client.Publish(req)
+			if err != nil {
+				log.Println(err)
+			}
+			fmt.Printf("<< Received data:\n%s", typeFmt.Sdump(pres))
+		}()
+	}
+	for {
+		select {
+		case err := <-ec:
+			log.Println(err)
+		case <-cleanupDone:
+			os.Exit(-1)
+		}
+	}
+
 }
 
 var clientCertificate = []byte{
