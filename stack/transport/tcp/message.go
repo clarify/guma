@@ -59,22 +59,22 @@ func (a AckResponse) bytes() ([]byte, error) {
 
 func (a AckResponse) String() string {
 	return fmt.Sprintf(`
-		---- AckResponse ----
-		Version:		%d
-		ReceiveBufferSize:	%d
-		SendBufferSize:		%d
-		MaxMessageSize:		%d
-		MaxChunkCount		%d
+		---- AckResponse -----
+		Version:            %d
+		ReceiveBufferSize:  %d
+		SendBufferSize:     %d
+		MaxMessageSize:     %d
+		MaxChunkCount       %d
 		---- /AckResponse ----`, a.Version, a.ReceiveBufferSize, a.SendBufferSize, a.MaxMessageSize, a.MaxChunkCount)
 }
 
 func (h HelloMessage) String() string {
 	return fmt.Sprintf(`
 		---- HelloMessage ----
-		Version:		%d
-		ReceiveBufferSize:	%d
-		SendBufferSize:		%d
-		MaxMessageSize:		%d
-		MaxChunkCount		%d
-		---- /HelloMessage ----`, h.Version, h.ReceiveBufferSize, h.SendBufferSize, h.MaxMessageSize, h.MaxChunkCount)
+		Version:            %d
+		ReceiveBufferSize:  %d
+		SendBufferSize:     %d
+		MaxMessageSize:     %d
+		MaxChunkCount       %d
+		---- /HelloMessage ---`, h.Version, h.ReceiveBufferSize, h.SendBufferSize, h.MaxMessageSize, h.MaxChunkCount)
 }

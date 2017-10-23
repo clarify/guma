@@ -4,6 +4,7 @@ package stack
 
 import (
 	"bytes"
+	"fmt"
 
 	"github.com/searis/guma/stack/encoding/binary"
 	"github.com/searis/guma/stack/transport"
@@ -12,8 +13,8 @@ import (
 
 func (c *Client) CreateSession(req uatype.CreateSessionRequest) (*uatype.CreateSessionResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -24,19 +25,27 @@ func (c *Client) CreateSession(req uatype.CreateSessionRequest) (*uatype.CreateS
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.CreateSessionResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdCreateSessionResponse_Encoding_DefaultBinary:
+		res := &uatype.CreateSessionResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) ActivateSession(req uatype.ActivateSessionRequest) (*uatype.ActivateSessionResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -47,19 +56,27 @@ func (c *Client) ActivateSession(req uatype.ActivateSessionRequest) (*uatype.Act
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.ActivateSessionResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdActivateSessionResponse_Encoding_DefaultBinary:
+		res := &uatype.ActivateSessionResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) CloseSession(req uatype.CloseSessionRequest) (*uatype.CloseSessionResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -70,19 +87,27 @@ func (c *Client) CloseSession(req uatype.CloseSessionRequest) (*uatype.CloseSess
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.CloseSessionResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdCloseSessionResponse_Encoding_DefaultBinary:
+		res := &uatype.CloseSessionResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) Cancel(req uatype.CancelRequest) (*uatype.CancelResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -93,19 +118,27 @@ func (c *Client) Cancel(req uatype.CancelRequest) (*uatype.CancelResponse, error
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.CancelResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdCancelResponse_Encoding_DefaultBinary:
+		res := &uatype.CancelResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) AddNodes(req uatype.AddNodesRequest) (*uatype.AddNodesResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -116,19 +149,27 @@ func (c *Client) AddNodes(req uatype.AddNodesRequest) (*uatype.AddNodesResponse,
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.AddNodesResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdAddNodesResponse_Encoding_DefaultBinary:
+		res := &uatype.AddNodesResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) AddReferences(req uatype.AddReferencesRequest) (*uatype.AddReferencesResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -139,19 +180,27 @@ func (c *Client) AddReferences(req uatype.AddReferencesRequest) (*uatype.AddRefe
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.AddReferencesResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdAddReferencesResponse_Encoding_DefaultBinary:
+		res := &uatype.AddReferencesResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) DeleteNodes(req uatype.DeleteNodesRequest) (*uatype.DeleteNodesResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -162,19 +211,27 @@ func (c *Client) DeleteNodes(req uatype.DeleteNodesRequest) (*uatype.DeleteNodes
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.DeleteNodesResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdDeleteNodesResponse_Encoding_DefaultBinary:
+		res := &uatype.DeleteNodesResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) DeleteReferences(req uatype.DeleteReferencesRequest) (*uatype.DeleteReferencesResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -185,19 +242,27 @@ func (c *Client) DeleteReferences(req uatype.DeleteReferencesRequest) (*uatype.D
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.DeleteReferencesResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdDeleteReferencesResponse_Encoding_DefaultBinary:
+		res := &uatype.DeleteReferencesResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) Browse(req uatype.BrowseRequest) (*uatype.BrowseResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -208,19 +273,27 @@ func (c *Client) Browse(req uatype.BrowseRequest) (*uatype.BrowseResponse, error
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.BrowseResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdBrowseResponse_Encoding_DefaultBinary:
+		res := &uatype.BrowseResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) BrowseNext(req uatype.BrowseNextRequest) (*uatype.BrowseNextResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -231,19 +304,27 @@ func (c *Client) BrowseNext(req uatype.BrowseNextRequest) (*uatype.BrowseNextRes
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.BrowseNextResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdBrowseNextResponse_Encoding_DefaultBinary:
+		res := &uatype.BrowseNextResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) TranslateBrowsePathsToNodeIds(req uatype.TranslateBrowsePathsToNodeIdsRequest) (*uatype.TranslateBrowsePathsToNodeIdsResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -254,19 +335,27 @@ func (c *Client) TranslateBrowsePathsToNodeIds(req uatype.TranslateBrowsePathsTo
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.TranslateBrowsePathsToNodeIdsResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdTranslateBrowsePathsToNodeIdsResponse_Encoding_DefaultBinary:
+		res := &uatype.TranslateBrowsePathsToNodeIdsResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) RegisterNodes(req uatype.RegisterNodesRequest) (*uatype.RegisterNodesResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -277,19 +366,27 @@ func (c *Client) RegisterNodes(req uatype.RegisterNodesRequest) (*uatype.Registe
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.RegisterNodesResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdRegisterNodesResponse_Encoding_DefaultBinary:
+		res := &uatype.RegisterNodesResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) UnregisterNodes(req uatype.UnregisterNodesRequest) (*uatype.UnregisterNodesResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -300,19 +397,27 @@ func (c *Client) UnregisterNodes(req uatype.UnregisterNodesRequest) (*uatype.Unr
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.UnregisterNodesResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdUnregisterNodesResponse_Encoding_DefaultBinary:
+		res := &uatype.UnregisterNodesResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) QueryFirst(req uatype.QueryFirstRequest) (*uatype.QueryFirstResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -323,19 +428,27 @@ func (c *Client) QueryFirst(req uatype.QueryFirstRequest) (*uatype.QueryFirstRes
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.QueryFirstResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdQueryFirstResponse_Encoding_DefaultBinary:
+		res := &uatype.QueryFirstResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) QueryNext(req uatype.QueryNextRequest) (*uatype.QueryNextResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -346,19 +459,27 @@ func (c *Client) QueryNext(req uatype.QueryNextRequest) (*uatype.QueryNextRespon
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.QueryNextResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdQueryNextResponse_Encoding_DefaultBinary:
+		res := &uatype.QueryNextResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) Read(req uatype.ReadRequest) (*uatype.ReadResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -369,19 +490,27 @@ func (c *Client) Read(req uatype.ReadRequest) (*uatype.ReadResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.ReadResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdReadResponse_Encoding_DefaultBinary:
+		res := &uatype.ReadResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) HistoryRead(req uatype.HistoryReadRequest) (*uatype.HistoryReadResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -392,19 +521,27 @@ func (c *Client) HistoryRead(req uatype.HistoryReadRequest) (*uatype.HistoryRead
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.HistoryReadResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdHistoryReadResponse_Encoding_DefaultBinary:
+		res := &uatype.HistoryReadResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) Write(req uatype.WriteRequest) (*uatype.WriteResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -415,19 +552,27 @@ func (c *Client) Write(req uatype.WriteRequest) (*uatype.WriteResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.WriteResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdWriteResponse_Encoding_DefaultBinary:
+		res := &uatype.WriteResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) HistoryUpdate(req uatype.HistoryUpdateRequest) (*uatype.HistoryUpdateResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -438,19 +583,27 @@ func (c *Client) HistoryUpdate(req uatype.HistoryUpdateRequest) (*uatype.History
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.HistoryUpdateResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdHistoryUpdateResponse_Encoding_DefaultBinary:
+		res := &uatype.HistoryUpdateResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) Call(req uatype.CallRequest) (*uatype.CallResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -461,19 +614,27 @@ func (c *Client) Call(req uatype.CallRequest) (*uatype.CallResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.CallResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdCallResponse_Encoding_DefaultBinary:
+		res := &uatype.CallResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) CreateMonitoredItems(req uatype.CreateMonitoredItemsRequest) (*uatype.CreateMonitoredItemsResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -484,19 +645,27 @@ func (c *Client) CreateMonitoredItems(req uatype.CreateMonitoredItemsRequest) (*
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.CreateMonitoredItemsResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdCreateMonitoredItemsResponse_Encoding_DefaultBinary:
+		res := &uatype.CreateMonitoredItemsResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) ModifyMonitoredItems(req uatype.ModifyMonitoredItemsRequest) (*uatype.ModifyMonitoredItemsResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -507,19 +676,27 @@ func (c *Client) ModifyMonitoredItems(req uatype.ModifyMonitoredItemsRequest) (*
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.ModifyMonitoredItemsResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdModifyMonitoredItemsResponse_Encoding_DefaultBinary:
+		res := &uatype.ModifyMonitoredItemsResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) SetMonitoringMode(req uatype.SetMonitoringModeRequest) (*uatype.SetMonitoringModeResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -530,19 +707,27 @@ func (c *Client) SetMonitoringMode(req uatype.SetMonitoringModeRequest) (*uatype
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.SetMonitoringModeResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdSetMonitoringModeResponse_Encoding_DefaultBinary:
+		res := &uatype.SetMonitoringModeResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) SetTriggering(req uatype.SetTriggeringRequest) (*uatype.SetTriggeringResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -553,19 +738,27 @@ func (c *Client) SetTriggering(req uatype.SetTriggeringRequest) (*uatype.SetTrig
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.SetTriggeringResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdSetTriggeringResponse_Encoding_DefaultBinary:
+		res := &uatype.SetTriggeringResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) DeleteMonitoredItems(req uatype.DeleteMonitoredItemsRequest) (*uatype.DeleteMonitoredItemsResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -576,19 +769,27 @@ func (c *Client) DeleteMonitoredItems(req uatype.DeleteMonitoredItemsRequest) (*
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.DeleteMonitoredItemsResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdDeleteMonitoredItemsResponse_Encoding_DefaultBinary:
+		res := &uatype.DeleteMonitoredItemsResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) CreateSubscription(req uatype.CreateSubscriptionRequest) (*uatype.CreateSubscriptionResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -599,19 +800,27 @@ func (c *Client) CreateSubscription(req uatype.CreateSubscriptionRequest) (*uaty
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.CreateSubscriptionResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdCreateSubscriptionResponse_Encoding_DefaultBinary:
+		res := &uatype.CreateSubscriptionResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) ModifySubscription(req uatype.ModifySubscriptionRequest) (*uatype.ModifySubscriptionResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -622,19 +831,27 @@ func (c *Client) ModifySubscription(req uatype.ModifySubscriptionRequest) (*uaty
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.ModifySubscriptionResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdModifySubscriptionResponse_Encoding_DefaultBinary:
+		res := &uatype.ModifySubscriptionResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) SetPublishingMode(req uatype.SetPublishingModeRequest) (*uatype.SetPublishingModeResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -645,19 +862,27 @@ func (c *Client) SetPublishingMode(req uatype.SetPublishingModeRequest) (*uatype
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.SetPublishingModeResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdSetPublishingModeResponse_Encoding_DefaultBinary:
+		res := &uatype.SetPublishingModeResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) Publish(req uatype.PublishRequest) (*uatype.PublishResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -668,19 +893,27 @@ func (c *Client) Publish(req uatype.PublishRequest) (*uatype.PublishResponse, er
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.PublishResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdPublishResponse_Encoding_DefaultBinary:
+		res := &uatype.PublishResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) Republish(req uatype.RepublishRequest) (*uatype.RepublishResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -691,19 +924,27 @@ func (c *Client) Republish(req uatype.RepublishRequest) (*uatype.RepublishRespon
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.RepublishResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdRepublishResponse_Encoding_DefaultBinary:
+		res := &uatype.RepublishResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) TransferSubscriptions(req uatype.TransferSubscriptionsRequest) (*uatype.TransferSubscriptionsResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -714,19 +955,27 @@ func (c *Client) TransferSubscriptions(req uatype.TransferSubscriptionsRequest) 
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.TransferSubscriptionsResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdTransferSubscriptionsResponse_Encoding_DefaultBinary:
+		res := &uatype.TransferSubscriptionsResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) DeleteSubscriptions(req uatype.DeleteSubscriptionsRequest) (*uatype.DeleteSubscriptionsResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -737,19 +986,27 @@ func (c *Client) DeleteSubscriptions(req uatype.DeleteSubscriptionsRequest) (*ua
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.DeleteSubscriptionsResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdDeleteSubscriptionsResponse_Encoding_DefaultBinary:
+		res := &uatype.DeleteSubscriptionsResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) FindServers(req uatype.FindServersRequest) (*uatype.FindServersResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -760,19 +1017,27 @@ func (c *Client) FindServers(req uatype.FindServersRequest) (*uatype.FindServers
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.FindServersResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdFindServersResponse_Encoding_DefaultBinary:
+		res := &uatype.FindServersResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) FindServersOnNetwork(req uatype.FindServersOnNetworkRequest) (*uatype.FindServersOnNetworkResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -783,19 +1048,27 @@ func (c *Client) FindServersOnNetwork(req uatype.FindServersOnNetworkRequest) (*
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.FindServersOnNetworkResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdFindServersOnNetworkResponse_Encoding_DefaultBinary:
+		res := &uatype.FindServersOnNetworkResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) GetEndpoints(req uatype.GetEndpointsRequest) (*uatype.GetEndpointsResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -806,19 +1079,27 @@ func (c *Client) GetEndpoints(req uatype.GetEndpointsRequest) (*uatype.GetEndpoi
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.GetEndpointsResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdGetEndpointsResponse_Encoding_DefaultBinary:
+		res := &uatype.GetEndpointsResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) RegisterServer(req uatype.RegisterServerRequest) (*uatype.RegisterServerResponse, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -829,19 +1110,27 @@ func (c *Client) RegisterServer(req uatype.RegisterServerRequest) (*uatype.Regis
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.RegisterServerResponse{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdRegisterServerResponse_Encoding_DefaultBinary:
+		res := &uatype.RegisterServerResponse{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
 func (c *Client) RegisterServer2(req uatype.RegisterServer2Request) (*uatype.RegisterServer2Response, error) {
 	var buf bytes.Buffer
-	enc := binary.NewEncoder(&buf)
-	if err := enc.Encode(req); err != nil {
+
+	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
@@ -852,11 +1141,19 @@ func (c *Client) RegisterServer2(req uatype.RegisterServer2Request) (*uatype.Reg
 	if err != nil {
 		return nil, err
 	}
-
-	res := &uatype.RegisterServer2Response{}
-	if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
-		return nil, err
+	switch resp.NodeID.Uint() {
+	case uatype.NodeIdRegisterServer2Response_Encoding_DefaultBinary:
+		res := &uatype.RegisterServer2Response{}
+		if err := binary.NewDecoder(resp.Body).Decode(res); err != nil {
+			return res, err
+		}
+		return res, nil
+	case uatype.NodeIdServiceFault_Encoding_DefaultBinary:
+		fault := uatype.ServiceFault{}
+		if err := binary.NewDecoder(resp.Body).Decode(&fault); err != nil {
+			return nil, err
+		}
+		return nil, fault
 	}
-
-	return res, nil
+	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }

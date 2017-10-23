@@ -90,6 +90,9 @@ func (u *bitCacheUnmarshaler) SetBoolTarget(v *bool) {
 func (u *bitCacheUnmarshaler) UnmarshalBinary(data []byte) error {
 	// read one byte to cache if needed.
 	if u.cursor == 0 {
+		if len(data) < 1 {
+			return ErrNotEnoughData
+		}
 		u.cache = data[0]
 		u.byteRead = true
 	} else {

@@ -33,7 +33,6 @@ func (s uaString) MarshalBinary() ([]byte, error) {
 func (s *uaString) UnmarshalBinary(data []byte) error {
 	l := len(data)
 	if l < 4 {
-		// FIXME: sort out import dependency on reorg.
 		return ErrNotEnoughData
 	}
 	size := int32(binary.LittleEndian.Uint32(data[0:4]))
