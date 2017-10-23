@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"time"
 
 	"github.com/searis/guma/stack/encoding/binary"
@@ -13,40 +12,46 @@ import (
 
 // Default values for SecureChannel
 const (
-	DefaulSecurityPolicyURI string        = SecurityPolicyURINone
-	DefaultLifeTime         time.Duration = 12 * time.Hour
+	DefaultSecurityPolicyURI string        = SecurityPolicyURINone
+	DefaultLifeTime          time.Duration = 12 * time.Hour
 )
 
-// SecureChannel implements the OPC Secure Channel. This struct will use default values if no
-// user params are provided.
+// SecureChannel implements the OPC Secure Channel. This struct will use default
+// values if no user params are provided.
 type SecureChannel struct {
-	c                             Conn
+	c               Conn
+	securityTokenID uint32
+	secureChannelID uint32
+	sequenceHeader  sequenceHeader
+	errorChan       chan (error)
+	renewTimer      *time.Timer
+
+	// TODO: Remove public config in favour of "Dialer" type.
+	// TODO: add SecurityMode uatype.enumMessageSecurityMode
 	SecurityPolicyURI             string
 	SenderCertificate             uatype.ByteString
 	ReceiverCertificateThumbPrint uatype.ByteString
 	LifeTime                      time.Duration
-	securityTokenID               uint32
-	secureChannelID               uint32
-	sequenceHeader                sequenceHeader
-	errorChan                     chan (error)
-	renewTimer                    *time.Timer
-	//Todo: add SecurityMode uatype.enumMessageSecurityMode
 }
 
-// OpenSecureChannel opens a SecureChannel with default values and returns a channel ready to use.
-// The provided connection must be opened and valid before calling this method.
-// It is the callers responsibility to close the provided Conn after closing the SecureChannel.
+// OpenSecureChannel opens a SecureChannel with default values and returns a
+// channel ready to use. The provided connection must be opened and valid before
+// calling this method. It is the callers responsibility to close the provided
+// Conn after closing the SecureChannel.
 func OpenSecureChannel(c Conn, errChan chan (error)) (*SecureChannel, error) {
 	secChan := &SecureChannel{}
 	err := secChan.Open(c, errChan)
 	return secChan, err
 }
 
-// Open opens a SecureChannel with a provided connection.
-// The provided connection must be opened and valid before calling this method.
-// It is the callers responsibility to close the provided Conn after closing the SecureChannel.
-// The SecureChannel will keep the Channel open by renewing the channel on 70% elapsed lifetime. Errors during renewal
-// will be provided in the errChan.
+// Open opens a SecureChannel with a provided connection. The provided
+// connection must be opened and valid before calling this method. It is the
+// callers responsibility to close the provided Conn after closing the
+// SecureChannel. The SecureChannel will keep the Channel open by renewing the
+// channel on 70% elapsed lifetime. Errors during renewal will be provided in
+// the errChan.
+//
+// TODO: Remove in favour of "Dialer" type.
 func (s *SecureChannel) Open(c Conn, errChan chan (error)) error {
 	if c == nil {
 		return fmt.Errorf("nil conn provided")
@@ -54,7 +59,10 @@ func (s *SecureChannel) Open(c Conn, errChan chan (error)) error {
 	s.c = c
 	s.errorChan = errChan
 	msg := openSecureChannelRequestMsg{
-		SecurityHeader: asymmetricAlgorithmSecurityHeaderNone(),
+		SecurityHeader: asymmetricAlgorithmSecurityHeader{
+			SecureChannelID:   0,
+			SecurityPolicyURI: SecurityPolicyURINone,
+		},
 		SequenceHeader: s.nextSequenceHeader(),
 		TypeID:         uatype.NewFourByteNodeID(0, uatype.NodeIdOpenSecureChannelRequest_Encoding_DefaultBinary),
 		SecureChannelRequest: uatype.OpenSecureChannelRequest{
@@ -66,27 +74,24 @@ func (s *SecureChannel) Open(c Conn, errChan chan (error)) error {
 			RequestedLifetime: s.lifeTime(),
 		},
 	}
-	data, err := msg.bytes()
+	sendBuff, err := msg.encode()
 	if err != nil {
 		return err
 	}
-	err = c.Send(MessageTypeOpen, bytes.NewReader(data), 0)
+	err = c.Send(MessageTypeOpen, sendBuff)
 	if err != nil {
 		return err
 	}
 
 	fmt.Println("Lets receive")
-	rdr, err := c.Receive()
-	if err != nil {
-		return err
-	}
-	data, err = ioutil.ReadAll(rdr)
+	recvBuff, err := c.Receive()
 	if err != nil {
 		return err
 	}
 
 	resp := openSecureChannelResponseMsg{}
-	err = resp.decode(data)
+	err = resp.decode(recvBuff)
+	fmt.Printf("err")
 
 	s.secureChannelID = resp.SecureChannelResponse.SecurityToken.ChannelId
 	s.LifeTime = time.Duration(resp.SecureChannelResponse.SecurityToken.RevisedLifetime)
@@ -101,22 +106,21 @@ func (s *SecureChannel) Open(c Conn, errChan chan (error)) error {
 // Send transmits a message over the secureChannel to the connected endpoint and blocks until a valid
 // response is received.
 func (s *SecureChannel) Send(r *Request) (*Response, error) {
-	//TODO: MUtex here
-
 	msg := secureChannelMsg{
 		SecurityHeader: symmetricAlgorithmSecurityHeader{
-			TokenID: s.securityTokenID,
+			SecureChannelID: s.secureChannelID,
+			TokenID:         s.securityTokenID,
 		},
 		SequenceHeader: s.nextSequenceHeader(),
 		TypeID:         r.NodeID,
 		body:           r.Body,
 	}
-	data, err := msg.bytes()
+	sendBuff, err := msg.encode()
 	if err != nil {
 		return nil, err
 	}
 
-	if err := s.c.Send(MessageTypeMsg, bytes.NewReader(data), s.secureChannelID); err != nil {
+	if err := s.c.Send(MessageTypeMsg, sendBuff); err != nil {
 		return nil, err
 	}
 
@@ -126,7 +130,7 @@ func (s *SecureChannel) Send(r *Request) (*Response, error) {
 	}
 
 	var headBuf bytes.Buffer
-	if _, err := io.CopyN(&headBuf, resp, 16); err != nil {
+	if _, err := io.CopyN(&headBuf, resp, 20); err != nil {
 		return nil, err
 	}
 
@@ -163,14 +167,14 @@ type openSecureChannelRequestMsg struct {
 	SecureChannelRequest uatype.OpenSecureChannelRequest
 }
 
-func (o openSecureChannelRequestMsg) bytes() ([]byte, error) {
+func (msg openSecureChannelRequestMsg) encode() (io.Reader, error) {
 	var buf bytes.Buffer
 	enc := binary.NewEncoder(&buf)
-	err := enc.Encode(o)
+	err := enc.Encode(msg)
 	if err != nil {
 		return nil, err
 	}
-	return buf.Bytes(), nil
+	return &buf, nil
 }
 
 type openSecureChannelResponseMsg struct {
@@ -180,9 +184,9 @@ type openSecureChannelResponseMsg struct {
 	SecureChannelResponse uatype.OpenSecureChannelResponse
 }
 
-func (o *openSecureChannelResponseMsg) decode(data []byte) error {
-	dec := binary.NewDecoder(bytes.NewReader(data))
-	return dec.Decode(o)
+func (msg *openSecureChannelResponseMsg) decode(r io.Reader) error {
+	dec := binary.NewDecoder(r)
+	return dec.Decode(msg)
 }
 
 type secureChannelMsg struct {
@@ -192,27 +196,28 @@ type secureChannelMsg struct {
 	body           io.Reader
 }
 
-func (s secureChannelMsg) bytes() ([]byte, error) {
+func (msg secureChannelMsg) encode() (io.Reader, error) {
 	var buf bytes.Buffer
 	enc := binary.NewEncoder(&buf)
 
-	if err := enc.Encode(s); err != nil {
+	if err := enc.Encode(msg); err != nil {
 		return nil, err
 	}
 
-	if _, err := io.Copy(&buf, s.body); err != nil {
+	if _, err := io.Copy(&buf, msg.body); err != nil {
 		return nil, err
 	}
 
-	return buf.Bytes(), nil
+	return &buf, nil
 }
 
-func (s *secureChannelMsg) decodeHeader(r io.Reader) error {
+func (msg *secureChannelMsg) decodeHeader(r io.Reader) error {
 	dec := binary.NewDecoder(r)
-	return dec.Decode(s)
+	return dec.Decode(msg)
 }
 
 type asymmetricAlgorithmSecurityHeader struct {
+	SecureChannelID               uint32
 	SecurityPolicyURI             string
 	SenderCertificate             string
 	ReceiverCertificateThumbprint string
@@ -226,8 +231,9 @@ const (
 	SecurityPolicyURIBasic256Sha256 string = "http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256"
 )
 
-func asymmetricAlgorithmSecurityHeaderNone() asymmetricAlgorithmSecurityHeader {
+func asymmetricAlgorithmSecurityHeaderNone(channelID uint32) asymmetricAlgorithmSecurityHeader {
 	return asymmetricAlgorithmSecurityHeader{
+		SecureChannelID:               channelID,
 		SecurityPolicyURI:             SecurityPolicyURINone,
 		SenderCertificate:             "",
 		ReceiverCertificateThumbprint: "",
@@ -235,7 +241,8 @@ func asymmetricAlgorithmSecurityHeaderNone() asymmetricAlgorithmSecurityHeader {
 }
 
 type symmetricAlgorithmSecurityHeader struct {
-	TokenID uint32
+	SecureChannelID uint32
+	TokenID         uint32
 }
 
 type sequenceHeader struct {
@@ -249,7 +256,7 @@ func (s *SecureChannel) securityPolicyURI() string {
 	if len(s.SecurityPolicyURI) > 0 {
 		return s.SecurityPolicyURI
 	}
-	return DefaulSecurityPolicyURI
+	return DefaultSecurityPolicyURI
 }
 
 func (s *SecureChannel) lifeTime() uint32 {

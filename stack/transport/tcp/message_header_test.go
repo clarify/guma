@@ -12,19 +12,17 @@ func TestMessageHeader(t *testing.T) {
 	cases := []testutil.TranscoderTest{
 		{
 			SubTests: testutil.TestEncode | testutil.TestDecode,
-			Name:     `"HELLO MESSAGE"`,
+			Name:     `MessageHeader(Type:"HEL",ChunkType:"F",Size:58)`,
 			Unmarshaled: tcp.MessageHeader{
-				Type:            transport.MessageTypeHello,
-				ChunkType:       tcp.ChunkTypeFinal,
-				Size:            58,
-				SecureChannelID: 01,
+				Type:      transport.MessageTypeHello,
+				ChunkType: tcp.ChunkTypeFinal,
+				Size:      58,
 			},
 			DecodeTarget: new(tcp.MessageHeader),
 			Marshaled: []byte{
-				0x48, 0x45, 0x4c, // HEL
-				0x46,                   // ChunkTypeFinal (F)
+				0x48, 0x45, 0x4c, // MessageType: HEL (Hello)
+				0x46,                   // ChunkType: F (Final)
 				0x3a, 0x00, 0x00, 0x00, // Size: 58
-				0x01, 0x00, 0x00, 0x00, // SecureChannelID: 01
 			},
 		},
 	}
@@ -43,11 +41,14 @@ func TestMessageType(t *testing.T) {
 			Name:         `"HEL"`,
 			Unmarshaled:  transport.MessageTypeHello,
 			DecodeTarget: new(transport.MessageType),
-			Marshaled: []byte{
-				'H',
-				'E',
-				'L',
-			},
+			Marshaled:    []byte{'H', 'E', 'L'},
+		},
+		{
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
+			Name:         `"ACK"`,
+			Unmarshaled:  transport.MessageTypeAck,
+			DecodeTarget: new(transport.MessageType),
+			Marshaled:    []byte{'A', 'C', 'K'},
 		},
 	}
 

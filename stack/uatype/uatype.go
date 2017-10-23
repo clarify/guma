@@ -81,3 +81,8 @@ func (bs *ByteString) UnmarshalBinary(data []byte) error {
 func (bs ByteString) BitLength() int {
 	return 32 + 8*len(bs)
 }
+
+// Error implements the built-in error interface.
+func (sf ServiceFault) Error() string {
+	return StatusText(sf.ResponseHeader.ServiceResult)
+}

@@ -46,7 +46,7 @@ func main() {
 	}()
 
 	client := stack.Client{
-		Channel: channel,
+		Channel: &channel,
 	}
 
 	resp, err := client.CreateSession(uatype.CreateSessionRequest{
@@ -68,7 +68,7 @@ func main() {
 		},
 		ServerUri:               "serverURI",
 		EndpointUrl:             "endPointURI",
-		SessionName:             "SssioName",
+		SessionName:             "SessionName",
 		ClientNonce:             uatype.ByteString(make([]byte, 32)),
 		ClientCertificate:       uatype.ByteString(clientCertificate),
 		RequestedSessionTimeout: 1200000,
@@ -101,9 +101,11 @@ func main() {
 	})
 
 	fmt.Printf("<< Received data:\n%s", typeFmt.Sdump(actresp))
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	fmt.Println("---------- SENDING BROWSE ---------------")
-
 	bres, err := client.Browse(uatype.BrowseRequest{
 		RequestHeader: uatype.RequestHeader{
 			Timestamp:           time.Now(),
@@ -127,6 +129,7 @@ func main() {
 		log.Fatal(err)
 	}
 
+	fmt.Println("---------- SENDING CREATE SUBSCRIBE ---------------")
 	subres, err := client.CreateSubscription(uatype.CreateSubscriptionRequest{
 		RequestHeader: uatype.RequestHeader{
 			Timestamp:           time.Now(),
@@ -139,8 +142,10 @@ func main() {
 		PublishingEnabled:           true,
 		Priority:                    0,
 	})
-
-	_ = subres
+	if err != nil {
+		fmt.Printf("<< Received data:\n%s", typeFmt.Sdump(subres))
+		log.Fatal(err)
+	}
 
 	mon, err := client.CreateMonitoredItems(uatype.CreateMonitoredItemsRequest{
 		RequestHeader: uatype.RequestHeader{
