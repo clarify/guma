@@ -4,341 +4,332 @@ package uatype
 
 import "time"
 
-type enumNodeIdType byte
+type NodeIdType byte
 
 // BitLength returns the number of bits that should be used for encoding this value.
-func (t enumNodeIdType) BitLength() int {
+func (t NodeIdType) BitLength() int {
 	return 6
 }
 
 // The possible encodings for a NodeId value.
 const (
-	NodeIdTypeTwoByte    enumNodeIdType = 0
-	NodeIdTypeFourByte   enumNodeIdType = 1
-	NodeIdTypeNumeric    enumNodeIdType = 2
-	NodeIdTypeString     enumNodeIdType = 3
-	NodeIdTypeGuid       enumNodeIdType = 4
-	NodeIdTypeByteString enumNodeIdType = 5
+	NodeIdTypeTwoByte    NodeIdType = 0
+	NodeIdTypeFourByte   NodeIdType = 1
+	NodeIdTypeNumeric    NodeIdType = 2
+	NodeIdTypeString     NodeIdType = 3
+	NodeIdTypeGuid       NodeIdType = 4
+	NodeIdTypeByteString NodeIdType = 5
 )
 
-type enumExtensionObjectEncoding byte
-
-// The possible encodings for an ExtensionObject.
-const (
-	ExtensionObjectEncodingNone       enumExtensionObjectEncoding = 0
-	ExtensionObjectEncodingByteString enumExtensionObjectEncoding = 1
-	ExtensionObjectEncodingXmlElement enumExtensionObjectEncoding = 2
-)
-
-type enumNamingRuleType uint32
+type NamingRuleType uint32
 
 const (
-	NamingRuleTypeMandatory  enumNamingRuleType = 1
-	NamingRuleTypeOptional   enumNamingRuleType = 2
-	NamingRuleTypeConstraint enumNamingRuleType = 3
+	NamingRuleTypeMandatory  NamingRuleType = 1
+	NamingRuleTypeOptional   NamingRuleType = 2
+	NamingRuleTypeConstraint NamingRuleType = 3
 )
 
-type enumOpenFileMode uint32
+type OpenFileMode uint32
 
 const (
-	OpenFileModeRead          enumOpenFileMode = 1
-	OpenFileModeWrite         enumOpenFileMode = 2
-	OpenFileModeEraseExisting enumOpenFileMode = 4
-	OpenFileModeAppend        enumOpenFileMode = 8
+	OpenFileModeRead          OpenFileMode = 1
+	OpenFileModeWrite         OpenFileMode = 2
+	OpenFileModeEraseExisting OpenFileMode = 4
+	OpenFileModeAppend        OpenFileMode = 8
 )
 
-type enumTrustListMasks uint32
+type TrustListMasks uint32
 
 const (
-	TrustListMasksNone                enumTrustListMasks = 0
-	TrustListMasksTrustedCertificates enumTrustListMasks = 1
-	TrustListMasksTrustedCrls         enumTrustListMasks = 2
-	TrustListMasksIssuerCertificates  enumTrustListMasks = 4
-	TrustListMasksIssuerCrls          enumTrustListMasks = 8
-	TrustListMasksAll                 enumTrustListMasks = 15
+	TrustListMasksNone                TrustListMasks = 0
+	TrustListMasksTrustedCertificates TrustListMasks = 1
+	TrustListMasksTrustedCrls         TrustListMasks = 2
+	TrustListMasksIssuerCertificates  TrustListMasks = 4
+	TrustListMasksIssuerCrls          TrustListMasks = 8
+	TrustListMasksAll                 TrustListMasks = 15
 )
 
-type enumIdType uint32
+type IdType uint32
 
 // The type of identifier used in a node id.
 const (
-	IdTypeNumeric enumIdType = 0
-	IdTypeString  enumIdType = 1
-	IdTypeGuid    enumIdType = 2
-	IdTypeOpaque  enumIdType = 3
+	IdTypeNumeric IdType = 0
+	IdTypeString  IdType = 1
+	IdTypeGuid    IdType = 2
+	IdTypeOpaque  IdType = 3
 )
 
-type enumNodeClass uint32
+type NodeClass uint32
 
 // A mask specifying the class of the node.
 const (
-	NodeClassUnspecified   enumNodeClass = 0
-	NodeClassObject        enumNodeClass = 1
-	NodeClassVariable      enumNodeClass = 2
-	NodeClassMethod        enumNodeClass = 4
-	NodeClassObjectType    enumNodeClass = 8
-	NodeClassVariableType  enumNodeClass = 16
-	NodeClassReferenceType enumNodeClass = 32
-	NodeClassDataType      enumNodeClass = 64
-	NodeClassView          enumNodeClass = 128
+	NodeClassUnspecified   NodeClass = 0
+	NodeClassObject        NodeClass = 1
+	NodeClassVariable      NodeClass = 2
+	NodeClassMethod        NodeClass = 4
+	NodeClassObjectType    NodeClass = 8
+	NodeClassVariableType  NodeClass = 16
+	NodeClassReferenceType NodeClass = 32
+	NodeClassDataType      NodeClass = 64
+	NodeClassView          NodeClass = 128
 )
 
-type enumApplicationType uint32
+type ApplicationType uint32
 
 // The types of applications.
 const (
-	ApplicationTypeServer          enumApplicationType = 0
-	ApplicationTypeClient          enumApplicationType = 1
-	ApplicationTypeClientAndServer enumApplicationType = 2
-	ApplicationTypeDiscoveryServer enumApplicationType = 3
+	ApplicationTypeServer          ApplicationType = 0
+	ApplicationTypeClient          ApplicationType = 1
+	ApplicationTypeClientAndServer ApplicationType = 2
+	ApplicationTypeDiscoveryServer ApplicationType = 3
 )
 
-type enumMessageSecurityMode uint32
+type MessageSecurityMode uint32
 
 // The type of security to use on a message.
 const (
-	MessageSecurityModeInvalid        enumMessageSecurityMode = 0
-	MessageSecurityModeNone           enumMessageSecurityMode = 1
-	MessageSecurityModeSign           enumMessageSecurityMode = 2
-	MessageSecurityModeSignAndEncrypt enumMessageSecurityMode = 3
+	MessageSecurityModeInvalid        MessageSecurityMode = 0
+	MessageSecurityModeNone           MessageSecurityMode = 1
+	MessageSecurityModeSign           MessageSecurityMode = 2
+	MessageSecurityModeSignAndEncrypt MessageSecurityMode = 3
 )
 
-type enumUserTokenType uint32
+type UserTokenType uint32
 
 // The possible user token types.
 const (
-	UserTokenTypeAnonymous   enumUserTokenType = 0
-	UserTokenTypeUserName    enumUserTokenType = 1
-	UserTokenTypeCertificate enumUserTokenType = 2
-	UserTokenTypeIssuedToken enumUserTokenType = 3
+	UserTokenTypeAnonymous   UserTokenType = 0
+	UserTokenTypeUserName    UserTokenType = 1
+	UserTokenTypeCertificate UserTokenType = 2
+	UserTokenTypeIssuedToken UserTokenType = 3
 )
 
-type enumSecurityTokenRequestType uint32
+type SecurityTokenRequestType uint32
 
 // Indicates whether a token if being created or renewed.
 const (
-	SecurityTokenRequestTypeIssue enumSecurityTokenRequestType = 0
-	SecurityTokenRequestTypeRenew enumSecurityTokenRequestType = 1
+	SecurityTokenRequestTypeIssue SecurityTokenRequestType = 0
+	SecurityTokenRequestTypeRenew SecurityTokenRequestType = 1
 )
 
-type enumNodeAttributesMask uint32
+type NodeAttributesMask uint32
 
 // The bits used to specify default attributes for a new node.
 const (
-	NodeAttributesMaskNone                    enumNodeAttributesMask = 0
-	NodeAttributesMaskAccessLevel             enumNodeAttributesMask = 1
-	NodeAttributesMaskArrayDimensions         enumNodeAttributesMask = 2
-	NodeAttributesMaskBrowseName              enumNodeAttributesMask = 4
-	NodeAttributesMaskContainsNoLoops         enumNodeAttributesMask = 8
-	NodeAttributesMaskDataType                enumNodeAttributesMask = 16
-	NodeAttributesMaskDescription             enumNodeAttributesMask = 32
-	NodeAttributesMaskDisplayName             enumNodeAttributesMask = 64
-	NodeAttributesMaskEventNotifier           enumNodeAttributesMask = 128
-	NodeAttributesMaskExecutable              enumNodeAttributesMask = 256
-	NodeAttributesMaskHistorizing             enumNodeAttributesMask = 512
-	NodeAttributesMaskInverseName             enumNodeAttributesMask = 1024
-	NodeAttributesMaskIsAbstract              enumNodeAttributesMask = 2048
-	NodeAttributesMaskMinimumSamplingInterval enumNodeAttributesMask = 4096
-	NodeAttributesMaskNodeClass               enumNodeAttributesMask = 8192
-	NodeAttributesMaskNodeId                  enumNodeAttributesMask = 16384
-	NodeAttributesMaskSymmetric               enumNodeAttributesMask = 32768
-	NodeAttributesMaskUserAccessLevel         enumNodeAttributesMask = 65536
-	NodeAttributesMaskUserExecutable          enumNodeAttributesMask = 131072
-	NodeAttributesMaskUserWriteMask           enumNodeAttributesMask = 262144
-	NodeAttributesMaskValueRank               enumNodeAttributesMask = 524288
-	NodeAttributesMaskWriteMask               enumNodeAttributesMask = 1048576
-	NodeAttributesMaskValue                   enumNodeAttributesMask = 2097152
-	NodeAttributesMaskAll                     enumNodeAttributesMask = 4194303
-	NodeAttributesMaskBaseNode                enumNodeAttributesMask = 1335396
-	NodeAttributesMaskObject                  enumNodeAttributesMask = 1335524
-	NodeAttributesMaskObjectTypeOrDataType    enumNodeAttributesMask = 1337444
-	NodeAttributesMaskVariable                enumNodeAttributesMask = 4026999
-	NodeAttributesMaskVariableType            enumNodeAttributesMask = 3958902
-	NodeAttributesMaskMethod                  enumNodeAttributesMask = 1466724
-	NodeAttributesMaskReferenceType           enumNodeAttributesMask = 1371236
-	NodeAttributesMaskView                    enumNodeAttributesMask = 1335532
+	NodeAttributesMaskNone                    NodeAttributesMask = 0
+	NodeAttributesMaskAccessLevel             NodeAttributesMask = 1
+	NodeAttributesMaskArrayDimensions         NodeAttributesMask = 2
+	NodeAttributesMaskBrowseName              NodeAttributesMask = 4
+	NodeAttributesMaskContainsNoLoops         NodeAttributesMask = 8
+	NodeAttributesMaskDataType                NodeAttributesMask = 16
+	NodeAttributesMaskDescription             NodeAttributesMask = 32
+	NodeAttributesMaskDisplayName             NodeAttributesMask = 64
+	NodeAttributesMaskEventNotifier           NodeAttributesMask = 128
+	NodeAttributesMaskExecutable              NodeAttributesMask = 256
+	NodeAttributesMaskHistorizing             NodeAttributesMask = 512
+	NodeAttributesMaskInverseName             NodeAttributesMask = 1024
+	NodeAttributesMaskIsAbstract              NodeAttributesMask = 2048
+	NodeAttributesMaskMinimumSamplingInterval NodeAttributesMask = 4096
+	NodeAttributesMaskNodeClass               NodeAttributesMask = 8192
+	NodeAttributesMaskNodeId                  NodeAttributesMask = 16384
+	NodeAttributesMaskSymmetric               NodeAttributesMask = 32768
+	NodeAttributesMaskUserAccessLevel         NodeAttributesMask = 65536
+	NodeAttributesMaskUserExecutable          NodeAttributesMask = 131072
+	NodeAttributesMaskUserWriteMask           NodeAttributesMask = 262144
+	NodeAttributesMaskValueRank               NodeAttributesMask = 524288
+	NodeAttributesMaskWriteMask               NodeAttributesMask = 1048576
+	NodeAttributesMaskValue                   NodeAttributesMask = 2097152
+	NodeAttributesMaskAll                     NodeAttributesMask = 4194303
+	NodeAttributesMaskBaseNode                NodeAttributesMask = 1335396
+	NodeAttributesMaskObject                  NodeAttributesMask = 1335524
+	NodeAttributesMaskObjectTypeOrDataType    NodeAttributesMask = 1337444
+	NodeAttributesMaskVariable                NodeAttributesMask = 4026999
+	NodeAttributesMaskVariableType            NodeAttributesMask = 3958902
+	NodeAttributesMaskMethod                  NodeAttributesMask = 1466724
+	NodeAttributesMaskReferenceType           NodeAttributesMask = 1371236
+	NodeAttributesMaskView                    NodeAttributesMask = 1335532
 )
 
-type enumAttributeWriteMask uint32
+type AttributeWriteMask uint32
 
 // Define bits used to indicate which attributes are writable.
 const (
-	AttributeWriteMaskNone                    enumAttributeWriteMask = 0
-	AttributeWriteMaskAccessLevel             enumAttributeWriteMask = 1
-	AttributeWriteMaskArrayDimensions         enumAttributeWriteMask = 2
-	AttributeWriteMaskBrowseName              enumAttributeWriteMask = 4
-	AttributeWriteMaskContainsNoLoops         enumAttributeWriteMask = 8
-	AttributeWriteMaskDataType                enumAttributeWriteMask = 16
-	AttributeWriteMaskDescription             enumAttributeWriteMask = 32
-	AttributeWriteMaskDisplayName             enumAttributeWriteMask = 64
-	AttributeWriteMaskEventNotifier           enumAttributeWriteMask = 128
-	AttributeWriteMaskExecutable              enumAttributeWriteMask = 256
-	AttributeWriteMaskHistorizing             enumAttributeWriteMask = 512
-	AttributeWriteMaskInverseName             enumAttributeWriteMask = 1024
-	AttributeWriteMaskIsAbstract              enumAttributeWriteMask = 2048
-	AttributeWriteMaskMinimumSamplingInterval enumAttributeWriteMask = 4096
-	AttributeWriteMaskNodeClass               enumAttributeWriteMask = 8192
-	AttributeWriteMaskNodeId                  enumAttributeWriteMask = 16384
-	AttributeWriteMaskSymmetric               enumAttributeWriteMask = 32768
-	AttributeWriteMaskUserAccessLevel         enumAttributeWriteMask = 65536
-	AttributeWriteMaskUserExecutable          enumAttributeWriteMask = 131072
-	AttributeWriteMaskUserWriteMask           enumAttributeWriteMask = 262144
-	AttributeWriteMaskValueRank               enumAttributeWriteMask = 524288
-	AttributeWriteMaskWriteMask               enumAttributeWriteMask = 1048576
-	AttributeWriteMaskValueForVariableType    enumAttributeWriteMask = 2097152
+	AttributeWriteMaskNone                    AttributeWriteMask = 0
+	AttributeWriteMaskAccessLevel             AttributeWriteMask = 1
+	AttributeWriteMaskArrayDimensions         AttributeWriteMask = 2
+	AttributeWriteMaskBrowseName              AttributeWriteMask = 4
+	AttributeWriteMaskContainsNoLoops         AttributeWriteMask = 8
+	AttributeWriteMaskDataType                AttributeWriteMask = 16
+	AttributeWriteMaskDescription             AttributeWriteMask = 32
+	AttributeWriteMaskDisplayName             AttributeWriteMask = 64
+	AttributeWriteMaskEventNotifier           AttributeWriteMask = 128
+	AttributeWriteMaskExecutable              AttributeWriteMask = 256
+	AttributeWriteMaskHistorizing             AttributeWriteMask = 512
+	AttributeWriteMaskInverseName             AttributeWriteMask = 1024
+	AttributeWriteMaskIsAbstract              AttributeWriteMask = 2048
+	AttributeWriteMaskMinimumSamplingInterval AttributeWriteMask = 4096
+	AttributeWriteMaskNodeClass               AttributeWriteMask = 8192
+	AttributeWriteMaskNodeId                  AttributeWriteMask = 16384
+	AttributeWriteMaskSymmetric               AttributeWriteMask = 32768
+	AttributeWriteMaskUserAccessLevel         AttributeWriteMask = 65536
+	AttributeWriteMaskUserExecutable          AttributeWriteMask = 131072
+	AttributeWriteMaskUserWriteMask           AttributeWriteMask = 262144
+	AttributeWriteMaskValueRank               AttributeWriteMask = 524288
+	AttributeWriteMaskWriteMask               AttributeWriteMask = 1048576
+	AttributeWriteMaskValueForVariableType    AttributeWriteMask = 2097152
 )
 
-type enumBrowseDirection uint32
+type BrowseDirection uint32
 
 // The directions of the references to return.
 const (
-	BrowseDirectionForward enumBrowseDirection = 0
-	BrowseDirectionInverse enumBrowseDirection = 1
-	BrowseDirectionBoth    enumBrowseDirection = 2
-	BrowseDirectionInvalid enumBrowseDirection = 3
+	BrowseDirectionForward BrowseDirection = 0
+	BrowseDirectionInverse BrowseDirection = 1
+	BrowseDirectionBoth    BrowseDirection = 2
+	BrowseDirectionInvalid BrowseDirection = 3
 )
 
-type enumBrowseResultMask uint32
+type BrowseResultMask uint32
 
 // A bit mask which specifies what should be returned in a browse response.
 const (
-	BrowseResultMaskNone              enumBrowseResultMask = 0
-	BrowseResultMaskReferenceTypeId   enumBrowseResultMask = 1
-	BrowseResultMaskIsForward         enumBrowseResultMask = 2
-	BrowseResultMaskNodeClass         enumBrowseResultMask = 4
-	BrowseResultMaskBrowseName        enumBrowseResultMask = 8
-	BrowseResultMaskDisplayName       enumBrowseResultMask = 16
-	BrowseResultMaskTypeDefinition    enumBrowseResultMask = 32
-	BrowseResultMaskAll               enumBrowseResultMask = 63
-	BrowseResultMaskReferenceTypeInfo enumBrowseResultMask = 3
-	BrowseResultMaskTargetInfo        enumBrowseResultMask = 60
+	BrowseResultMaskNone              BrowseResultMask = 0
+	BrowseResultMaskReferenceTypeId   BrowseResultMask = 1
+	BrowseResultMaskIsForward         BrowseResultMask = 2
+	BrowseResultMaskNodeClass         BrowseResultMask = 4
+	BrowseResultMaskBrowseName        BrowseResultMask = 8
+	BrowseResultMaskDisplayName       BrowseResultMask = 16
+	BrowseResultMaskTypeDefinition    BrowseResultMask = 32
+	BrowseResultMaskAll               BrowseResultMask = 63
+	BrowseResultMaskReferenceTypeInfo BrowseResultMask = 3
+	BrowseResultMaskTargetInfo        BrowseResultMask = 60
 )
 
-type enumFilterOperator uint32
+type FilterOperator uint32
 
 const (
-	FilterOperatorEquals             enumFilterOperator = 0
-	FilterOperatorIsNull             enumFilterOperator = 1
-	FilterOperatorGreaterThan        enumFilterOperator = 2
-	FilterOperatorLessThan           enumFilterOperator = 3
-	FilterOperatorGreaterThanOrEqual enumFilterOperator = 4
-	FilterOperatorLessThanOrEqual    enumFilterOperator = 5
-	FilterOperatorLike               enumFilterOperator = 6
-	FilterOperatorNot                enumFilterOperator = 7
-	FilterOperatorBetween            enumFilterOperator = 8
-	FilterOperatorInList             enumFilterOperator = 9
-	FilterOperatorAnd                enumFilterOperator = 10
-	FilterOperatorOr                 enumFilterOperator = 11
-	FilterOperatorCast               enumFilterOperator = 12
-	FilterOperatorInView             enumFilterOperator = 13
-	FilterOperatorOfType             enumFilterOperator = 14
-	FilterOperatorRelatedTo          enumFilterOperator = 15
-	FilterOperatorBitwiseAnd         enumFilterOperator = 16
-	FilterOperatorBitwiseOr          enumFilterOperator = 17
+	FilterOperatorEquals             FilterOperator = 0
+	FilterOperatorIsNull             FilterOperator = 1
+	FilterOperatorGreaterThan        FilterOperator = 2
+	FilterOperatorLessThan           FilterOperator = 3
+	FilterOperatorGreaterThanOrEqual FilterOperator = 4
+	FilterOperatorLessThanOrEqual    FilterOperator = 5
+	FilterOperatorLike               FilterOperator = 6
+	FilterOperatorNot                FilterOperator = 7
+	FilterOperatorBetween            FilterOperator = 8
+	FilterOperatorInList             FilterOperator = 9
+	FilterOperatorAnd                FilterOperator = 10
+	FilterOperatorOr                 FilterOperator = 11
+	FilterOperatorCast               FilterOperator = 12
+	FilterOperatorInView             FilterOperator = 13
+	FilterOperatorOfType             FilterOperator = 14
+	FilterOperatorRelatedTo          FilterOperator = 15
+	FilterOperatorBitwiseAnd         FilterOperator = 16
+	FilterOperatorBitwiseOr          FilterOperator = 17
 )
 
-type enumTimestampsToReturn uint32
+type TimestampsToReturn uint32
 
 const (
-	TimestampsToReturnSource  enumTimestampsToReturn = 0
-	TimestampsToReturnServer  enumTimestampsToReturn = 1
-	TimestampsToReturnBoth    enumTimestampsToReturn = 2
-	TimestampsToReturnNeither enumTimestampsToReturn = 3
-	TimestampsToReturnInvalid enumTimestampsToReturn = 4
+	TimestampsToReturnSource  TimestampsToReturn = 0
+	TimestampsToReturnServer  TimestampsToReturn = 1
+	TimestampsToReturnBoth    TimestampsToReturn = 2
+	TimestampsToReturnNeither TimestampsToReturn = 3
+	TimestampsToReturnInvalid TimestampsToReturn = 4
 )
 
-type enumHistoryUpdateType uint32
+type HistoryUpdateType uint32
 
 const (
-	HistoryUpdateTypeInsert  enumHistoryUpdateType = 1
-	HistoryUpdateTypeReplace enumHistoryUpdateType = 2
-	HistoryUpdateTypeUpdate  enumHistoryUpdateType = 3
-	HistoryUpdateTypeDelete  enumHistoryUpdateType = 4
+	HistoryUpdateTypeInsert  HistoryUpdateType = 1
+	HistoryUpdateTypeReplace HistoryUpdateType = 2
+	HistoryUpdateTypeUpdate  HistoryUpdateType = 3
+	HistoryUpdateTypeDelete  HistoryUpdateType = 4
 )
 
-type enumPerformUpdateType uint32
+type PerformUpdateType uint32
 
 const (
-	PerformUpdateTypeInsert  enumPerformUpdateType = 1
-	PerformUpdateTypeReplace enumPerformUpdateType = 2
-	PerformUpdateTypeUpdate  enumPerformUpdateType = 3
-	PerformUpdateTypeRemove  enumPerformUpdateType = 4
+	PerformUpdateTypeInsert  PerformUpdateType = 1
+	PerformUpdateTypeReplace PerformUpdateType = 2
+	PerformUpdateTypeUpdate  PerformUpdateType = 3
+	PerformUpdateTypeRemove  PerformUpdateType = 4
 )
 
-type enumMonitoringMode uint32
+type MonitoringMode uint32
 
 const (
-	MonitoringModeDisabled  enumMonitoringMode = 0
-	MonitoringModeSampling  enumMonitoringMode = 1
-	MonitoringModeReporting enumMonitoringMode = 2
+	MonitoringModeDisabled  MonitoringMode = 0
+	MonitoringModeSampling  MonitoringMode = 1
+	MonitoringModeReporting MonitoringMode = 2
 )
 
-type enumDataChangeTrigger uint32
+type DataChangeTrigger uint32
 
 const (
-	DataChangeTriggerStatus               enumDataChangeTrigger = 0
-	DataChangeTriggerStatusValue          enumDataChangeTrigger = 1
-	DataChangeTriggerStatusValueTimestamp enumDataChangeTrigger = 2
+	DataChangeTriggerStatus               DataChangeTrigger = 0
+	DataChangeTriggerStatusValue          DataChangeTrigger = 1
+	DataChangeTriggerStatusValueTimestamp DataChangeTrigger = 2
 )
 
-type enumDeadbandType uint32
+type DeadbandType uint32
 
 const (
-	DeadbandTypeNone     enumDeadbandType = 0
-	DeadbandTypeAbsolute enumDeadbandType = 1
-	DeadbandTypePercent  enumDeadbandType = 2
+	DeadbandTypeNone     DeadbandType = 0
+	DeadbandTypeAbsolute DeadbandType = 1
+	DeadbandTypePercent  DeadbandType = 2
 )
 
-type enumRedundancySupport uint32
+type RedundancySupport uint32
 
 const (
-	RedundancySupportNone           enumRedundancySupport = 0
-	RedundancySupportCold           enumRedundancySupport = 1
-	RedundancySupportWarm           enumRedundancySupport = 2
-	RedundancySupportHot            enumRedundancySupport = 3
-	RedundancySupportTransparent    enumRedundancySupport = 4
-	RedundancySupportHotAndMirrored enumRedundancySupport = 5
+	RedundancySupportNone           RedundancySupport = 0
+	RedundancySupportCold           RedundancySupport = 1
+	RedundancySupportWarm           RedundancySupport = 2
+	RedundancySupportHot            RedundancySupport = 3
+	RedundancySupportTransparent    RedundancySupport = 4
+	RedundancySupportHotAndMirrored RedundancySupport = 5
 )
 
-type enumServerState uint32
+type ServerState uint32
 
 const (
-	ServerStateRunning            enumServerState = 0
-	ServerStateFailed             enumServerState = 1
-	ServerStateNoConfiguration    enumServerState = 2
-	ServerStateSuspended          enumServerState = 3
-	ServerStateShutdown           enumServerState = 4
-	ServerStateTest               enumServerState = 5
-	ServerStateCommunicationFault enumServerState = 6
-	ServerStateUnknown            enumServerState = 7
+	ServerStateRunning            ServerState = 0
+	ServerStateFailed             ServerState = 1
+	ServerStateNoConfiguration    ServerState = 2
+	ServerStateSuspended          ServerState = 3
+	ServerStateShutdown           ServerState = 4
+	ServerStateTest               ServerState = 5
+	ServerStateCommunicationFault ServerState = 6
+	ServerStateUnknown            ServerState = 7
 )
 
-type enumModelChangeStructureVerbMask uint32
+type ModelChangeStructureVerbMask uint32
 
 const (
-	ModelChangeStructureVerbMaskNodeAdded        enumModelChangeStructureVerbMask = 1
-	ModelChangeStructureVerbMaskNodeDeleted      enumModelChangeStructureVerbMask = 2
-	ModelChangeStructureVerbMaskReferenceAdded   enumModelChangeStructureVerbMask = 4
-	ModelChangeStructureVerbMaskReferenceDeleted enumModelChangeStructureVerbMask = 8
-	ModelChangeStructureVerbMaskDataTypeChanged  enumModelChangeStructureVerbMask = 16
+	ModelChangeStructureVerbMaskNodeAdded        ModelChangeStructureVerbMask = 1
+	ModelChangeStructureVerbMaskNodeDeleted      ModelChangeStructureVerbMask = 2
+	ModelChangeStructureVerbMaskReferenceAdded   ModelChangeStructureVerbMask = 4
+	ModelChangeStructureVerbMaskReferenceDeleted ModelChangeStructureVerbMask = 8
+	ModelChangeStructureVerbMaskDataTypeChanged  ModelChangeStructureVerbMask = 16
 )
 
-type enumAxisScaleEnumeration uint32
+type AxisScaleEnumeration uint32
 
 const (
-	AxisScaleEnumerationLinear enumAxisScaleEnumeration = 0
-	AxisScaleEnumerationLog    enumAxisScaleEnumeration = 1
-	AxisScaleEnumerationLn     enumAxisScaleEnumeration = 2
+	AxisScaleEnumerationLinear AxisScaleEnumeration = 0
+	AxisScaleEnumerationLog    AxisScaleEnumeration = 1
+	AxisScaleEnumerationLn     AxisScaleEnumeration = 2
 )
 
-type enumExceptionDeviationFormat uint32
+type ExceptionDeviationFormat uint32
 
 const (
-	ExceptionDeviationFormatAbsoluteValue    enumExceptionDeviationFormat = 0
-	ExceptionDeviationFormatPercentOfValue   enumExceptionDeviationFormat = 1
-	ExceptionDeviationFormatPercentOfRange   enumExceptionDeviationFormat = 2
-	ExceptionDeviationFormatPercentOfEURange enumExceptionDeviationFormat = 3
-	ExceptionDeviationFormatUnknown          enumExceptionDeviationFormat = 4
+	ExceptionDeviationFormatAbsoluteValue    ExceptionDeviationFormat = 0
+	ExceptionDeviationFormatPercentOfValue   ExceptionDeviationFormat = 1
+	ExceptionDeviationFormatPercentOfRange   ExceptionDeviationFormat = 2
+	ExceptionDeviationFormatPercentOfEURange ExceptionDeviationFormat = 3
+	ExceptionDeviationFormatUnknown          ExceptionDeviationFormat = 4
 )
 
 // XmlElement is an XML element encoded as a UTF-8 string.
@@ -378,7 +369,7 @@ type ByteStringNodeId struct {
 
 // NodeId is an identifier for a node in a UA server address space.
 type NodeId struct {
-	NodeIdType enumNodeIdType
+	NodeIdType NodeIdType
 	Reserved1  byte             `opcua:"bits=2"`
 	TwoByte    TwoByteNodeId    `opcua:"switchField=NodeIdType,switchValue=0"`
 	FourByte   FourByteNodeId   `opcua:"switchField=NodeIdType,switchValue=1"`
@@ -390,7 +381,7 @@ type NodeId struct {
 
 // ExpandedNodeId is an identifier for a node in a UA server address space qualified with a complete namespace string.
 type ExpandedNodeId struct {
-	NodeIdType            enumNodeIdType
+	NodeIdType            NodeIdType
 	ServerIndexSpecified  Bit
 	NamespaceURISpecified Bit
 	TwoByte               TwoByteNodeId    `opcua:"switchField=NodeIdType,switchValue=0"`
@@ -418,7 +409,7 @@ type DiagnosticInfo struct {
 	Locale                       int32           `opcua:"switchField=LocaleSpecified"`
 	LocalizedText                int32           `opcua:"switchField=LocalizedTextSpecified"`
 	AdditionalInfo               string          `opcua:"switchField=AdditionalInfoSpecified"`
-	InnerStatusCode              enumStatusCode  `opcua:"switchField=InnerStatusCodeSpecified"`
+	InnerStatusCode              StatusCode      `opcua:"switchField=InnerStatusCodeSpecified"`
 	InnerDiagnosticInfo          *DiagnosticInfo `opcua:"switchField=InnerDiagnosticInfoSpecified"`
 }
 
@@ -445,19 +436,19 @@ type DataValue struct {
 	SourcePicosecondsSpecified Bit
 	ServerTimestampSpecified   Bit
 	ServerPicosecondsSpecified Bit
-	Reserved1                  byte           `opcua:"bits=2"`
-	Value                      Variant        `opcua:"switchField=ValueSpecified"`
-	StatusCode                 enumStatusCode `opcua:"switchField=StatusCodeSpecified"`
-	SourceTimestamp            time.Time      `opcua:"switchField=SourceTimestampSpecified"`
-	SourcePicoseconds          uint16         `opcua:"switchField=SourcePicosecondsSpecified"`
-	ServerTimestamp            time.Time      `opcua:"switchField=ServerTimestampSpecified"`
-	ServerPicoseconds          uint16         `opcua:"switchField=ServerPicosecondsSpecified"`
+	Reserved1                  byte       `opcua:"bits=2"`
+	Value                      Variant    `opcua:"switchField=ValueSpecified"`
+	StatusCode                 StatusCode `opcua:"switchField=StatusCodeSpecified"`
+	SourceTimestamp            time.Time  `opcua:"switchField=SourceTimestampSpecified"`
+	SourcePicoseconds          uint16     `opcua:"switchField=SourcePicosecondsSpecified"`
+	ServerTimestamp            time.Time  `opcua:"switchField=ServerTimestampSpecified"`
+	ServerPicoseconds          uint16     `opcua:"switchField=ServerPicosecondsSpecified"`
 }
 
 // ExtensionObject is a serialized object prefixed with its data type identifier.
 type ExtensionObject struct {
 	TypeId     ExpandedNodeId
-	Encoding   enumExtensionObjectEncoding
+	Encoding   uint8
 	BodyLength int32   `opcua:"switchField=Encoding,switchValue=0,switchOperand=NotEqual"`
 	Body       []uint8 `opcua:"lengthField=BodyLength,switchField=Encoding,switchValue=0,switchOperand=NotEqual"`
 }
@@ -486,7 +477,7 @@ type Variant struct {
 	XmlElement               []XmlElement      `opcua:"lengthField=ArrayLength,switchField=VariantType,switchValue=16"`
 	NodeId                   []NodeId          `opcua:"lengthField=ArrayLength,switchField=VariantType,switchValue=17"`
 	ExpandedNodeId           []ExpandedNodeId  `opcua:"lengthField=ArrayLength,switchField=VariantType,switchValue=18"`
-	StatusCode               []enumStatusCode  `opcua:"lengthField=ArrayLength,switchField=VariantType,switchValue=19"`
+	StatusCode               []StatusCode      `opcua:"lengthField=ArrayLength,switchField=VariantType,switchValue=19"`
 	QualifiedName            []QualifiedName   `opcua:"lengthField=ArrayLength,switchField=VariantType,switchValue=20"`
 	LocalizedText            []LocalizedText   `opcua:"lengthField=ArrayLength,switchField=VariantType,switchValue=21"`
 	ExtensionObject          []ExtensionObject `opcua:"lengthField=ArrayLength,switchField=VariantType,switchValue=22"`
@@ -512,7 +503,7 @@ type TrustListDataType struct {
 // Node specifies the attributes which belong to all nodes.
 type Node struct {
 	NodeId         NodeId
-	NodeClass      enumNodeClass
+	NodeClass      NodeClass
 	BrowseName     QualifiedName
 	DisplayName    LocalizedText
 	Description    LocalizedText
@@ -526,7 +517,7 @@ type InstanceNode struct {
 	Node
 
 	NodeId         NodeId
-	NodeClass      enumNodeClass
+	NodeClass      NodeClass
 	BrowseName     QualifiedName
 	DisplayName    LocalizedText
 	Description    LocalizedText
@@ -540,7 +531,7 @@ type TypeNode struct {
 	Node
 
 	NodeId         NodeId
-	NodeClass      enumNodeClass
+	NodeClass      NodeClass
 	BrowseName     QualifiedName
 	DisplayName    LocalizedText
 	Description    LocalizedText
@@ -555,7 +546,7 @@ type ObjectNode struct {
 	InstanceNode
 
 	NodeId         NodeId
-	NodeClass      enumNodeClass
+	NodeClass      NodeClass
 	BrowseName     QualifiedName
 	DisplayName    LocalizedText
 	Description    LocalizedText
@@ -571,7 +562,7 @@ type ObjectTypeNode struct {
 	TypeNode
 
 	NodeId         NodeId
-	NodeClass      enumNodeClass
+	NodeClass      NodeClass
 	BrowseName     QualifiedName
 	DisplayName    LocalizedText
 	Description    LocalizedText
@@ -587,7 +578,7 @@ type VariableNode struct {
 	InstanceNode
 
 	NodeId                  NodeId
-	NodeClass               enumNodeClass
+	NodeClass               NodeClass
 	BrowseName              QualifiedName
 	DisplayName             LocalizedText
 	Description             LocalizedText
@@ -611,7 +602,7 @@ type VariableTypeNode struct {
 	TypeNode
 
 	NodeId              NodeId
-	NodeClass           enumNodeClass
+	NodeClass           NodeClass
 	BrowseName          QualifiedName
 	DisplayName         LocalizedText
 	Description         LocalizedText
@@ -632,7 +623,7 @@ type ReferenceTypeNode struct {
 	TypeNode
 
 	NodeId         NodeId
-	NodeClass      enumNodeClass
+	NodeClass      NodeClass
 	BrowseName     QualifiedName
 	DisplayName    LocalizedText
 	Description    LocalizedText
@@ -650,7 +641,7 @@ type MethodNode struct {
 	InstanceNode
 
 	NodeId         NodeId
-	NodeClass      enumNodeClass
+	NodeClass      NodeClass
 	BrowseName     QualifiedName
 	DisplayName    LocalizedText
 	Description    LocalizedText
@@ -666,7 +657,7 @@ type ViewNode struct {
 	InstanceNode
 
 	NodeId          NodeId
-	NodeClass       enumNodeClass
+	NodeClass       NodeClass
 	BrowseName      QualifiedName
 	DisplayName     LocalizedText
 	Description     LocalizedText
@@ -682,7 +673,7 @@ type DataTypeNode struct {
 	TypeNode
 
 	NodeId         NodeId
-	NodeClass      enumNodeClass
+	NodeClass      NodeClass
 	BrowseName     QualifiedName
 	DisplayName    LocalizedText
 	Description    LocalizedText
@@ -737,7 +728,7 @@ type ApplicationDescription struct {
 	ApplicationUri      string
 	ProductUri          string
 	ApplicationName     LocalizedText
-	ApplicationType     enumApplicationType
+	ApplicationType     ApplicationType
 	GatewayServerUri    string
 	DiscoveryProfileUri string
 	NoOfDiscoveryUrls   int32
@@ -759,7 +750,7 @@ type RequestHeader struct {
 type ResponseHeader struct {
 	Timestamp          time.Time
 	RequestHandle      uint32
-	ServiceResult      enumStatusCode
+	ServiceResult      StatusCode
 	ServiceDiagnostics *DiagnosticInfo
 	NoOfStringTable    int32
 	StringTable        []string `opcua:"lengthField=NoOfStringTable"`
@@ -814,7 +805,7 @@ type FindServersOnNetworkResponse struct {
 // UserTokenPolicy describes a user token that can be used with a server.
 type UserTokenPolicy struct {
 	PolicyId          string
-	TokenType         enumUserTokenType
+	TokenType         UserTokenType
 	IssuedTokenType   string
 	IssuerEndpointUrl string
 	SecurityPolicyUri string
@@ -825,7 +816,7 @@ type EndpointDescription struct {
 	EndpointUrl            string
 	Server                 ApplicationDescription
 	ServerCertificate      ByteString
-	SecurityMode           enumMessageSecurityMode
+	SecurityMode           MessageSecurityMode
 	SecurityPolicyUri      string
 	NoOfUserIdentityTokens int32
 	UserIdentityTokens     []UserTokenPolicy `opcua:"lengthField=NoOfUserIdentityTokens"`
@@ -856,7 +847,7 @@ type RegisteredServer struct {
 	ProductUri        string
 	NoOfServerNames   int32
 	ServerNames       []LocalizedText `opcua:"lengthField=NoOfServerNames"`
-	ServerType        enumApplicationType
+	ServerType        ApplicationType
 	GatewayServerUri  string
 	NoOfDiscoveryUrls int32
 	DiscoveryUrls     []string `opcua:"lengthField=NoOfDiscoveryUrls"`
@@ -898,7 +889,7 @@ type RegisterServer2Request struct {
 type RegisterServer2Response struct {
 	ResponseHeader           ResponseHeader
 	NoOfConfigurationResults int32
-	ConfigurationResults     []enumStatusCode `opcua:"lengthField=NoOfConfigurationResults"`
+	ConfigurationResults     []StatusCode `opcua:"lengthField=NoOfConfigurationResults"`
 	NoOfDiagnosticInfos      int32
 	DiagnosticInfos          []DiagnosticInfo `opcua:"lengthField=NoOfDiagnosticInfos"`
 }
@@ -915,8 +906,8 @@ type ChannelSecurityToken struct {
 type OpenSecureChannelRequest struct {
 	RequestHeader         RequestHeader
 	ClientProtocolVersion uint32
-	RequestType           enumSecurityTokenRequestType
-	SecurityMode          enumMessageSecurityMode
+	RequestType           SecurityTokenRequestType
+	SecurityMode          MessageSecurityMode
 	ClientNonce           ByteString
 	RequestedLifetime     uint32
 }
@@ -1038,7 +1029,7 @@ type ActivateSessionResponse struct {
 	ResponseHeader      ResponseHeader
 	ServerNonce         ByteString
 	NoOfResults         int32
-	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
+	Results             []StatusCode `opcua:"lengthField=NoOfResults"`
 	NoOfDiagnosticInfos int32
 	DiagnosticInfos     []DiagnosticInfo `opcua:"lengthField=NoOfDiagnosticInfos"`
 }
@@ -1196,14 +1187,14 @@ type AddNodesItem struct {
 	ReferenceTypeId    NodeId
 	RequestedNewNodeId ExpandedNodeId
 	BrowseName         QualifiedName
-	NodeClass          enumNodeClass
+	NodeClass          NodeClass
 	NodeAttributes     ExtensionObject
 	TypeDefinition     ExpandedNodeId
 }
 
 // AddNodesResult is a result of an add node operation.
 type AddNodesResult struct {
-	StatusCode  enumStatusCode
+	StatusCode  StatusCode
 	AddedNodeId NodeId
 }
 
@@ -1230,7 +1221,7 @@ type AddReferencesItem struct {
 	IsForward       bool
 	TargetServerUri string
 	TargetNodeId    ExpandedNodeId
-	TargetNodeClass enumNodeClass
+	TargetNodeClass NodeClass
 }
 
 // AddReferencesRequest adds one or more references to the server address space.
@@ -1244,7 +1235,7 @@ type AddReferencesRequest struct {
 type AddReferencesResponse struct {
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
-	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
+	Results             []StatusCode `opcua:"lengthField=NoOfResults"`
 	NoOfDiagnosticInfos int32
 	DiagnosticInfos     []DiagnosticInfo `opcua:"lengthField=NoOfDiagnosticInfos"`
 }
@@ -1266,7 +1257,7 @@ type DeleteNodesRequest struct {
 type DeleteNodesResponse struct {
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
-	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
+	Results             []StatusCode `opcua:"lengthField=NoOfResults"`
 	NoOfDiagnosticInfos int32
 	DiagnosticInfos     []DiagnosticInfo `opcua:"lengthField=NoOfDiagnosticInfos"`
 }
@@ -1291,7 +1282,7 @@ type DeleteReferencesRequest struct {
 type DeleteReferencesResponse struct {
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
-	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
+	Results             []StatusCode `opcua:"lengthField=NoOfResults"`
 	NoOfDiagnosticInfos int32
 	DiagnosticInfos     []DiagnosticInfo `opcua:"lengthField=NoOfDiagnosticInfos"`
 }
@@ -1306,7 +1297,7 @@ type ViewDescription struct {
 // BrowseDescription is a request to browse the the references from a node.
 type BrowseDescription struct {
 	NodeId          NodeId
-	BrowseDirection enumBrowseDirection
+	BrowseDirection BrowseDirection
 	ReferenceTypeId NodeId
 	IncludeSubtypes bool
 	NodeClassMask   uint32
@@ -1320,13 +1311,13 @@ type ReferenceDescription struct {
 	NodeId          ExpandedNodeId
 	BrowseName      QualifiedName
 	DisplayName     LocalizedText
-	NodeClass       enumNodeClass
+	NodeClass       NodeClass
 	TypeDefinition  ExpandedNodeId
 }
 
 // BrowseResult the result of a browse operation.
 type BrowseResult struct {
-	StatusCode        enumStatusCode
+	StatusCode        StatusCode
 	ContinuationPoint ByteString
 	NoOfReferences    int32
 	References        []ReferenceDescription `opcua:"lengthField=NoOfReferences"`
@@ -1395,7 +1386,7 @@ type BrowsePathTarget struct {
 
 // BrowsePathResult the result of a translate opearation.
 type BrowsePathResult struct {
-	StatusCode  enumStatusCode
+	StatusCode  StatusCode
 	NoOfTargets int32
 	Targets     []BrowsePathTarget `opcua:"lengthField=NoOfTargets"`
 }
@@ -1483,7 +1474,7 @@ type NodeReference struct {
 }
 
 type ContentFilterElement struct {
-	FilterOperator     enumFilterOperator
+	FilterOperator     FilterOperator
 	NoOfFilterOperands int32
 	FilterOperands     []ExtensionObject `opcua:"lengthField=NoOfFilterOperands"`
 }
@@ -1529,9 +1520,9 @@ type SimpleAttributeOperand struct {
 }
 
 type ContentFilterElementResult struct {
-	StatusCode                 enumStatusCode
+	StatusCode                 StatusCode
 	NoOfOperandStatusCodes     int32
-	OperandStatusCodes         []enumStatusCode `opcua:"lengthField=NoOfOperandStatusCodes"`
+	OperandStatusCodes         []StatusCode `opcua:"lengthField=NoOfOperandStatusCodes"`
 	NoOfOperandDiagnosticInfos int32
 	OperandDiagnosticInfos     []DiagnosticInfo `opcua:"lengthField=NoOfOperandDiagnosticInfos"`
 }
@@ -1544,9 +1535,9 @@ type ContentFilterResult struct {
 }
 
 type ParsingResult struct {
-	StatusCode              enumStatusCode
+	StatusCode              StatusCode
 	NoOfDataStatusCodes     int32
-	DataStatusCodes         []enumStatusCode `opcua:"lengthField=NoOfDataStatusCodes"`
+	DataStatusCodes         []StatusCode `opcua:"lengthField=NoOfDataStatusCodes"`
 	NoOfDataDiagnosticInfos int32
 	DataDiagnosticInfos     []DiagnosticInfo `opcua:"lengthField=NoOfDataDiagnosticInfos"`
 }
@@ -1596,7 +1587,7 @@ type ReadValueId struct {
 type ReadRequest struct {
 	RequestHeader      RequestHeader
 	MaxAge             float64
-	TimestampsToReturn enumTimestampsToReturn
+	TimestampsToReturn TimestampsToReturn
 	NoOfNodesToRead    int32
 	NodesToRead        []ReadValueId `opcua:"lengthField=NoOfNodesToRead"`
 }
@@ -1617,7 +1608,7 @@ type HistoryReadValueId struct {
 }
 
 type HistoryReadResult struct {
-	StatusCode        enumStatusCode
+	StatusCode        StatusCode
 	ContinuationPoint ByteString
 	HistoryData       ExtensionObject
 }
@@ -1670,7 +1661,7 @@ type HistoryData struct {
 
 type ModificationInfo struct {
 	ModificationTime time.Time
-	UpdateType       enumHistoryUpdateType
+	UpdateType       HistoryUpdateType
 	UserName         string
 }
 
@@ -1691,7 +1682,7 @@ type HistoryEvent struct {
 type HistoryReadRequest struct {
 	RequestHeader             RequestHeader
 	HistoryReadDetails        ExtensionObject
-	TimestampsToReturn        enumTimestampsToReturn
+	TimestampsToReturn        TimestampsToReturn
 	ReleaseContinuationPoints bool
 	NoOfNodesToRead           int32
 	NodesToRead               []HistoryReadValueId `opcua:"lengthField=NoOfNodesToRead"`
@@ -1721,7 +1712,7 @@ type WriteRequest struct {
 type WriteResponse struct {
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
-	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
+	Results             []StatusCode `opcua:"lengthField=NoOfResults"`
 	NoOfDiagnosticInfos int32
 	DiagnosticInfos     []DiagnosticInfo `opcua:"lengthField=NoOfDiagnosticInfos"`
 }
@@ -1734,7 +1725,7 @@ type UpdateDataDetails struct {
 	HistoryUpdateDetails
 
 	NodeId               NodeId
-	PerformInsertReplace enumPerformUpdateType
+	PerformInsertReplace PerformUpdateType
 	NoOfUpdateValues     int32
 	UpdateValues         []DataValue `opcua:"lengthField=NoOfUpdateValues"`
 }
@@ -1743,7 +1734,7 @@ type UpdateStructureDataDetails struct {
 	HistoryUpdateDetails
 
 	NodeId               NodeId
-	PerformInsertReplace enumPerformUpdateType
+	PerformInsertReplace PerformUpdateType
 	NoOfUpdateValues     int32
 	UpdateValues         []DataValue `opcua:"lengthField=NoOfUpdateValues"`
 }
@@ -1752,7 +1743,7 @@ type UpdateEventDetails struct {
 	HistoryUpdateDetails
 
 	NodeId               NodeId
-	PerformInsertReplace enumPerformUpdateType
+	PerformInsertReplace PerformUpdateType
 	Filter               EventFilter
 	NoOfEventData        int32
 	EventData            []HistoryEventFieldList `opcua:"lengthField=NoOfEventData"`
@@ -1784,9 +1775,9 @@ type DeleteEventDetails struct {
 }
 
 type HistoryUpdateResult struct {
-	StatusCode           enumStatusCode
+	StatusCode           StatusCode
 	NoOfOperationResults int32
-	OperationResults     []enumStatusCode `opcua:"lengthField=NoOfOperationResults"`
+	OperationResults     []StatusCode `opcua:"lengthField=NoOfOperationResults"`
 	NoOfDiagnosticInfos  int32
 	DiagnosticInfos      []DiagnosticInfo `opcua:"lengthField=NoOfDiagnosticInfos"`
 }
@@ -1813,9 +1804,9 @@ type CallMethodRequest struct {
 }
 
 type CallMethodResult struct {
-	StatusCode                       enumStatusCode
+	StatusCode                       StatusCode
 	NoOfInputArgumentResults         int32
-	InputArgumentResults             []enumStatusCode `opcua:"lengthField=NoOfInputArgumentResults"`
+	InputArgumentResults             []StatusCode `opcua:"lengthField=NoOfInputArgumentResults"`
 	NoOfInputArgumentDiagnosticInfos int32
 	InputArgumentDiagnosticInfos     []DiagnosticInfo `opcua:"lengthField=NoOfInputArgumentDiagnosticInfos"`
 	NoOfOutputArguments              int32
@@ -1842,7 +1833,7 @@ type MonitoringFilter struct {
 type DataChangeFilter struct {
 	MonitoringFilter
 
-	Trigger       enumDataChangeTrigger
+	Trigger       DataChangeTrigger
 	DeadbandType  uint32
 	DeadbandValue float64
 }
@@ -1879,7 +1870,7 @@ type EventFilterResult struct {
 	MonitoringFilterResult
 
 	NoOfSelectClauseResults         int32
-	SelectClauseResults             []enumStatusCode `opcua:"lengthField=NoOfSelectClauseResults"`
+	SelectClauseResults             []StatusCode `opcua:"lengthField=NoOfSelectClauseResults"`
 	NoOfSelectClauseDiagnosticInfos int32
 	SelectClauseDiagnosticInfos     []DiagnosticInfo `opcua:"lengthField=NoOfSelectClauseDiagnosticInfos"`
 	WhereClauseResult               ContentFilterResult
@@ -1903,12 +1894,12 @@ type MonitoringParameters struct {
 
 type MonitoredItemCreateRequest struct {
 	ItemToMonitor       ReadValueId
-	MonitoringMode      enumMonitoringMode
+	MonitoringMode      MonitoringMode
 	RequestedParameters MonitoringParameters
 }
 
 type MonitoredItemCreateResult struct {
-	StatusCode              enumStatusCode
+	StatusCode              StatusCode
 	MonitoredItemId         uint32
 	RevisedSamplingInterval float64
 	RevisedQueueSize        uint32
@@ -1918,7 +1909,7 @@ type MonitoredItemCreateResult struct {
 type CreateMonitoredItemsRequest struct {
 	RequestHeader      RequestHeader
 	SubscriptionId     uint32
-	TimestampsToReturn enumTimestampsToReturn
+	TimestampsToReturn TimestampsToReturn
 	NoOfItemsToCreate  int32
 	ItemsToCreate      []MonitoredItemCreateRequest `opcua:"lengthField=NoOfItemsToCreate"`
 }
@@ -1937,7 +1928,7 @@ type MonitoredItemModifyRequest struct {
 }
 
 type MonitoredItemModifyResult struct {
-	StatusCode              enumStatusCode
+	StatusCode              StatusCode
 	RevisedSamplingInterval float64
 	RevisedQueueSize        uint32
 	FilterResult            ExtensionObject
@@ -1946,7 +1937,7 @@ type MonitoredItemModifyResult struct {
 type ModifyMonitoredItemsRequest struct {
 	RequestHeader      RequestHeader
 	SubscriptionId     uint32
-	TimestampsToReturn enumTimestampsToReturn
+	TimestampsToReturn TimestampsToReturn
 	NoOfItemsToModify  int32
 	ItemsToModify      []MonitoredItemModifyRequest `opcua:"lengthField=NoOfItemsToModify"`
 }
@@ -1962,7 +1953,7 @@ type ModifyMonitoredItemsResponse struct {
 type SetMonitoringModeRequest struct {
 	RequestHeader        RequestHeader
 	SubscriptionId       uint32
-	MonitoringMode       enumMonitoringMode
+	MonitoringMode       MonitoringMode
 	NoOfMonitoredItemIds int32
 	MonitoredItemIds     []uint32 `opcua:"lengthField=NoOfMonitoredItemIds"`
 }
@@ -1970,7 +1961,7 @@ type SetMonitoringModeRequest struct {
 type SetMonitoringModeResponse struct {
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
-	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
+	Results             []StatusCode `opcua:"lengthField=NoOfResults"`
 	NoOfDiagnosticInfos int32
 	DiagnosticInfos     []DiagnosticInfo `opcua:"lengthField=NoOfDiagnosticInfos"`
 }
@@ -1988,11 +1979,11 @@ type SetTriggeringRequest struct {
 type SetTriggeringResponse struct {
 	ResponseHeader            ResponseHeader
 	NoOfAddResults            int32
-	AddResults                []enumStatusCode `opcua:"lengthField=NoOfAddResults"`
+	AddResults                []StatusCode `opcua:"lengthField=NoOfAddResults"`
 	NoOfAddDiagnosticInfos    int32
 	AddDiagnosticInfos        []DiagnosticInfo `opcua:"lengthField=NoOfAddDiagnosticInfos"`
 	NoOfRemoveResults         int32
-	RemoveResults             []enumStatusCode `opcua:"lengthField=NoOfRemoveResults"`
+	RemoveResults             []StatusCode `opcua:"lengthField=NoOfRemoveResults"`
 	NoOfRemoveDiagnosticInfos int32
 	RemoveDiagnosticInfos     []DiagnosticInfo `opcua:"lengthField=NoOfRemoveDiagnosticInfos"`
 }
@@ -2007,7 +1998,7 @@ type DeleteMonitoredItemsRequest struct {
 type DeleteMonitoredItemsResponse struct {
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
-	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
+	Results             []StatusCode `opcua:"lengthField=NoOfResults"`
 	NoOfDiagnosticInfos int32
 	DiagnosticInfos     []DiagnosticInfo `opcua:"lengthField=NoOfDiagnosticInfos"`
 }
@@ -2057,7 +2048,7 @@ type SetPublishingModeRequest struct {
 type SetPublishingModeResponse struct {
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
-	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
+	Results             []StatusCode `opcua:"lengthField=NoOfResults"`
 	NoOfDiagnosticInfos int32
 	DiagnosticInfos     []DiagnosticInfo `opcua:"lengthField=NoOfDiagnosticInfos"`
 }
@@ -2107,7 +2098,7 @@ type HistoryEventFieldList struct {
 type StatusChangeNotification struct {
 	NotificationData
 
-	Status         enumStatusCode
+	Status         StatusCode
 	DiagnosticInfo *DiagnosticInfo
 }
 
@@ -2130,7 +2121,7 @@ type PublishResponse struct {
 	MoreNotifications            bool
 	NotificationMessage          NotificationMessage
 	NoOfResults                  int32
-	Results                      []enumStatusCode `opcua:"lengthField=NoOfResults"`
+	Results                      []StatusCode `opcua:"lengthField=NoOfResults"`
 	NoOfDiagnosticInfos          int32
 	DiagnosticInfos              []DiagnosticInfo `opcua:"lengthField=NoOfDiagnosticInfos"`
 }
@@ -2147,7 +2138,7 @@ type RepublishResponse struct {
 }
 
 type TransferResult struct {
-	StatusCode                   enumStatusCode
+	StatusCode                   StatusCode
 	NoOfAvailableSequenceNumbers int32
 	AvailableSequenceNumbers     []uint32 `opcua:"lengthField=NoOfAvailableSequenceNumbers"`
 }
@@ -2176,7 +2167,7 @@ type DeleteSubscriptionsRequest struct {
 type DeleteSubscriptionsResponse struct {
 	ResponseHeader      ResponseHeader
 	NoOfResults         int32
-	Results             []enumStatusCode `opcua:"lengthField=NoOfResults"`
+	Results             []StatusCode `opcua:"lengthField=NoOfResults"`
 	NoOfDiagnosticInfos int32
 	DiagnosticInfos     []DiagnosticInfo `opcua:"lengthField=NoOfDiagnosticInfos"`
 }
@@ -2193,7 +2184,7 @@ type BuildInfo struct {
 type RedundantServerDataType struct {
 	ServerId     string
 	ServiceLevel uint8
-	ServerState  enumServerState
+	ServerState  ServerState
 }
 
 type EndpointUrlListDataType struct {
@@ -2232,7 +2223,7 @@ type ServerDiagnosticsSummaryDataType struct {
 type ServerStatusDataType struct {
 	StartTime           time.Time
 	CurrentTime         time.Time
-	State               enumServerState
+	State               ServerState
 	BuildInfo           BuildInfo
 	SecondsTillShutdown uint32
 	ShutdownReason      LocalizedText
@@ -2293,7 +2284,7 @@ type SessionSecurityDiagnosticsDataType struct {
 	AuthenticationMechanism string
 	Encoding                string
 	TransportProtocol       string
-	SecurityMode            enumMessageSecurityMode
+	SecurityMode            MessageSecurityMode
 	SecurityPolicyUri       string
 	ClientCertificate       ByteString
 }
@@ -2304,7 +2295,7 @@ type ServiceCounterDataType struct {
 }
 
 type StatusResult struct {
-	StatusCode     enumStatusCode
+	StatusCode     StatusCode
 	DiagnosticInfo *DiagnosticInfo
 }
 
@@ -2379,7 +2370,7 @@ type AxisInformation struct {
 	EngineeringUnits EUInformation
 	EURange          Range
 	Title            LocalizedText
-	AxisScaleType    enumAxisScaleEnumeration
+	AxisScaleType    AxisScaleEnumeration
 	NoOfAxisSteps    int32
 	AxisSteps        []float64 `opcua:"lengthField=NoOfAxisSteps"`
 }

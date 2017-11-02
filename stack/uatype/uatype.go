@@ -7,11 +7,8 @@ package uatype
 
 import (
 	"encoding/binary"
-	"errors"
-)
-
-var (
-	ErrNotEnoughData = errors.New("not enough data")
+	"fmt"
+	"io"
 )
 
 // A Bit can either be set (true) or not set (false).
@@ -35,7 +32,7 @@ func (bs ByteString) MarshalBinary() ([]byte, error) {
 	size := int32(len(bs))
 	target := make([]byte, size+4)
 
-	// At least initally, we don't distinguish between null values and arrays
+	// At least initially, we don't distinguish between null values and arrays
 	// with length null. We could change this if it's required.
 	if size == 0 {
 		size = -1
@@ -51,12 +48,12 @@ func (bs ByteString) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary reads from the head of data and sets bs. If there is not
-// enough data available, the ErrNotEnoughData error is returned.
+// enough data available, the io.ErrShortBuffer error is returned.
 func (bs *ByteString) UnmarshalBinary(data []byte) error {
 
 	l := len(data)
 	if l < 4 {
-		return ErrNotEnoughData
+		return io.ErrShortBuffer
 	}
 	size := int32(binary.LittleEndian.Uint32(data[0:4]))
 	if size == -1 || size == 0 {
@@ -68,7 +65,7 @@ func (bs *ByteString) UnmarshalBinary(data []byte) error {
 
 	stop := int(size) + 4
 	if stop > l {
-		return ErrNotEnoughData
+		return io.ErrShortBuffer
 	}
 
 	*bs = make([]byte, size)
@@ -83,6 +80,11 @@ func (bs ByteString) BitLength() int {
 }
 
 // Error implements the built-in error interface.
-func (sf ServiceFault) Error() string {
-	return StatusText(sf.ResponseHeader.ServiceResult)
+func (f ServiceFault) Error() string {
+	code := f.ResponseHeader.ServiceResult
+	s := statusText[code]
+	if s == "" {
+		return fmt.Sprintf("unknown status code 0x%.8X", code)
+	}
+	return fmt.Sprintf("status code 0x%.8X: %s", code, s)
 }

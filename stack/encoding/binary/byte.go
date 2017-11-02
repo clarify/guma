@@ -49,3 +49,14 @@ func (d byteUnmarshaler) UnmarshalBinary(data []byte) error {
 	buf := bytes.NewBuffer(data)
 	return binary.Read(buf, binary.LittleEndian, d.Target)
 }
+
+type byteSlice []byte
+
+func (d byteSlice) UnmarshalBinary(data []byte) error {
+	copy(d, data)
+	return nil
+}
+
+func (d byteSlice) MarshalBinary() ([]byte, error) {
+	return d, nil
+}

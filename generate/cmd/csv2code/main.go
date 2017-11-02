@@ -89,8 +89,11 @@ func main() {
 
 	// Parse template file(s).
 	tmpl := template.New("").Funcs(template.FuncMap{
-		"atoi": strconv.Atoi,
-		"itoa": strconv.Itoa,
+		"atoi":       strconv.Atoi,
+		"itoa":       strconv.Itoa,
+		"firstLower": firstLower,
+		"trimSuffix": strings.TrimSuffix,
+		"trimPrefix": strings.TrimSuffix,
 	})
 	for _, filename := range tmplSrc {
 		var err error
@@ -112,4 +115,11 @@ func main() {
 	if err := tmpl.Execute(out, data); err != nil {
 		log.Fatal("failed to execute template:", err)
 	}
+}
+
+func firstLower(s string) string {
+	if len(s) > 1 {
+		return strings.ToLower(s[0:1]) + s[1:]
+	}
+	return ""
 }

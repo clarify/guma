@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"os/signal"
+	"sync"
 	"time"
 
 	"github.com/davecgh/go-spew/spew"
+
 	"github.com/searis/guma/stack"
-	"github.com/searis/guma/stack/transport"
-	"github.com/searis/guma/stack/transport/tcp"
+	"github.com/searis/guma/stack/encoding/binary"
+	"github.com/searis/guma/stack/transport/uacp"
 	"github.com/searis/guma/stack/uatype"
 )
 
@@ -20,35 +21,32 @@ var typeFmt = spew.ConfigState{
 }
 
 func main() {
-	conn := tcp.Conn{}
+	logger := log.New(os.Stderr, "gumatest: ", log.Llongfile|log.Lmicroseconds|log.LUTC)
+	logger.SetPrefix("I/")
+	dlogger := log.New(os.Stderr, "gumatest: ", log.Llongfile|log.Lmicroseconds|log.LUTC)
+	dlogger.SetPrefix("D/")
 
-	err := conn.Connect("localhost:4840")
-	if err != nil {
-		log.Fatal(err)
+	uacp.SetLogger(logger)
+	uacp.SetDebugLogger(dlogger)
+	binary.SetDebugLogger(dlogger)
+
+	security := uacp.ChSecurity{
+		SecurityHeader: uacp.AsymmetricAlgorithmSecurityHeader{
+			SecurityPolicyURI: uacp.SecurityPolicyURINone,
+			//SenderCertificate: clientCertificate,
+		},
+		MessageSecurity: uatype.MessageSecurityModeNone,
 	}
-
-	channel := transport.SecureChannel{}
-	ec := make(chan error)
-	err = channel.Open(&conn, ec)
+	sc, err := uacp.ConnectSecureTCPChannel("localhost:4840", "", security)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("failed to connect", err)
+		os.Exit(1)
 	}
-
-	signalChan := make(chan os.Signal, 1)
-	cleanupDone := make(chan bool)
-	signal.Notify(signalChan, os.Interrupt)
-	go func() {
-		for _ = range signalChan {
-			fmt.Println("\nReceived an interrupt, stopping services...\n")
-			channel.Close()
-			cleanupDone <- true
-		}
-	}()
 
 	client := stack.Client{
-		Channel: &channel,
+		Channel: sc,
 	}
-
+	deadline := time.Now().Add(5 * time.Minute)
 	resp, err := client.CreateSession(uatype.CreateSessionRequest{
 		RequestHeader: uatype.RequestHeader{
 			Timestamp: time.Now(),
@@ -73,7 +71,7 @@ func main() {
 		ClientCertificate:       uatype.ByteString(clientCertificate),
 		RequestedSessionTimeout: 1200000,
 		MaxResponseMessageSize:  16777216,
-	})
+	}, deadline)
 
 	if err != nil {
 		log.Fatal(err)
@@ -98,7 +96,7 @@ func main() {
 			BodyLength: 13,
 			Body:       []byte{9, 0, 0, 0, 'a', 'n', 'o', 'n', 'y', 'm', 'o', 'u', 's'},
 		},
-	})
+	}, deadline)
 
 	fmt.Printf("<< Received data:\n%s", typeFmt.Sdump(actresp))
 	if err != nil {
@@ -123,7 +121,7 @@ func main() {
 				ResultMask:      63,
 			},
 		},
-	})
+	}, deadline)
 	if err != nil {
 		fmt.Printf("<< Received data:\n%s", typeFmt.Sdump(bres))
 		log.Fatal(err)
@@ -141,7 +139,7 @@ func main() {
 		MaxNotificationsPerPublish:  0,
 		PublishingEnabled:           true,
 		Priority:                    0,
-	})
+	}, deadline)
 	if err != nil {
 		fmt.Printf("<< Received data:\n%s", typeFmt.Sdump(subres))
 		log.Fatal(err)
@@ -157,36 +155,41 @@ func main() {
 		ItemsToCreate: []uatype.MonitoredItemCreateRequest{
 			uatype.MonitoredItemCreateRequest{
 				ItemToMonitor: uatype.ReadValueId{
-					NodeId:      uatype.NewFourByteNodeID(0, 2007),
+					NodeId:      uatype.NewFourByteNodeID(0, uatype.NodeIdServerType_ServerStatus),
 					AttributeId: 5,
 				},
 				MonitoringMode: uatype.MonitoringModeReporting,
 				//				RequestedParameters: uatype.MonitoringParameters{},
 			},
 		},
-	})
+	}, deadline)
+
 	fmt.Printf("<< Received data:\n%s", typeFmt.Sdump(mon))
+	var wg sync.WaitGroup
 	for i := 0; i < 4; i++ {
+		wg.Add(1)
 		go func() {
+			defer wg.Done()
 			req := uatype.PublishRequest{
 				RequestHeader: uatype.RequestHeader{
 					Timestamp:           time.Now(),
 					AuthenticationToken: resp.AuthenticationToken,
 				},
-				/*NoOfSubscriptionAcknowledgements: 1,
+				NoOfSubscriptionAcknowledgements: 1,
 				SubscriptionAcknowledgements: []uatype.SubscriptionAcknowledgement{
-					uatype.SubscriptionAcknowledgement{
+					{
 						SubscriptionId: subres.SubscriptionId,
 						SequenceNumber: 1,
 					},
-					},*/
+				},
 			}
-			pres, err := client.Publish(req)
+			pres, err := client.Publish(req, deadline)
 			if err != nil {
 				log.Println(err)
 			}
 
 			req.NoOfSubscriptionAcknowledgements = pres.NoOfAvailableSequenceNumbers
+			req.SubscriptionAcknowledgements = req.SubscriptionAcknowledgements[0:0]
 			for _, seq := range pres.AvailableSequenceNumbers {
 				req.SubscriptionAcknowledgements = append(req.SubscriptionAcknowledgements, uatype.SubscriptionAcknowledgement{
 					SubscriptionId: subres.SubscriptionId,
@@ -194,21 +197,14 @@ func main() {
 				})
 			}
 			fmt.Printf("<< Received data:\n%s", typeFmt.Sdump(pres))
-			pres, err = client.Publish(req)
+			pres, err = client.Publish(req, deadline)
 			if err != nil {
 				log.Println(err)
 			}
 			fmt.Printf("<< Received data:\n%s", typeFmt.Sdump(pres))
 		}()
 	}
-	for {
-		select {
-		case err := <-ec:
-			log.Println(err)
-		case <-cleanupDone:
-			os.Exit(-1)
-		}
-	}
+	wg.Wait()
 
 }
 

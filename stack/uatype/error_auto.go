@@ -3,466 +3,461 @@
 package uatype
 
 const (
-	StatusBadUnexpectedError                      enumStatusCode = 0x80010000
-	StatusBadInternalError                        enumStatusCode = 0x80020000
-	StatusBadOutOfMemory                          enumStatusCode = 0x80030000
-	StatusBadResourceUnavailable                  enumStatusCode = 0x80040000
-	StatusBadCommunicationError                   enumStatusCode = 0x80050000
-	StatusBadEncodingError                        enumStatusCode = 0x80060000
-	StatusBadDecodingError                        enumStatusCode = 0x80070000
-	StatusBadEncodingLimitsExceeded               enumStatusCode = 0x80080000
-	StatusBadRequestTooLarge                      enumStatusCode = 0x80B80000
-	StatusBadResponseTooLarge                     enumStatusCode = 0x80B90000
-	StatusBadUnknownResponse                      enumStatusCode = 0x80090000
-	StatusBadTimeout                              enumStatusCode = 0x800A0000
-	StatusBadServiceUnsupported                   enumStatusCode = 0x800B0000
-	StatusBadShutdown                             enumStatusCode = 0x800C0000
-	StatusBadServerNotConnected                   enumStatusCode = 0x800D0000
-	StatusBadServerHalted                         enumStatusCode = 0x800E0000
-	StatusBadNothingToDo                          enumStatusCode = 0x800F0000
-	StatusBadTooManyOperations                    enumStatusCode = 0x80100000
-	StatusBadTooManyMonitoredItems                enumStatusCode = 0x80DB0000
-	StatusBadDataTypeIdUnknown                    enumStatusCode = 0x80110000
-	StatusBadCertificateInvalid                   enumStatusCode = 0x80120000
-	StatusBadSecurityChecksFailed                 enumStatusCode = 0x80130000
-	StatusBadCertificateTimeInvalid               enumStatusCode = 0x80140000
-	StatusBadCertificateIssuerTimeInvalid         enumStatusCode = 0x80150000
-	StatusBadCertificateHostNameInvalid           enumStatusCode = 0x80160000
-	StatusBadCertificateUriInvalid                enumStatusCode = 0x80170000
-	StatusBadCertificateUseNotAllowed             enumStatusCode = 0x80180000
-	StatusBadCertificateIssuerUseNotAllowed       enumStatusCode = 0x80190000
-	StatusBadCertificateUntrusted                 enumStatusCode = 0x801A0000
-	StatusBadCertificateRevocationUnknown         enumStatusCode = 0x801B0000
-	StatusBadCertificateIssuerRevocationUnknown   enumStatusCode = 0x801C0000
-	StatusBadCertificateRevoked                   enumStatusCode = 0x801D0000
-	StatusBadCertificateIssuerRevoked             enumStatusCode = 0x801E0000
-	StatusBadCertificateChainIncomplete           enumStatusCode = 0x810D0000
-	StatusBadUserAccessDenied                     enumStatusCode = 0x801F0000
-	StatusBadIdentityTokenInvalid                 enumStatusCode = 0x80200000
-	StatusBadIdentityTokenRejected                enumStatusCode = 0x80210000
-	StatusBadSecureChannelIdInvalid               enumStatusCode = 0x80220000
-	StatusBadInvalidTimestamp                     enumStatusCode = 0x80230000
-	StatusBadNonceInvalid                         enumStatusCode = 0x80240000
-	StatusBadSessionIdInvalid                     enumStatusCode = 0x80250000
-	StatusBadSessionClosed                        enumStatusCode = 0x80260000
-	StatusBadSessionNotActivated                  enumStatusCode = 0x80270000
-	StatusBadSubscriptionIdInvalid                enumStatusCode = 0x80280000
-	StatusBadRequestHeaderInvalid                 enumStatusCode = 0x802A0000
-	StatusBadTimestampsToReturnInvalid            enumStatusCode = 0x802B0000
-	StatusBadRequestCancelledByClient             enumStatusCode = 0x802C0000
-	StatusBadTooManyArguments                     enumStatusCode = 0x80E50000
-	StatusGoodSubscriptionTransferred             enumStatusCode = 0x002D0000
-	StatusGoodCompletesAsynchronously             enumStatusCode = 0x002E0000
-	StatusGoodOverload                            enumStatusCode = 0x002F0000
-	StatusGoodClamped                             enumStatusCode = 0x00300000
-	StatusBadNoCommunication                      enumStatusCode = 0x80310000
-	StatusBadWaitingForInitialData                enumStatusCode = 0x80320000
-	StatusBadNodeIdInvalid                        enumStatusCode = 0x80330000
-	StatusBadNodeIdUnknown                        enumStatusCode = 0x80340000
-	StatusBadAttributeIdInvalid                   enumStatusCode = 0x80350000
-	StatusBadIndexRangeInvalid                    enumStatusCode = 0x80360000
-	StatusBadIndexRangeNoData                     enumStatusCode = 0x80370000
-	StatusBadDataEncodingInvalid                  enumStatusCode = 0x80380000
-	StatusBadDataEncodingUnsupported              enumStatusCode = 0x80390000
-	StatusBadNotReadable                          enumStatusCode = 0x803A0000
-	StatusBadNotWritable                          enumStatusCode = 0x803B0000
-	StatusBadOutOfRange                           enumStatusCode = 0x803C0000
-	StatusBadNotSupported                         enumStatusCode = 0x803D0000
-	StatusBadNotFound                             enumStatusCode = 0x803E0000
-	StatusBadObjectDeleted                        enumStatusCode = 0x803F0000
-	StatusBadNotImplemented                       enumStatusCode = 0x80400000
-	StatusBadMonitoringModeInvalid                enumStatusCode = 0x80410000
-	StatusBadMonitoredItemIdInvalid               enumStatusCode = 0x80420000
-	StatusBadMonitoredItemFilterInvalid           enumStatusCode = 0x80430000
-	StatusBadMonitoredItemFilterUnsupported       enumStatusCode = 0x80440000
-	StatusBadFilterNotAllowed                     enumStatusCode = 0x80450000
-	StatusBadStructureMissing                     enumStatusCode = 0x80460000
-	StatusBadEventFilterInvalid                   enumStatusCode = 0x80470000
-	StatusBadContentFilterInvalid                 enumStatusCode = 0x80480000
-	StatusBadFilterOperatorInvalid                enumStatusCode = 0x80C10000
-	StatusBadFilterOperatorUnsupported            enumStatusCode = 0x80C20000
-	StatusBadFilterOperandCountMismatch           enumStatusCode = 0x80C30000
-	StatusBadFilterOperandInvalid                 enumStatusCode = 0x80490000
-	StatusBadFilterElementInvalid                 enumStatusCode = 0x80C40000
-	StatusBadFilterLiteralInvalid                 enumStatusCode = 0x80C50000
-	StatusBadContinuationPointInvalid             enumStatusCode = 0x804A0000
-	StatusBadNoContinuationPoints                 enumStatusCode = 0x804B0000
-	StatusBadReferenceTypeIdInvalid               enumStatusCode = 0x804C0000
-	StatusBadBrowseDirectionInvalid               enumStatusCode = 0x804D0000
-	StatusBadNodeNotInView                        enumStatusCode = 0x804E0000
-	StatusBadServerUriInvalid                     enumStatusCode = 0x804F0000
-	StatusBadServerNameMissing                    enumStatusCode = 0x80500000
-	StatusBadDiscoveryUrlMissing                  enumStatusCode = 0x80510000
-	StatusBadSempahoreFileMissing                 enumStatusCode = 0x80520000
-	StatusBadRequestTypeInvalid                   enumStatusCode = 0x80530000
-	StatusBadSecurityModeRejected                 enumStatusCode = 0x80540000
-	StatusBadSecurityPolicyRejected               enumStatusCode = 0x80550000
-	StatusBadTooManySessions                      enumStatusCode = 0x80560000
-	StatusBadUserSignatureInvalid                 enumStatusCode = 0x80570000
-	StatusBadApplicationSignatureInvalid          enumStatusCode = 0x80580000
-	StatusBadNoValidCertificates                  enumStatusCode = 0x80590000
-	StatusBadIdentityChangeNotSupported           enumStatusCode = 0x80C60000
-	StatusBadRequestCancelledByRequest            enumStatusCode = 0x805A0000
-	StatusBadParentNodeIdInvalid                  enumStatusCode = 0x805B0000
-	StatusBadReferenceNotAllowed                  enumStatusCode = 0x805C0000
-	StatusBadNodeIdRejected                       enumStatusCode = 0x805D0000
-	StatusBadNodeIdExists                         enumStatusCode = 0x805E0000
-	StatusBadNodeClassInvalid                     enumStatusCode = 0x805F0000
-	StatusBadBrowseNameInvalid                    enumStatusCode = 0x80600000
-	StatusBadBrowseNameDuplicated                 enumStatusCode = 0x80610000
-	StatusBadNodeAttributesInvalid                enumStatusCode = 0x80620000
-	StatusBadTypeDefinitionInvalid                enumStatusCode = 0x80630000
-	StatusBadSourceNodeIdInvalid                  enumStatusCode = 0x80640000
-	StatusBadTargetNodeIdInvalid                  enumStatusCode = 0x80650000
-	StatusBadDuplicateReferenceNotAllowed         enumStatusCode = 0x80660000
-	StatusBadInvalidSelfReference                 enumStatusCode = 0x80670000
-	StatusBadReferenceLocalOnly                   enumStatusCode = 0x80680000
-	StatusBadNoDeleteRights                       enumStatusCode = 0x80690000
-	StatusUncertainReferenceNotDeleted            enumStatusCode = 0x40BC0000
-	StatusBadServerIndexInvalid                   enumStatusCode = 0x806A0000
-	StatusBadViewIdUnknown                        enumStatusCode = 0x806B0000
-	StatusBadViewTimestampInvalid                 enumStatusCode = 0x80C90000
-	StatusBadViewParameterMismatch                enumStatusCode = 0x80CA0000
-	StatusBadViewVersionInvalid                   enumStatusCode = 0x80CB0000
-	StatusUncertainNotAllNodesAvailable           enumStatusCode = 0x40C00000
-	StatusGoodResultsMayBeIncomplete              enumStatusCode = 0x00BA0000
-	StatusBadNotTypeDefinition                    enumStatusCode = 0x80C80000
-	StatusUncertainReferenceOutOfServer           enumStatusCode = 0x406C0000
-	StatusBadTooManyMatches                       enumStatusCode = 0x806D0000
-	StatusBadQueryTooComplex                      enumStatusCode = 0x806E0000
-	StatusBadNoMatch                              enumStatusCode = 0x806F0000
-	StatusBadMaxAgeInvalid                        enumStatusCode = 0x80700000
-	StatusBadSecurityModeInsufficient             enumStatusCode = 0x80E60000
-	StatusBadHistoryOperationInvalid              enumStatusCode = 0x80710000
-	StatusBadHistoryOperationUnsupported          enumStatusCode = 0x80720000
-	StatusBadInvalidTimestampArgument             enumStatusCode = 0x80BD0000
-	StatusBadWriteNotSupported                    enumStatusCode = 0x80730000
-	StatusBadTypeMismatch                         enumStatusCode = 0x80740000
-	StatusBadMethodInvalid                        enumStatusCode = 0x80750000
-	StatusBadArgumentsMissing                     enumStatusCode = 0x80760000
-	StatusBadTooManySubscriptions                 enumStatusCode = 0x80770000
-	StatusBadTooManyPublishRequests               enumStatusCode = 0x80780000
-	StatusBadNoSubscription                       enumStatusCode = 0x80790000
-	StatusBadSequenceNumberUnknown                enumStatusCode = 0x807A0000
-	StatusBadMessageNotAvailable                  enumStatusCode = 0x807B0000
-	StatusBadInsufficientClientProfile            enumStatusCode = 0x807C0000
-	StatusBadStateNotActive                       enumStatusCode = 0x80BF0000
-	StatusBadTcpServerTooBusy                     enumStatusCode = 0x807D0000
-	StatusBadTcpMessageTypeInvalid                enumStatusCode = 0x807E0000
-	StatusBadTcpSecureChannelUnknown              enumStatusCode = 0x807F0000
-	StatusBadTcpMessageTooLarge                   enumStatusCode = 0x80800000
-	StatusBadTcpNotEnoughResources                enumStatusCode = 0x80810000
-	StatusBadTcpInternalError                     enumStatusCode = 0x80820000
-	StatusBadTcpEndpointUrlInvalid                enumStatusCode = 0x80830000
-	StatusBadRequestInterrupted                   enumStatusCode = 0x80840000
-	StatusBadRequestTimeout                       enumStatusCode = 0x80850000
-	StatusBadSecureChannelClosed                  enumStatusCode = 0x80860000
-	StatusBadSecureChannelTokenUnknown            enumStatusCode = 0x80870000
-	StatusBadSequenceNumberInvalid                enumStatusCode = 0x80880000
-	StatusBadProtocolVersionUnsupported           enumStatusCode = 0x80BE0000
-	StatusBadConfigurationError                   enumStatusCode = 0x80890000
-	StatusBadNotConnected                         enumStatusCode = 0x808A0000
-	StatusBadDeviceFailure                        enumStatusCode = 0x808B0000
-	StatusBadSensorFailure                        enumStatusCode = 0x808C0000
-	StatusBadOutOfService                         enumStatusCode = 0x808D0000
-	StatusBadDeadbandFilterInvalid                enumStatusCode = 0x808E0000
-	StatusUncertainNoCommunicationLastUsableValue enumStatusCode = 0x408F0000
-	StatusUncertainLastUsableValue                enumStatusCode = 0x40900000
-	StatusUncertainSubstituteValue                enumStatusCode = 0x40910000
-	StatusUncertainInitialValue                   enumStatusCode = 0x40920000
-	StatusUncertainSensorNotAccurate              enumStatusCode = 0x40930000
-	StatusUncertainEngineeringUnitsExceeded       enumStatusCode = 0x40940000
-	StatusUncertainSubNormal                      enumStatusCode = 0x40950000
-	StatusGoodLocalOverride                       enumStatusCode = 0x00960000
-	StatusBadRefreshInProgress                    enumStatusCode = 0x80970000
-	StatusBadConditionAlreadyDisabled             enumStatusCode = 0x80980000
-	StatusBadConditionAlreadyEnabled              enumStatusCode = 0x80CC0000
-	StatusBadConditionDisabled                    enumStatusCode = 0x80990000
-	StatusBadEventIdUnknown                       enumStatusCode = 0x809A0000
-	StatusBadEventNotAcknowledgeable              enumStatusCode = 0x80BB0000
-	StatusBadDialogNotActive                      enumStatusCode = 0x80CD0000
-	StatusBadDialogResponseInvalid                enumStatusCode = 0x80CE0000
-	StatusBadConditionBranchAlreadyAcked          enumStatusCode = 0x80CF0000
-	StatusBadConditionBranchAlreadyConfirmed      enumStatusCode = 0x80D00000
-	StatusBadConditionAlreadyShelved              enumStatusCode = 0x80D10000
-	StatusBadConditionNotShelved                  enumStatusCode = 0x80D20000
-	StatusBadShelvingTimeOutOfRange               enumStatusCode = 0x80D30000
-	StatusBadNoData                               enumStatusCode = 0x809B0000
-	StatusBadBoundNotFound                        enumStatusCode = 0x80D70000
-	StatusBadBoundNotSupported                    enumStatusCode = 0x80D80000
-	StatusBadDataLost                             enumStatusCode = 0x809D0000
-	StatusBadDataUnavailable                      enumStatusCode = 0x809E0000
-	StatusBadEntryExists                          enumStatusCode = 0x809F0000
-	StatusBadNoEntryExists                        enumStatusCode = 0x80A00000
-	StatusBadTimestampNotSupported                enumStatusCode = 0x80A10000
-	StatusGoodEntryInserted                       enumStatusCode = 0x00A20000
-	StatusGoodEntryReplaced                       enumStatusCode = 0x00A30000
-	StatusUncertainDataSubNormal                  enumStatusCode = 0x40A40000
-	StatusGoodNoData                              enumStatusCode = 0x00A50000
-	StatusGoodMoreData                            enumStatusCode = 0x00A60000
-	StatusBadAggregateListMismatch                enumStatusCode = 0x80D40000
-	StatusBadAggregateNotSupported                enumStatusCode = 0x80D50000
-	StatusBadAggregateInvalidInputs               enumStatusCode = 0x80D60000
-	StatusBadAggregateConfigurationRejected       enumStatusCode = 0x80DA0000
-	StatusGoodDataIgnored                         enumStatusCode = 0x00D90000
-	StatusBadRequestNotAllowed                    enumStatusCode = 0x80E40000
-	StatusGoodEdited                              enumStatusCode = 0x00DC0000
-	StatusGoodPostActionFailed                    enumStatusCode = 0x00DD0000
-	StatusUncertainDominantValueChanged           enumStatusCode = 0x40DE0000
-	StatusGoodDependentValueChanged               enumStatusCode = 0x00E00000
-	StatusBadDominantValueChanged                 enumStatusCode = 0x80E10000
-	StatusUncertainDependentValueChanged          enumStatusCode = 0x40E20000
-	StatusBadDependentValueChanged                enumStatusCode = 0x80E30000
-	StatusGoodCommunicationEvent                  enumStatusCode = 0x00A70000
-	StatusGoodShutdownEvent                       enumStatusCode = 0x00A80000
-	StatusGoodCallAgain                           enumStatusCode = 0x00A90000
-	StatusGoodNonCriticalTimeout                  enumStatusCode = 0x00AA0000
-	StatusBadInvalidArgument                      enumStatusCode = 0x80AB0000
-	StatusBadConnectionRejected                   enumStatusCode = 0x80AC0000
-	StatusBadDisconnect                           enumStatusCode = 0x80AD0000
-	StatusBadConnectionClosed                     enumStatusCode = 0x80AE0000
-	StatusBadInvalidState                         enumStatusCode = 0x80AF0000
-	StatusBadEndOfStream                          enumStatusCode = 0x80B00000
-	StatusBadNoDataAvailable                      enumStatusCode = 0x80B10000
-	StatusBadWaitingForResponse                   enumStatusCode = 0x80B20000
-	StatusBadOperationAbandoned                   enumStatusCode = 0x80B30000
-	StatusBadExpectedStreamToBlock                enumStatusCode = 0x80B40000
-	StatusBadWouldBlock                           enumStatusCode = 0x80B50000
-	StatusBadSyntaxError                          enumStatusCode = 0x80B60000
-	StatusBadMaxConnectionsReached                enumStatusCode = 0x80B70000
+	StatusBadUnexpectedError                      StatusCode = 0x80010000
+	StatusBadInternalError                        StatusCode = 0x80020000
+	StatusBadOutOfMemory                          StatusCode = 0x80030000
+	StatusBadResourceUnavailable                  StatusCode = 0x80040000
+	StatusBadCommunicationError                   StatusCode = 0x80050000
+	StatusBadEncodingError                        StatusCode = 0x80060000
+	StatusBadDecodingError                        StatusCode = 0x80070000
+	StatusBadEncodingLimitsExceeded               StatusCode = 0x80080000
+	StatusBadRequestTooLarge                      StatusCode = 0x80B80000
+	StatusBadResponseTooLarge                     StatusCode = 0x80B90000
+	StatusBadUnknownResponse                      StatusCode = 0x80090000
+	StatusBadTimeout                              StatusCode = 0x800A0000
+	StatusBadServiceUnsupported                   StatusCode = 0x800B0000
+	StatusBadShutdown                             StatusCode = 0x800C0000
+	StatusBadServerNotConnected                   StatusCode = 0x800D0000
+	StatusBadServerHalted                         StatusCode = 0x800E0000
+	StatusBadNothingToDo                          StatusCode = 0x800F0000
+	StatusBadTooManyOperations                    StatusCode = 0x80100000
+	StatusBadTooManyMonitoredItems                StatusCode = 0x80DB0000
+	StatusBadDataTypeIdUnknown                    StatusCode = 0x80110000
+	StatusBadCertificateInvalid                   StatusCode = 0x80120000
+	StatusBadSecurityChecksFailed                 StatusCode = 0x80130000
+	StatusBadCertificateTimeInvalid               StatusCode = 0x80140000
+	StatusBadCertificateIssuerTimeInvalid         StatusCode = 0x80150000
+	StatusBadCertificateHostNameInvalid           StatusCode = 0x80160000
+	StatusBadCertificateUriInvalid                StatusCode = 0x80170000
+	StatusBadCertificateUseNotAllowed             StatusCode = 0x80180000
+	StatusBadCertificateIssuerUseNotAllowed       StatusCode = 0x80190000
+	StatusBadCertificateUntrusted                 StatusCode = 0x801A0000
+	StatusBadCertificateRevocationUnknown         StatusCode = 0x801B0000
+	StatusBadCertificateIssuerRevocationUnknown   StatusCode = 0x801C0000
+	StatusBadCertificateRevoked                   StatusCode = 0x801D0000
+	StatusBadCertificateIssuerRevoked             StatusCode = 0x801E0000
+	StatusBadCertificateChainIncomplete           StatusCode = 0x810D0000
+	StatusBadUserAccessDenied                     StatusCode = 0x801F0000
+	StatusBadIdentityTokenInvalid                 StatusCode = 0x80200000
+	StatusBadIdentityTokenRejected                StatusCode = 0x80210000
+	StatusBadSecureChannelIdInvalid               StatusCode = 0x80220000
+	StatusBadInvalidTimestamp                     StatusCode = 0x80230000
+	StatusBadNonceInvalid                         StatusCode = 0x80240000
+	StatusBadSessionIdInvalid                     StatusCode = 0x80250000
+	StatusBadSessionClosed                        StatusCode = 0x80260000
+	StatusBadSessionNotActivated                  StatusCode = 0x80270000
+	StatusBadSubscriptionIdInvalid                StatusCode = 0x80280000
+	StatusBadRequestHeaderInvalid                 StatusCode = 0x802A0000
+	StatusBadTimestampsToReturnInvalid            StatusCode = 0x802B0000
+	StatusBadRequestCancelledByClient             StatusCode = 0x802C0000
+	StatusBadTooManyArguments                     StatusCode = 0x80E50000
+	StatusGoodSubscriptionTransferred             StatusCode = 0x002D0000
+	StatusGoodCompletesAsynchronously             StatusCode = 0x002E0000
+	StatusGoodOverload                            StatusCode = 0x002F0000
+	StatusGoodClamped                             StatusCode = 0x00300000
+	StatusBadNoCommunication                      StatusCode = 0x80310000
+	StatusBadWaitingForInitialData                StatusCode = 0x80320000
+	StatusBadNodeIdInvalid                        StatusCode = 0x80330000
+	StatusBadNodeIdUnknown                        StatusCode = 0x80340000
+	StatusBadAttributeIdInvalid                   StatusCode = 0x80350000
+	StatusBadIndexRangeInvalid                    StatusCode = 0x80360000
+	StatusBadIndexRangeNoData                     StatusCode = 0x80370000
+	StatusBadDataEncodingInvalid                  StatusCode = 0x80380000
+	StatusBadDataEncodingUnsupported              StatusCode = 0x80390000
+	StatusBadNotReadable                          StatusCode = 0x803A0000
+	StatusBadNotWritable                          StatusCode = 0x803B0000
+	StatusBadOutOfRange                           StatusCode = 0x803C0000
+	StatusBadNotSupported                         StatusCode = 0x803D0000
+	StatusBadNotFound                             StatusCode = 0x803E0000
+	StatusBadObjectDeleted                        StatusCode = 0x803F0000
+	StatusBadNotImplemented                       StatusCode = 0x80400000
+	StatusBadMonitoringModeInvalid                StatusCode = 0x80410000
+	StatusBadMonitoredItemIdInvalid               StatusCode = 0x80420000
+	StatusBadMonitoredItemFilterInvalid           StatusCode = 0x80430000
+	StatusBadMonitoredItemFilterUnsupported       StatusCode = 0x80440000
+	StatusBadFilterNotAllowed                     StatusCode = 0x80450000
+	StatusBadStructureMissing                     StatusCode = 0x80460000
+	StatusBadEventFilterInvalid                   StatusCode = 0x80470000
+	StatusBadContentFilterInvalid                 StatusCode = 0x80480000
+	StatusBadFilterOperatorInvalid                StatusCode = 0x80C10000
+	StatusBadFilterOperatorUnsupported            StatusCode = 0x80C20000
+	StatusBadFilterOperandCountMismatch           StatusCode = 0x80C30000
+	StatusBadFilterOperandInvalid                 StatusCode = 0x80490000
+	StatusBadFilterElementInvalid                 StatusCode = 0x80C40000
+	StatusBadFilterLiteralInvalid                 StatusCode = 0x80C50000
+	StatusBadContinuationPointInvalid             StatusCode = 0x804A0000
+	StatusBadNoContinuationPoints                 StatusCode = 0x804B0000
+	StatusBadReferenceTypeIdInvalid               StatusCode = 0x804C0000
+	StatusBadBrowseDirectionInvalid               StatusCode = 0x804D0000
+	StatusBadNodeNotInView                        StatusCode = 0x804E0000
+	StatusBadServerUriInvalid                     StatusCode = 0x804F0000
+	StatusBadServerNameMissing                    StatusCode = 0x80500000
+	StatusBadDiscoveryUrlMissing                  StatusCode = 0x80510000
+	StatusBadSempahoreFileMissing                 StatusCode = 0x80520000
+	StatusBadRequestTypeInvalid                   StatusCode = 0x80530000
+	StatusBadSecurityModeRejected                 StatusCode = 0x80540000
+	StatusBadSecurityPolicyRejected               StatusCode = 0x80550000
+	StatusBadTooManySessions                      StatusCode = 0x80560000
+	StatusBadUserSignatureInvalid                 StatusCode = 0x80570000
+	StatusBadApplicationSignatureInvalid          StatusCode = 0x80580000
+	StatusBadNoValidCertificates                  StatusCode = 0x80590000
+	StatusBadIdentityChangeNotSupported           StatusCode = 0x80C60000
+	StatusBadRequestCancelledByRequest            StatusCode = 0x805A0000
+	StatusBadParentNodeIdInvalid                  StatusCode = 0x805B0000
+	StatusBadReferenceNotAllowed                  StatusCode = 0x805C0000
+	StatusBadNodeIdRejected                       StatusCode = 0x805D0000
+	StatusBadNodeIdExists                         StatusCode = 0x805E0000
+	StatusBadNodeClassInvalid                     StatusCode = 0x805F0000
+	StatusBadBrowseNameInvalid                    StatusCode = 0x80600000
+	StatusBadBrowseNameDuplicated                 StatusCode = 0x80610000
+	StatusBadNodeAttributesInvalid                StatusCode = 0x80620000
+	StatusBadTypeDefinitionInvalid                StatusCode = 0x80630000
+	StatusBadSourceNodeIdInvalid                  StatusCode = 0x80640000
+	StatusBadTargetNodeIdInvalid                  StatusCode = 0x80650000
+	StatusBadDuplicateReferenceNotAllowed         StatusCode = 0x80660000
+	StatusBadInvalidSelfReference                 StatusCode = 0x80670000
+	StatusBadReferenceLocalOnly                   StatusCode = 0x80680000
+	StatusBadNoDeleteRights                       StatusCode = 0x80690000
+	StatusUncertainReferenceNotDeleted            StatusCode = 0x40BC0000
+	StatusBadServerIndexInvalid                   StatusCode = 0x806A0000
+	StatusBadViewIdUnknown                        StatusCode = 0x806B0000
+	StatusBadViewTimestampInvalid                 StatusCode = 0x80C90000
+	StatusBadViewParameterMismatch                StatusCode = 0x80CA0000
+	StatusBadViewVersionInvalid                   StatusCode = 0x80CB0000
+	StatusUncertainNotAllNodesAvailable           StatusCode = 0x40C00000
+	StatusGoodResultsMayBeIncomplete              StatusCode = 0x00BA0000
+	StatusBadNotTypeDefinition                    StatusCode = 0x80C80000
+	StatusUncertainReferenceOutOfServer           StatusCode = 0x406C0000
+	StatusBadTooManyMatches                       StatusCode = 0x806D0000
+	StatusBadQueryTooComplex                      StatusCode = 0x806E0000
+	StatusBadNoMatch                              StatusCode = 0x806F0000
+	StatusBadMaxAgeInvalid                        StatusCode = 0x80700000
+	StatusBadSecurityModeInsufficient             StatusCode = 0x80E60000
+	StatusBadHistoryOperationInvalid              StatusCode = 0x80710000
+	StatusBadHistoryOperationUnsupported          StatusCode = 0x80720000
+	StatusBadInvalidTimestampArgument             StatusCode = 0x80BD0000
+	StatusBadWriteNotSupported                    StatusCode = 0x80730000
+	StatusBadTypeMismatch                         StatusCode = 0x80740000
+	StatusBadMethodInvalid                        StatusCode = 0x80750000
+	StatusBadArgumentsMissing                     StatusCode = 0x80760000
+	StatusBadTooManySubscriptions                 StatusCode = 0x80770000
+	StatusBadTooManyPublishRequests               StatusCode = 0x80780000
+	StatusBadNoSubscription                       StatusCode = 0x80790000
+	StatusBadSequenceNumberUnknown                StatusCode = 0x807A0000
+	StatusBadMessageNotAvailable                  StatusCode = 0x807B0000
+	StatusBadInsufficientClientProfile            StatusCode = 0x807C0000
+	StatusBadStateNotActive                       StatusCode = 0x80BF0000
+	StatusBadTcpServerTooBusy                     StatusCode = 0x807D0000
+	StatusBadTcpMessageTypeInvalid                StatusCode = 0x807E0000
+	StatusBadTcpSecureChannelUnknown              StatusCode = 0x807F0000
+	StatusBadTcpMessageTooLarge                   StatusCode = 0x80800000
+	StatusBadTcpNotEnoughResources                StatusCode = 0x80810000
+	StatusBadTcpInternalError                     StatusCode = 0x80820000
+	StatusBadTcpEndpointUrlInvalid                StatusCode = 0x80830000
+	StatusBadRequestInterrupted                   StatusCode = 0x80840000
+	StatusBadRequestTimeout                       StatusCode = 0x80850000
+	StatusBadSecureChannelClosed                  StatusCode = 0x80860000
+	StatusBadSecureChannelTokenUnknown            StatusCode = 0x80870000
+	StatusBadSequenceNumberInvalid                StatusCode = 0x80880000
+	StatusBadProtocolVersionUnsupported           StatusCode = 0x80BE0000
+	StatusBadConfigurationError                   StatusCode = 0x80890000
+	StatusBadNotConnected                         StatusCode = 0x808A0000
+	StatusBadDeviceFailure                        StatusCode = 0x808B0000
+	StatusBadSensorFailure                        StatusCode = 0x808C0000
+	StatusBadOutOfService                         StatusCode = 0x808D0000
+	StatusBadDeadbandFilterInvalid                StatusCode = 0x808E0000
+	StatusUncertainNoCommunicationLastUsableValue StatusCode = 0x408F0000
+	StatusUncertainLastUsableValue                StatusCode = 0x40900000
+	StatusUncertainSubstituteValue                StatusCode = 0x40910000
+	StatusUncertainInitialValue                   StatusCode = 0x40920000
+	StatusUncertainSensorNotAccurate              StatusCode = 0x40930000
+	StatusUncertainEngineeringUnitsExceeded       StatusCode = 0x40940000
+	StatusUncertainSubNormal                      StatusCode = 0x40950000
+	StatusGoodLocalOverride                       StatusCode = 0x00960000
+	StatusBadRefreshInProgress                    StatusCode = 0x80970000
+	StatusBadConditionAlreadyDisabled             StatusCode = 0x80980000
+	StatusBadConditionAlreadyEnabled              StatusCode = 0x80CC0000
+	StatusBadConditionDisabled                    StatusCode = 0x80990000
+	StatusBadEventIdUnknown                       StatusCode = 0x809A0000
+	StatusBadEventNotAcknowledgeable              StatusCode = 0x80BB0000
+	StatusBadDialogNotActive                      StatusCode = 0x80CD0000
+	StatusBadDialogResponseInvalid                StatusCode = 0x80CE0000
+	StatusBadConditionBranchAlreadyAcked          StatusCode = 0x80CF0000
+	StatusBadConditionBranchAlreadyConfirmed      StatusCode = 0x80D00000
+	StatusBadConditionAlreadyShelved              StatusCode = 0x80D10000
+	StatusBadConditionNotShelved                  StatusCode = 0x80D20000
+	StatusBadShelvingTimeOutOfRange               StatusCode = 0x80D30000
+	StatusBadNoData                               StatusCode = 0x809B0000
+	StatusBadBoundNotFound                        StatusCode = 0x80D70000
+	StatusBadBoundNotSupported                    StatusCode = 0x80D80000
+	StatusBadDataLost                             StatusCode = 0x809D0000
+	StatusBadDataUnavailable                      StatusCode = 0x809E0000
+	StatusBadEntryExists                          StatusCode = 0x809F0000
+	StatusBadNoEntryExists                        StatusCode = 0x80A00000
+	StatusBadTimestampNotSupported                StatusCode = 0x80A10000
+	StatusGoodEntryInserted                       StatusCode = 0x00A20000
+	StatusGoodEntryReplaced                       StatusCode = 0x00A30000
+	StatusUncertainDataSubNormal                  StatusCode = 0x40A40000
+	StatusGoodNoData                              StatusCode = 0x00A50000
+	StatusGoodMoreData                            StatusCode = 0x00A60000
+	StatusBadAggregateListMismatch                StatusCode = 0x80D40000
+	StatusBadAggregateNotSupported                StatusCode = 0x80D50000
+	StatusBadAggregateInvalidInputs               StatusCode = 0x80D60000
+	StatusBadAggregateConfigurationRejected       StatusCode = 0x80DA0000
+	StatusGoodDataIgnored                         StatusCode = 0x00D90000
+	StatusBadRequestNotAllowed                    StatusCode = 0x80E40000
+	StatusGoodEdited                              StatusCode = 0x00DC0000
+	StatusGoodPostActionFailed                    StatusCode = 0x00DD0000
+	StatusUncertainDominantValueChanged           StatusCode = 0x40DE0000
+	StatusGoodDependentValueChanged               StatusCode = 0x00E00000
+	StatusBadDominantValueChanged                 StatusCode = 0x80E10000
+	StatusUncertainDependentValueChanged          StatusCode = 0x40E20000
+	StatusBadDependentValueChanged                StatusCode = 0x80E30000
+	StatusGoodCommunicationEvent                  StatusCode = 0x00A70000
+	StatusGoodShutdownEvent                       StatusCode = 0x00A80000
+	StatusGoodCallAgain                           StatusCode = 0x00A90000
+	StatusGoodNonCriticalTimeout                  StatusCode = 0x00AA0000
+	StatusBadInvalidArgument                      StatusCode = 0x80AB0000
+	StatusBadConnectionRejected                   StatusCode = 0x80AC0000
+	StatusBadDisconnect                           StatusCode = 0x80AD0000
+	StatusBadConnectionClosed                     StatusCode = 0x80AE0000
+	StatusBadInvalidState                         StatusCode = 0x80AF0000
+	StatusBadEndOfStream                          StatusCode = 0x80B00000
+	StatusBadNoDataAvailable                      StatusCode = 0x80B10000
+	StatusBadWaitingForResponse                   StatusCode = 0x80B20000
+	StatusBadOperationAbandoned                   StatusCode = 0x80B30000
+	StatusBadExpectedStreamToBlock                StatusCode = 0x80B40000
+	StatusBadWouldBlock                           StatusCode = 0x80B50000
+	StatusBadSyntaxError                          StatusCode = 0x80B60000
+	StatusBadMaxConnectionsReached                StatusCode = 0x80B70000
 )
 
-var statusText = map[enumStatusCode]string{
-	StatusBadUnexpectedError:                      "An unexpected error occurred.",
-	StatusBadInternalError:                        "An internal error occurred as a result of a programming or configuration error.",
-	StatusBadOutOfMemory:                          "Not enough memory to complete the operation.",
-	StatusBadResourceUnavailable:                  "An operating system resource is not available.",
-	StatusBadCommunicationError:                   "A low level communication error occurred.",
-	StatusBadEncodingError:                        "Encoding halted because of invalid data in the objects being serialized.",
-	StatusBadDecodingError:                        "Decoding halted because of invalid data in the stream.",
-	StatusBadEncodingLimitsExceeded:               "The message encoding/decoding limits imposed by the stack have been exceeded.",
-	StatusBadRequestTooLarge:                      "The request message size exceeds limits set by the server.",
-	StatusBadResponseTooLarge:                     "The response message size exceeds limits set by the client.",
-	StatusBadUnknownResponse:                      "An unrecognized response was received from the server.",
-	StatusBadTimeout:                              "The operation timed out.",
-	StatusBadServiceUnsupported:                   "The server does not support the requested service.",
-	StatusBadShutdown:                             "The operation was cancelled because the application is shutting down.",
-	StatusBadServerNotConnected:                   "The operation could not complete because the client is not connected to the server.",
-	StatusBadServerHalted:                         "The server has stopped and cannot process any requests.",
-	StatusBadNothingToDo:                          "There was nothing to do because the client passed a list of operations with no elements.",
-	StatusBadTooManyOperations:                    "The request could not be processed because it specified too many operations.",
-	StatusBadTooManyMonitoredItems:                "The request could not be processed because there are too many monitored items in the subscription.",
-	StatusBadDataTypeIdUnknown:                    "The extension object cannot be (de)serialized because the data type id is not recognized.",
-	StatusBadCertificateInvalid:                   "The certificate provided as a parameter is not valid.",
-	StatusBadSecurityChecksFailed:                 "An error occurred verifying security.",
-	StatusBadCertificateTimeInvalid:               "The Certificate has expired or is not yet valid.",
-	StatusBadCertificateIssuerTimeInvalid:         "An Issuer Certificate has expired or is not yet valid.",
-	StatusBadCertificateHostNameInvalid:           "The HostName used to connect to a Server does not match a HostName in the Certificate.",
-	StatusBadCertificateUriInvalid:                "The URI specified in the ApplicationDescription does not match the URI in the Certificate.",
-	StatusBadCertificateUseNotAllowed:             "The Certificate may not be used for the requested operation.",
-	StatusBadCertificateIssuerUseNotAllowed:       "The Issuer Certificate may not be used for the requested operation.",
-	StatusBadCertificateUntrusted:                 "The Certificate is not trusted.",
-	StatusBadCertificateRevocationUnknown:         "It was not possible to determine if the Certificate has been revoked.",
-	StatusBadCertificateIssuerRevocationUnknown:   "It was not possible to determine if the Issuer Certificate has been revoked.",
-	StatusBadCertificateRevoked:                   "The certificate has been revoked.",
-	StatusBadCertificateIssuerRevoked:             "The issuer certificate has been revoked.",
-	StatusBadCertificateChainIncomplete:           "The certificate chain is incomplete.",
-	StatusBadUserAccessDenied:                     "User does not have permission to perform the requested operation.",
-	StatusBadIdentityTokenInvalid:                 "The user identity token is not valid.",
-	StatusBadIdentityTokenRejected:                "The user identity token is valid but the server has rejected it.",
-	StatusBadSecureChannelIdInvalid:               "The specified secure channel is no longer valid.",
-	StatusBadInvalidTimestamp:                     "The timestamp is outside the range allowed by the server.",
-	StatusBadNonceInvalid:                         "The nonce does appear to be not a random value or it is not the correct length.",
-	StatusBadSessionIdInvalid:                     "The session id is not valid.",
-	StatusBadSessionClosed:                        "The session was closed by the client.",
-	StatusBadSessionNotActivated:                  "The session cannot be used because ActivateSession has not been called.",
-	StatusBadSubscriptionIdInvalid:                "The subscription id is not valid.",
-	StatusBadRequestHeaderInvalid:                 "The header for the request is missing or invalid.",
-	StatusBadTimestampsToReturnInvalid:            "The timestamps to return parameter is invalid.",
-	StatusBadRequestCancelledByClient:             "The request was cancelled by the client.",
-	StatusBadTooManyArguments:                     "Too many arguments were provided.",
-	StatusGoodSubscriptionTransferred:             "The subscription was transferred to another session.",
-	StatusGoodCompletesAsynchronously:             "The processing will complete asynchronously.",
-	StatusGoodOverload:                            "Sampling has slowed down due to resource limitations.",
-	StatusGoodClamped:                             "The value written was accepted but was clamped.",
-	StatusBadNoCommunication:                      "Communication with the data source is defined",
-	StatusBadWaitingForInitialData:                "Waiting for the server to obtain values from the underlying data source.",
-	StatusBadNodeIdInvalid:                        "The syntax of the node id is not valid.",
-	StatusBadNodeIdUnknown:                        "The node id refers to a node that does not exist in the server address space.",
-	StatusBadAttributeIdInvalid:                   "The attribute is not supported for the specified Node.",
-	StatusBadIndexRangeInvalid:                    "The syntax of the index range parameter is invalid.",
-	StatusBadIndexRangeNoData:                     "No data exists within the range of indexes specified.",
-	StatusBadDataEncodingInvalid:                  "The data encoding is invalid.",
-	StatusBadDataEncodingUnsupported:              "The server does not support the requested data encoding for the node.",
-	StatusBadNotReadable:                          "The access level does not allow reading or subscribing to the Node.",
-	StatusBadNotWritable:                          "The access level does not allow writing to the Node.",
-	StatusBadOutOfRange:                           "The value was out of range.",
-	StatusBadNotSupported:                         "The requested operation is not supported.",
-	StatusBadNotFound:                             "A requested item was not found or a search operation ended without success.",
-	StatusBadObjectDeleted:                        "The object cannot be used because it has been deleted.",
-	StatusBadNotImplemented:                       "Requested operation is not implemented.",
-	StatusBadMonitoringModeInvalid:                "The monitoring mode is invalid.",
-	StatusBadMonitoredItemIdInvalid:               "The monitoring item id does not refer to a valid monitored item.",
-	StatusBadMonitoredItemFilterInvalid:           "The monitored item filter parameter is not valid.",
-	StatusBadMonitoredItemFilterUnsupported:       "The server does not support the requested monitored item filter.",
-	StatusBadFilterNotAllowed:                     "A monitoring filter cannot be used in combination with the attribute specified.",
-	StatusBadStructureMissing:                     "A mandatory structured parameter was missing or null.",
-	StatusBadEventFilterInvalid:                   "The event filter is not valid.",
-	StatusBadContentFilterInvalid:                 "The content filter is not valid.",
-	StatusBadFilterOperatorInvalid:                "An unregognized operator was provided in a filter.",
-	StatusBadFilterOperatorUnsupported:            "A valid operator was provided",
-	StatusBadFilterOperandCountMismatch:           "The number of operands provided for the filter operator was less then expected for the operand provided.",
-	StatusBadFilterOperandInvalid:                 "The operand used in a content filter is not valid.",
-	StatusBadFilterElementInvalid:                 "The referenced element is not a valid element in the content filter.",
-	StatusBadFilterLiteralInvalid:                 "The referenced literal is not a valid value.",
-	StatusBadContinuationPointInvalid:             "The continuation point provide is longer valid.",
-	StatusBadNoContinuationPoints:                 "The operation could not be processed because all continuation points have been allocated.",
-	StatusBadReferenceTypeIdInvalid:               "The operation could not be processed because all continuation points have been allocated.",
-	StatusBadBrowseDirectionInvalid:               "The browse direction is not valid.",
-	StatusBadNodeNotInView:                        "The node is not part of the view.",
-	StatusBadServerUriInvalid:                     "The ServerUri is not a valid URI.",
-	StatusBadServerNameMissing:                    "No ServerName was specified.",
-	StatusBadDiscoveryUrlMissing:                  "No DiscoveryUrl was specified.",
-	StatusBadSempahoreFileMissing:                 "The semaphore file specified by the client is not valid.",
-	StatusBadRequestTypeInvalid:                   "The security token request type is not valid.",
-	StatusBadSecurityModeRejected:                 "The security mode does not meet the requirements set by the Server.",
-	StatusBadSecurityPolicyRejected:               "The security policy does not meet the requirements set by the Server.",
-	StatusBadTooManySessions:                      "The server has reached its maximum number of sessions.",
-	StatusBadUserSignatureInvalid:                 "The user token signature is missing or invalid.",
-	StatusBadApplicationSignatureInvalid:          "The signature generated with the client certificate is missing or invalid.",
-	StatusBadNoValidCertificates:                  "The client did not provide at least one software certificate that is valid and meets the profile requirements for the server.",
-	StatusBadIdentityChangeNotSupported:           "The Server does not support changing the user identity assigned to the session.",
-	StatusBadRequestCancelledByRequest:            "The request was cancelled by the client with the Cancel service.",
-	StatusBadParentNodeIdInvalid:                  "The parent node id does not to refer to a valid node.",
-	StatusBadReferenceNotAllowed:                  "The reference could not be created because it violates constraints imposed by the data model.",
-	StatusBadNodeIdRejected:                       "The requested node id was reject because it was either invalid or server does not allow node ids to be specified by the client.",
-	StatusBadNodeIdExists:                         "The requested node id is already used by another node.",
-	StatusBadNodeClassInvalid:                     "The node class is not valid.",
-	StatusBadBrowseNameInvalid:                    "The browse name is invalid.",
-	StatusBadBrowseNameDuplicated:                 "The browse name is not unique among nodes that share the same relationship with the parent.",
-	StatusBadNodeAttributesInvalid:                "The node attributes are not valid for the node class.",
-	StatusBadTypeDefinitionInvalid:                "The type definition node id does not reference an appropriate type node.",
-	StatusBadSourceNodeIdInvalid:                  "The source node id does not reference a valid node.",
-	StatusBadTargetNodeIdInvalid:                  "The target node id does not reference a valid node.",
-	StatusBadDuplicateReferenceNotAllowed:         "The reference type between the nodes is already defined.",
-	StatusBadInvalidSelfReference:                 "The server does not allow this type of self reference on this node.",
-	StatusBadReferenceLocalOnly:                   "The reference type is not valid for a reference to a remote server.",
-	StatusBadNoDeleteRights:                       "The server will not allow the node to be deleted.",
-	StatusUncertainReferenceNotDeleted:            "The server was not able to delete all target references.",
-	StatusBadServerIndexInvalid:                   "The server index is not valid.",
-	StatusBadViewIdUnknown:                        "The view id does not refer to a valid view node.",
-	StatusBadViewTimestampInvalid:                 "The view timestamp is not available or not supported.",
-	StatusBadViewParameterMismatch:                "The view parameters are not consistent with each other.",
-	StatusBadViewVersionInvalid:                   "The view version is not available or not supported.",
-	StatusUncertainNotAllNodesAvailable:           "The list of references may not be complete because the underlying system is not available.",
-	StatusGoodResultsMayBeIncomplete:              "The server should have followed a reference to a node in a remote server but did not. The result set may be incomplete.",
-	StatusBadNotTypeDefinition:                    "The provided Nodeid was not a type definition nodeid.",
-	StatusUncertainReferenceOutOfServer:           "One of the references to follow in the relative path references to a node in the address space in another server.",
-	StatusBadTooManyMatches:                       "The requested operation has too many matches to return.",
-	StatusBadQueryTooComplex:                      "The requested operation requires too many resources in the server.",
-	StatusBadNoMatch:                              "The requested operation has no match to return.",
-	StatusBadMaxAgeInvalid:                        "The max age parameter is invalid.",
-	StatusBadSecurityModeInsufficient:             "The operation is not permitted over the current secure channel.",
-	StatusBadHistoryOperationInvalid:              "The history details parameter is not valid.",
-	StatusBadHistoryOperationUnsupported:          "The server does not support the requested operation.",
-	StatusBadInvalidTimestampArgument:             "The defined timestamp to return was invalid.",
-	StatusBadWriteNotSupported:                    "The server not does support writing the combination of value",
-	StatusBadTypeMismatch:                         "The value supplied for the attribute is not of the same type as the attribute's value.",
-	StatusBadMethodInvalid:                        "The method id does not refer to a method for the specified object.",
-	StatusBadArgumentsMissing:                     "The client did not specify all of the input arguments for the method.",
-	StatusBadTooManySubscriptions:                 "The server has reached its  maximum number of subscriptions.",
-	StatusBadTooManyPublishRequests:               "The server has reached the maximum number of queued publish requests.",
-	StatusBadNoSubscription:                       "There is no subscription available for this session.",
-	StatusBadSequenceNumberUnknown:                "The sequence number is unknown to the server.",
-	StatusBadMessageNotAvailable:                  "The requested notification message is no longer available.",
-	StatusBadInsufficientClientProfile:            "The Client of the current Session does not support one or more Profiles that are necessary for the Subscription.",
-	StatusBadStateNotActive:                       "The sub-state machine is not currently active.",
-	StatusBadTcpServerTooBusy:                     "The server cannot process the request because it is too busy.",
-	StatusBadTcpMessageTypeInvalid:                "The type of the message specified in the header invalid.",
-	StatusBadTcpSecureChannelUnknown:              "The SecureChannelId and/or TokenId are not currently in use.",
-	StatusBadTcpMessageTooLarge:                   "The size of the message specified in the header is too large.",
-	StatusBadTcpNotEnoughResources:                "There are not enough resources to process the request.",
-	StatusBadTcpInternalError:                     "An internal error occurred.",
-	StatusBadTcpEndpointUrlInvalid:                "The Server does not recognize the QueryString specified.",
-	StatusBadRequestInterrupted:                   "The request could not be sent because of a network interruption.",
-	StatusBadRequestTimeout:                       "Timeout occurred while processing the request.",
-	StatusBadSecureChannelClosed:                  "The secure channel has been closed.",
-	StatusBadSecureChannelTokenUnknown:            "The token has expired or is not recognized.",
-	StatusBadSequenceNumberInvalid:                "The sequence number is not valid.",
-	StatusBadProtocolVersionUnsupported:           "The applications do not have compatible protocol versions.",
-	StatusBadConfigurationError:                   "There is a problem with the configuration that affects the usefulness of the value.",
-	StatusBadNotConnected:                         "The variable should receive its value from another variable",
-	StatusBadDeviceFailure:                        "There has been a failure in the device/data source that generates the value that has affected the value.",
-	StatusBadSensorFailure:                        "There has been a failure in the sensor from which the value is derived by the device/data source.",
-	StatusBadOutOfService:                         "The source of the data is not operational.",
-	StatusBadDeadbandFilterInvalid:                "The deadband filter is not valid.",
-	StatusUncertainNoCommunicationLastUsableValue: "Communication to the data source has failed. The variable value is the last value that had a good quality.",
-	StatusUncertainLastUsableValue:                "Whatever was updating this value has stopped doing so.",
-	StatusUncertainSubstituteValue:                "The value is an operational value that was manually overwritten.",
-	StatusUncertainInitialValue:                   "The value is an initial value for a variable that normally receives its value from another variable.",
-	StatusUncertainSensorNotAccurate:              "The value is at one of the sensor limits.",
-	StatusUncertainEngineeringUnitsExceeded:       "The value is outside of the range of values defined for this parameter.",
-	StatusUncertainSubNormal:                      "The value is derived from multiple sources and has less than the required number of Good sources.",
-	StatusGoodLocalOverride:                       "The value has been overridden.",
-	StatusBadRefreshInProgress:                    "This Condition refresh failed",
-	StatusBadConditionAlreadyDisabled:             "This condition has already been disabled.",
-	StatusBadConditionAlreadyEnabled:              "This condition has already been enabled.",
-	StatusBadConditionDisabled:                    "Property not available",
-	StatusBadEventIdUnknown:                       "The specified event id is not recognized.",
-	StatusBadEventNotAcknowledgeable:              "The event cannot be acknowledged.",
-	StatusBadDialogNotActive:                      "The dialog condition is not active.",
-	StatusBadDialogResponseInvalid:                "The response is not valid for the dialog.",
-	StatusBadConditionBranchAlreadyAcked:          "The condition branch has already been acknowledged.",
-	StatusBadConditionBranchAlreadyConfirmed:      "The condition branch has already been confirmed.",
-	StatusBadConditionAlreadyShelved:              "The condition has already been shelved.",
-	StatusBadConditionNotShelved:                  "The condition is not currently shelved.",
-	StatusBadShelvingTimeOutOfRange:               "The shelving time not within an acceptable range.",
-	StatusBadNoData:                               "No data exists for the requested time range or event filter.",
-	StatusBadBoundNotFound:                        "No data found to provide upper or lower bound value.",
-	StatusBadBoundNotSupported:                    "The server cannot retrieve a bound for the variable.",
-	StatusBadDataLost:                             "Data is missing due to collection started/stopped/lost.",
-	StatusBadDataUnavailable:                      "Expected data is unavailable for the requested time range due to an un-mounted volume",
-	StatusBadEntryExists:                          "The data or event was not successfully inserted because a matching entry exists.",
-	StatusBadNoEntryExists:                        "The data or event was not successfully updated because no matching entry exists.",
-	StatusBadTimestampNotSupported:                "The client requested history using a timestamp format the server does not support (i.e requested ServerTimestamp when server only supports SourceTimestamp).",
-	StatusGoodEntryInserted:                       "The data or event was successfully inserted into the historical database.",
-	StatusGoodEntryReplaced:                       "The data or event field was successfully replaced in the historical database.",
-	StatusUncertainDataSubNormal:                  "The value is derived from multiple values and has less than the required number of Good values.",
-	StatusGoodNoData:                              "No data exists for the requested time range or event filter.",
-	StatusGoodMoreData:                            "The data or event field was successfully replaced in the historical database.",
-	StatusBadAggregateListMismatch:                "The requested number of Aggregates does not match the requested number of NodeIds.",
-	StatusBadAggregateNotSupported:                "The requested Aggregate is not support by the server.",
-	StatusBadAggregateInvalidInputs:               "The aggregate value could not be derived due to invalid data inputs.",
-	StatusBadAggregateConfigurationRejected:       "The aggregate configuration is not valid for specified node.",
-	StatusGoodDataIgnored:                         "The request pecifies fields which are not valid for the EventType or cannot be saved by the historian.",
-	StatusBadRequestNotAllowed:                    "The request was rejected by the server because it did not meet the criteria set by the server.",
-	StatusGoodEdited:                              "The value does not come from the real source and has been edited by the server.",
-	StatusGoodPostActionFailed:                    "There was an error in execution of these post-actions.",
-	StatusUncertainDominantValueChanged:           "The related EngineeringUnit has been changed but the Variable Value is still provided based on the previous unit.",
-	StatusGoodDependentValueChanged:               "A dependent value has been changed but the change has not been applied to the device.",
-	StatusBadDominantValueChanged:                 "The related EngineeringUnit has been changed but this change has not been applied to the device. The Variable Value is still dependent on the previous unit but its status is currently Bad.",
-	StatusUncertainDependentValueChanged:          "A dependent value has been changed but the change has not been applied to the device. The quality of the dominant variable is uncertain.",
-	StatusBadDependentValueChanged:                "A dependent value has been changed but the change has not been applied to the device. The quality of the dominant variable is Bad.",
-	StatusGoodCommunicationEvent:                  "The communication layer has raised an event.",
-	StatusGoodShutdownEvent:                       "The system is shutting down.",
-	StatusGoodCallAgain:                           "The operation is not finished and needs to be called again.",
-	StatusGoodNonCriticalTimeout:                  "A non-critical timeout occurred.",
-	StatusBadInvalidArgument:                      "One or more arguments are invalid.",
-	StatusBadConnectionRejected:                   "Could not establish a network connection to remote server.",
-	StatusBadDisconnect:                           "The server has disconnected from the client.",
-	StatusBadConnectionClosed:                     "The network connection has been closed.",
-	StatusBadInvalidState:                         "The operation cannot be completed because the object is closed",
-	StatusBadEndOfStream:                          "Cannot move beyond end of the stream.",
-	StatusBadNoDataAvailable:                      "No data is currently available for reading from a non-blocking stream.",
-	StatusBadWaitingForResponse:                   "The asynchronous operation is waiting for a response.",
-	StatusBadOperationAbandoned:                   "The asynchronous operation was abandoned by the caller.",
-	StatusBadExpectedStreamToBlock:                "The stream did not return all data requested (possibly because it is a non-blocking stream).",
-	StatusBadWouldBlock:                           "Non blocking behaviour is required and the operation would block.",
-	StatusBadSyntaxError:                          "A value had an invalid syntax.",
-	StatusBadMaxConnectionsReached:                "The operation could not be finished because all available connections are in use.",
-}
-
-// StatusText returns a text for the OPC UA status code. It returns the empty string if the code is unknown.
-func StatusText(code enumStatusCode) string {
-	return statusText[code]
+var statusText = map[StatusCode]string{
+	StatusBadUnexpectedError:                      "an unexpected error occurred",
+	StatusBadInternalError:                        "an internal error occurred as a result of a programming or configuration error",
+	StatusBadOutOfMemory:                          "not enough memory to complete the operation",
+	StatusBadResourceUnavailable:                  "an operating system resource is not available",
+	StatusBadCommunicationError:                   "a low level communication error occurred",
+	StatusBadEncodingError:                        "encoding halted because of invalid data in the objects being serialized",
+	StatusBadDecodingError:                        "decoding halted because of invalid data in the stream",
+	StatusBadEncodingLimitsExceeded:               "the message encoding/decoding limits imposed by the stack have been exceeded",
+	StatusBadRequestTooLarge:                      "the request message size exceeds limits set by the server",
+	StatusBadResponseTooLarge:                     "the response message size exceeds limits set by the client",
+	StatusBadUnknownResponse:                      "an unrecognized response was received from the server",
+	StatusBadTimeout:                              "the operation timed out",
+	StatusBadServiceUnsupported:                   "the server does not support the requested service",
+	StatusBadShutdown:                             "the operation was cancelled because the application is shutting down",
+	StatusBadServerNotConnected:                   "the operation could not complete because the client is not connected to the server",
+	StatusBadServerHalted:                         "the server has stopped and cannot process any requests",
+	StatusBadNothingToDo:                          "there was nothing to do because the client passed a list of operations with no elements",
+	StatusBadTooManyOperations:                    "the request could not be processed because it specified too many operations",
+	StatusBadTooManyMonitoredItems:                "the request could not be processed because there are too many monitored items in the subscription",
+	StatusBadDataTypeIdUnknown:                    "the extension object cannot be (de)serialized because the data type id is not recognized",
+	StatusBadCertificateInvalid:                   "the certificate provided as a parameter is not valid",
+	StatusBadSecurityChecksFailed:                 "an error occurred verifying security",
+	StatusBadCertificateTimeInvalid:               "the Certificate has expired or is not yet valid",
+	StatusBadCertificateIssuerTimeInvalid:         "an Issuer Certificate has expired or is not yet valid",
+	StatusBadCertificateHostNameInvalid:           "the HostName used to connect to a Server does not match a HostName in the Certificate",
+	StatusBadCertificateUriInvalid:                "the URI specified in the ApplicationDescription does not match the URI in the Certificate",
+	StatusBadCertificateUseNotAllowed:             "the Certificate may not be used for the requested operation",
+	StatusBadCertificateIssuerUseNotAllowed:       "the Issuer Certificate may not be used for the requested operation",
+	StatusBadCertificateUntrusted:                 "the Certificate is not trusted",
+	StatusBadCertificateRevocationUnknown:         "it was not possible to determine if the Certificate has been revoked",
+	StatusBadCertificateIssuerRevocationUnknown:   "it was not possible to determine if the Issuer Certificate has been revoked",
+	StatusBadCertificateRevoked:                   "the certificate has been revoked",
+	StatusBadCertificateIssuerRevoked:             "the issuer certificate has been revoked",
+	StatusBadCertificateChainIncomplete:           "the certificate chain is incomplete",
+	StatusBadUserAccessDenied:                     "user does not have permission to perform the requested operation",
+	StatusBadIdentityTokenInvalid:                 "the user identity token is not valid",
+	StatusBadIdentityTokenRejected:                "the user identity token is valid but the server has rejected it",
+	StatusBadSecureChannelIdInvalid:               "the specified secure channel is no longer valid",
+	StatusBadInvalidTimestamp:                     "the timestamp is outside the range allowed by the server",
+	StatusBadNonceInvalid:                         "the nonce does appear to be not a random value or it is not the correct length",
+	StatusBadSessionIdInvalid:                     "the session id is not valid",
+	StatusBadSessionClosed:                        "the session was closed by the client",
+	StatusBadSessionNotActivated:                  "the session cannot be used because ActivateSession has not been called",
+	StatusBadSubscriptionIdInvalid:                "the subscription id is not valid",
+	StatusBadRequestHeaderInvalid:                 "the header for the request is missing or invalid",
+	StatusBadTimestampsToReturnInvalid:            "the timestamps to return parameter is invalid",
+	StatusBadRequestCancelledByClient:             "the request was cancelled by the client",
+	StatusBadTooManyArguments:                     "too many arguments were provided",
+	StatusGoodSubscriptionTransferred:             "the subscription was transferred to another session",
+	StatusGoodCompletesAsynchronously:             "the processing will complete asynchronously",
+	StatusGoodOverload:                            "sampling has slowed down due to resource limitations",
+	StatusGoodClamped:                             "the value written was accepted but was clamped",
+	StatusBadNoCommunication:                      "communication with the data source is defined",
+	StatusBadWaitingForInitialData:                "waiting for the server to obtain values from the underlying data source",
+	StatusBadNodeIdInvalid:                        "the syntax of the node id is not valid",
+	StatusBadNodeIdUnknown:                        "the node id refers to a node that does not exist in the server address space",
+	StatusBadAttributeIdInvalid:                   "the attribute is not supported for the specified Node",
+	StatusBadIndexRangeInvalid:                    "the syntax of the index range parameter is invalid",
+	StatusBadIndexRangeNoData:                     "no data exists within the range of indexes specified",
+	StatusBadDataEncodingInvalid:                  "the data encoding is invalid",
+	StatusBadDataEncodingUnsupported:              "the server does not support the requested data encoding for the node",
+	StatusBadNotReadable:                          "the access level does not allow reading or subscribing to the Node",
+	StatusBadNotWritable:                          "the access level does not allow writing to the Node",
+	StatusBadOutOfRange:                           "the value was out of range",
+	StatusBadNotSupported:                         "the requested operation is not supported",
+	StatusBadNotFound:                             "a requested item was not found or a search operation ended without success",
+	StatusBadObjectDeleted:                        "the object cannot be used because it has been deleted",
+	StatusBadNotImplemented:                       "requested operation is not implemented",
+	StatusBadMonitoringModeInvalid:                "the monitoring mode is invalid",
+	StatusBadMonitoredItemIdInvalid:               "the monitoring item id does not refer to a valid monitored item",
+	StatusBadMonitoredItemFilterInvalid:           "the monitored item filter parameter is not valid",
+	StatusBadMonitoredItemFilterUnsupported:       "the server does not support the requested monitored item filter",
+	StatusBadFilterNotAllowed:                     "a monitoring filter cannot be used in combination with the attribute specified",
+	StatusBadStructureMissing:                     "a mandatory structured parameter was missing or null",
+	StatusBadEventFilterInvalid:                   "the event filter is not valid",
+	StatusBadContentFilterInvalid:                 "the content filter is not valid",
+	StatusBadFilterOperatorInvalid:                "an unregognized operator was provided in a filter",
+	StatusBadFilterOperatorUnsupported:            "a valid operator was provided",
+	StatusBadFilterOperandCountMismatch:           "the number of operands provided for the filter operator was less then expected for the operand provided",
+	StatusBadFilterOperandInvalid:                 "the operand used in a content filter is not valid",
+	StatusBadFilterElementInvalid:                 "the referenced element is not a valid element in the content filter",
+	StatusBadFilterLiteralInvalid:                 "the referenced literal is not a valid value",
+	StatusBadContinuationPointInvalid:             "the continuation point provide is longer valid",
+	StatusBadNoContinuationPoints:                 "the operation could not be processed because all continuation points have been allocated",
+	StatusBadReferenceTypeIdInvalid:               "the operation could not be processed because all continuation points have been allocated",
+	StatusBadBrowseDirectionInvalid:               "the browse direction is not valid",
+	StatusBadNodeNotInView:                        "the node is not part of the view",
+	StatusBadServerUriInvalid:                     "the ServerUri is not a valid URI",
+	StatusBadServerNameMissing:                    "no ServerName was specified",
+	StatusBadDiscoveryUrlMissing:                  "no DiscoveryUrl was specified",
+	StatusBadSempahoreFileMissing:                 "the semaphore file specified by the client is not valid",
+	StatusBadRequestTypeInvalid:                   "the security token request type is not valid",
+	StatusBadSecurityModeRejected:                 "the security mode does not meet the requirements set by the Server",
+	StatusBadSecurityPolicyRejected:               "the security policy does not meet the requirements set by the Server",
+	StatusBadTooManySessions:                      "the server has reached its maximum number of sessions",
+	StatusBadUserSignatureInvalid:                 "the user token signature is missing or invalid",
+	StatusBadApplicationSignatureInvalid:          "the signature generated with the client certificate is missing or invalid",
+	StatusBadNoValidCertificates:                  "the client did not provide at least one software certificate that is valid and meets the profile requirements for the server",
+	StatusBadIdentityChangeNotSupported:           "the Server does not support changing the user identity assigned to the session",
+	StatusBadRequestCancelledByRequest:            "the request was cancelled by the client with the Cancel service",
+	StatusBadParentNodeIdInvalid:                  "the parent node id does not to refer to a valid node",
+	StatusBadReferenceNotAllowed:                  "the reference could not be created because it violates constraints imposed by the data model",
+	StatusBadNodeIdRejected:                       "the requested node id was reject because it was either invalid or server does not allow node ids to be specified by the client",
+	StatusBadNodeIdExists:                         "the requested node id is already used by another node",
+	StatusBadNodeClassInvalid:                     "the node class is not valid",
+	StatusBadBrowseNameInvalid:                    "the browse name is invalid",
+	StatusBadBrowseNameDuplicated:                 "the browse name is not unique among nodes that share the same relationship with the parent",
+	StatusBadNodeAttributesInvalid:                "the node attributes are not valid for the node class",
+	StatusBadTypeDefinitionInvalid:                "the type definition node id does not reference an appropriate type node",
+	StatusBadSourceNodeIdInvalid:                  "the source node id does not reference a valid node",
+	StatusBadTargetNodeIdInvalid:                  "the target node id does not reference a valid node",
+	StatusBadDuplicateReferenceNotAllowed:         "the reference type between the nodes is already defined",
+	StatusBadInvalidSelfReference:                 "the server does not allow this type of self reference on this node",
+	StatusBadReferenceLocalOnly:                   "the reference type is not valid for a reference to a remote server",
+	StatusBadNoDeleteRights:                       "the server will not allow the node to be deleted",
+	StatusUncertainReferenceNotDeleted:            "the server was not able to delete all target references",
+	StatusBadServerIndexInvalid:                   "the server index is not valid",
+	StatusBadViewIdUnknown:                        "the view id does not refer to a valid view node",
+	StatusBadViewTimestampInvalid:                 "the view timestamp is not available or not supported",
+	StatusBadViewParameterMismatch:                "the view parameters are not consistent with each other",
+	StatusBadViewVersionInvalid:                   "the view version is not available or not supported",
+	StatusUncertainNotAllNodesAvailable:           "the list of references may not be complete because the underlying system is not available",
+	StatusGoodResultsMayBeIncomplete:              "the server should have followed a reference to a node in a remote server but did not. The result set may be incomplete",
+	StatusBadNotTypeDefinition:                    "the provided Nodeid was not a type definition nodeid",
+	StatusUncertainReferenceOutOfServer:           "one of the references to follow in the relative path references to a node in the address space in another server",
+	StatusBadTooManyMatches:                       "the requested operation has too many matches to return",
+	StatusBadQueryTooComplex:                      "the requested operation requires too many resources in the server",
+	StatusBadNoMatch:                              "the requested operation has no match to return",
+	StatusBadMaxAgeInvalid:                        "the max age parameter is invalid",
+	StatusBadSecurityModeInsufficient:             "the operation is not permitted over the current secure channel",
+	StatusBadHistoryOperationInvalid:              "the history details parameter is not valid",
+	StatusBadHistoryOperationUnsupported:          "the server does not support the requested operation",
+	StatusBadInvalidTimestampArgument:             "the defined timestamp to return was invalid",
+	StatusBadWriteNotSupported:                    "the server not does support writing the combination of value",
+	StatusBadTypeMismatch:                         "the value supplied for the attribute is not of the same type as the attribute's value",
+	StatusBadMethodInvalid:                        "the method id does not refer to a method for the specified object",
+	StatusBadArgumentsMissing:                     "the client did not specify all of the input arguments for the method",
+	StatusBadTooManySubscriptions:                 "the server has reached its  maximum number of subscriptions",
+	StatusBadTooManyPublishRequests:               "the server has reached the maximum number of queued publish requests",
+	StatusBadNoSubscription:                       "there is no subscription available for this session",
+	StatusBadSequenceNumberUnknown:                "the sequence number is unknown to the server",
+	StatusBadMessageNotAvailable:                  "the requested notification message is no longer available",
+	StatusBadInsufficientClientProfile:            "the Client of the current Session does not support one or more Profiles that are necessary for the Subscription",
+	StatusBadStateNotActive:                       "the sub-state machine is not currently active",
+	StatusBadTcpServerTooBusy:                     "the server cannot process the request because it is too busy",
+	StatusBadTcpMessageTypeInvalid:                "the type of the message specified in the header invalid",
+	StatusBadTcpSecureChannelUnknown:              "the SecureChannelId and/or TokenId are not currently in use",
+	StatusBadTcpMessageTooLarge:                   "the size of the message specified in the header is too large",
+	StatusBadTcpNotEnoughResources:                "there are not enough resources to process the request",
+	StatusBadTcpInternalError:                     "an internal error occurred",
+	StatusBadTcpEndpointUrlInvalid:                "the Server does not recognize the QueryString specified",
+	StatusBadRequestInterrupted:                   "the request could not be sent because of a network interruption",
+	StatusBadRequestTimeout:                       "timeout occurred while processing the request",
+	StatusBadSecureChannelClosed:                  "the secure channel has been closed",
+	StatusBadSecureChannelTokenUnknown:            "the token has expired or is not recognized",
+	StatusBadSequenceNumberInvalid:                "the sequence number is not valid",
+	StatusBadProtocolVersionUnsupported:           "the applications do not have compatible protocol versions",
+	StatusBadConfigurationError:                   "there is a problem with the configuration that affects the usefulness of the value",
+	StatusBadNotConnected:                         "the variable should receive its value from another variable",
+	StatusBadDeviceFailure:                        "there has been a failure in the device/data source that generates the value that has affected the value",
+	StatusBadSensorFailure:                        "there has been a failure in the sensor from which the value is derived by the device/data source",
+	StatusBadOutOfService:                         "the source of the data is not operational",
+	StatusBadDeadbandFilterInvalid:                "the deadband filter is not valid",
+	StatusUncertainNoCommunicationLastUsableValue: "communication to the data source has failed. The variable value is the last value that had a good quality",
+	StatusUncertainLastUsableValue:                "whatever was updating this value has stopped doing so",
+	StatusUncertainSubstituteValue:                "the value is an operational value that was manually overwritten",
+	StatusUncertainInitialValue:                   "the value is an initial value for a variable that normally receives its value from another variable",
+	StatusUncertainSensorNotAccurate:              "the value is at one of the sensor limits",
+	StatusUncertainEngineeringUnitsExceeded:       "the value is outside of the range of values defined for this parameter",
+	StatusUncertainSubNormal:                      "the value is derived from multiple sources and has less than the required number of Good sources",
+	StatusGoodLocalOverride:                       "the value has been overridden",
+	StatusBadRefreshInProgress:                    "this Condition refresh failed",
+	StatusBadConditionAlreadyDisabled:             "this condition has already been disabled",
+	StatusBadConditionAlreadyEnabled:              "this condition has already been enabled",
+	StatusBadConditionDisabled:                    "property not available",
+	StatusBadEventIdUnknown:                       "the specified event id is not recognized",
+	StatusBadEventNotAcknowledgeable:              "the event cannot be acknowledged",
+	StatusBadDialogNotActive:                      "the dialog condition is not active",
+	StatusBadDialogResponseInvalid:                "the response is not valid for the dialog",
+	StatusBadConditionBranchAlreadyAcked:          "the condition branch has already been acknowledged",
+	StatusBadConditionBranchAlreadyConfirmed:      "the condition branch has already been confirmed",
+	StatusBadConditionAlreadyShelved:              "the condition has already been shelved",
+	StatusBadConditionNotShelved:                  "the condition is not currently shelved",
+	StatusBadShelvingTimeOutOfRange:               "the shelving time not within an acceptable range",
+	StatusBadNoData:                               "no data exists for the requested time range or event filter",
+	StatusBadBoundNotFound:                        "no data found to provide upper or lower bound value",
+	StatusBadBoundNotSupported:                    "the server cannot retrieve a bound for the variable",
+	StatusBadDataLost:                             "data is missing due to collection started/stopped/lost",
+	StatusBadDataUnavailable:                      "expected data is unavailable for the requested time range due to an un-mounted volume",
+	StatusBadEntryExists:                          "the data or event was not successfully inserted because a matching entry exists",
+	StatusBadNoEntryExists:                        "the data or event was not successfully updated because no matching entry exists",
+	StatusBadTimestampNotSupported:                "the client requested history using a timestamp format the server does not support (i.e requested ServerTimestamp when server only supports SourceTimestamp)",
+	StatusGoodEntryInserted:                       "the data or event was successfully inserted into the historical database",
+	StatusGoodEntryReplaced:                       "the data or event field was successfully replaced in the historical database",
+	StatusUncertainDataSubNormal:                  "the value is derived from multiple values and has less than the required number of Good values",
+	StatusGoodNoData:                              "no data exists for the requested time range or event filter",
+	StatusGoodMoreData:                            "the data or event field was successfully replaced in the historical database",
+	StatusBadAggregateListMismatch:                "the requested number of Aggregates does not match the requested number of NodeIds",
+	StatusBadAggregateNotSupported:                "the requested Aggregate is not support by the server",
+	StatusBadAggregateInvalidInputs:               "the aggregate value could not be derived due to invalid data inputs",
+	StatusBadAggregateConfigurationRejected:       "the aggregate configuration is not valid for specified node",
+	StatusGoodDataIgnored:                         "the request pecifies fields which are not valid for the EventType or cannot be saved by the historian",
+	StatusBadRequestNotAllowed:                    "the request was rejected by the server because it did not meet the criteria set by the server",
+	StatusGoodEdited:                              "the value does not come from the real source and has been edited by the server",
+	StatusGoodPostActionFailed:                    "there was an error in execution of these post-actions",
+	StatusUncertainDominantValueChanged:           "the related EngineeringUnit has been changed but the Variable Value is still provided based on the previous unit",
+	StatusGoodDependentValueChanged:               "a dependent value has been changed but the change has not been applied to the device",
+	StatusBadDominantValueChanged:                 "the related EngineeringUnit has been changed but this change has not been applied to the device. The Variable Value is still dependent on the previous unit but its status is currently Bad",
+	StatusUncertainDependentValueChanged:          "a dependent value has been changed but the change has not been applied to the device. The quality of the dominant variable is uncertain",
+	StatusBadDependentValueChanged:                "a dependent value has been changed but the change has not been applied to the device. The quality of the dominant variable is Bad",
+	StatusGoodCommunicationEvent:                  "the communication layer has raised an event",
+	StatusGoodShutdownEvent:                       "the system is shutting down",
+	StatusGoodCallAgain:                           "the operation is not finished and needs to be called again",
+	StatusGoodNonCriticalTimeout:                  "a non-critical timeout occurred",
+	StatusBadInvalidArgument:                      "one or more arguments are invalid",
+	StatusBadConnectionRejected:                   "could not establish a network connection to remote server",
+	StatusBadDisconnect:                           "the server has disconnected from the client",
+	StatusBadConnectionClosed:                     "the network connection has been closed",
+	StatusBadInvalidState:                         "the operation cannot be completed because the object is closed",
+	StatusBadEndOfStream:                          "cannot move beyond end of the stream",
+	StatusBadNoDataAvailable:                      "no data is currently available for reading from a non-blocking stream",
+	StatusBadWaitingForResponse:                   "the asynchronous operation is waiting for a response",
+	StatusBadOperationAbandoned:                   "the asynchronous operation was abandoned by the caller",
+	StatusBadExpectedStreamToBlock:                "the stream did not return all data requested (possibly because it is a non-blocking stream)",
+	StatusBadWouldBlock:                           "non blocking behaviour is required and the operation would block",
+	StatusBadSyntaxError:                          "a value had an invalid syntax",
+	StatusBadMaxConnectionsReached:                "the operation could not be finished because all available connections are in use",
 }

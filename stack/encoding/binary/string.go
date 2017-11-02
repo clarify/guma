@@ -2,6 +2,7 @@ package binary
 
 import (
 	"encoding/binary"
+	"io"
 )
 
 // uaString handles encoding and decoding of an OPC UA String.
@@ -33,7 +34,7 @@ func (s uaString) MarshalBinary() ([]byte, error) {
 func (s *uaString) UnmarshalBinary(data []byte) error {
 	l := len(data)
 	if l < 4 {
-		return ErrNotEnoughData
+		return io.ErrShortBuffer
 	}
 	size := int32(binary.LittleEndian.Uint32(data[0:4]))
 	if size == -1 || size == 0 {
@@ -42,7 +43,7 @@ func (s *uaString) UnmarshalBinary(data []byte) error {
 	}
 	stop := int(size) + 4
 	if stop > l {
-		return ErrNotEnoughData
+		return io.ErrShortBuffer
 	}
 
 	*s = uaString(data[4:stop])

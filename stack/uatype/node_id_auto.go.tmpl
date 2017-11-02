@@ -1,5 +1,5 @@
 package uatype
 
-var ({{range .}}{{$name := index . 0}}{{$nodeId := index . 1}}{{$type := index . 2}}
-	NodeId{{$name}} uint16 = {{$nodeId}}{{end}}
+var ({{range .}}{{$name := index . 0}}{{$nodeId := atoi (index . 1)}}{{$type := index . 2}}
+	NodeId{{$name}} uint16 = {{printf "0x%04x" $nodeId}}{{end}}
 )

@@ -25,10 +25,9 @@ var goTypes = map[string]string{
 	// specification. Looking at the PDF specification seconds this as it uses
 	// type String, opcua:String or xs:string to refer to fields that have type
 	// CharArray in the XML.
-	"CharArray":  "string",
-	"Char":       "rune",
-	"DateTime":   "time.Time",
-	"StatusCode": "enumStatusCode",
+	"CharArray": "string",
+	"Char":      "rune",
+	"DateTime":  "time.Time",
 }
 
 func goTypeName(s string) string {
@@ -119,7 +118,7 @@ func (e enumType) NeedsBitLengther() bool {
 }
 
 func (e enumType) GoName() string {
-	return "enum" + e.Name
+	return e.Name
 }
 
 func (e enumType) GoType() string {

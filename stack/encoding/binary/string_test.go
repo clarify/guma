@@ -1,6 +1,7 @@
 package binary_test
 
 import (
+	"io"
 	"testing"
 
 	"github.com/searis/guma/internal/testutil"
@@ -22,9 +23,9 @@ func TestString(t *testing.T) {
 		},
 		{
 			SubTests:     testutil.TestDecode,
-			Name:         "ErrNotEnoughData",
+			Name:         "io.ErrNotEnoughData",
 			DecodeTarget: new(string),
-			DecodeError:  "not enough data",
+			DecodeError:  io.ErrShortBuffer.Error(),
 			Marshaled:    []byte{0x42},
 		},
 		{

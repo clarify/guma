@@ -5,23 +5,27 @@ package stack
 import (
 	"bytes"
 	"fmt"
+	"time"
 
 	"github.com/searis/guma/stack/encoding/binary"
 	"github.com/searis/guma/stack/transport"
 	"github.com/searis/guma/stack/uatype"
 )
 
-func (c *Client) CreateSession(req uatype.CreateSessionRequest) (*uatype.CreateSessionResponse, error) {
+// CreateSession sends a CreateSession request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) CreateSession(req uatype.CreateSessionRequest, deadline time.Time) (*uatype.CreateSessionResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdCreateSessionRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdCreateSessionRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -42,17 +46,20 @@ func (c *Client) CreateSession(req uatype.CreateSessionRequest) (*uatype.CreateS
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) ActivateSession(req uatype.ActivateSessionRequest) (*uatype.ActivateSessionResponse, error) {
+// ActivateSession sends a ActivateSession request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) ActivateSession(req uatype.ActivateSessionRequest, deadline time.Time) (*uatype.ActivateSessionResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdActivateSessionRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdActivateSessionRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -73,17 +80,20 @@ func (c *Client) ActivateSession(req uatype.ActivateSessionRequest) (*uatype.Act
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) CloseSession(req uatype.CloseSessionRequest) (*uatype.CloseSessionResponse, error) {
+// CloseSession sends a CloseSession request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) CloseSession(req uatype.CloseSessionRequest, deadline time.Time) (*uatype.CloseSessionResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdCloseSessionRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdCloseSessionRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -104,17 +114,20 @@ func (c *Client) CloseSession(req uatype.CloseSessionRequest) (*uatype.CloseSess
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) Cancel(req uatype.CancelRequest) (*uatype.CancelResponse, error) {
+// Cancel sends a Cancel request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) Cancel(req uatype.CancelRequest, deadline time.Time) (*uatype.CancelResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdCancelRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdCancelRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -135,17 +148,20 @@ func (c *Client) Cancel(req uatype.CancelRequest) (*uatype.CancelResponse, error
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) AddNodes(req uatype.AddNodesRequest) (*uatype.AddNodesResponse, error) {
+// AddNodes sends a AddNodes request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) AddNodes(req uatype.AddNodesRequest, deadline time.Time) (*uatype.AddNodesResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdAddNodesRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdAddNodesRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -166,17 +182,20 @@ func (c *Client) AddNodes(req uatype.AddNodesRequest) (*uatype.AddNodesResponse,
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) AddReferences(req uatype.AddReferencesRequest) (*uatype.AddReferencesResponse, error) {
+// AddReferences sends a AddReferences request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) AddReferences(req uatype.AddReferencesRequest, deadline time.Time) (*uatype.AddReferencesResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdAddReferencesRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdAddReferencesRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -197,17 +216,20 @@ func (c *Client) AddReferences(req uatype.AddReferencesRequest) (*uatype.AddRefe
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) DeleteNodes(req uatype.DeleteNodesRequest) (*uatype.DeleteNodesResponse, error) {
+// DeleteNodes sends a DeleteNodes request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) DeleteNodes(req uatype.DeleteNodesRequest, deadline time.Time) (*uatype.DeleteNodesResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdDeleteNodesRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdDeleteNodesRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -228,17 +250,20 @@ func (c *Client) DeleteNodes(req uatype.DeleteNodesRequest) (*uatype.DeleteNodes
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) DeleteReferences(req uatype.DeleteReferencesRequest) (*uatype.DeleteReferencesResponse, error) {
+// DeleteReferences sends a DeleteReferences request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) DeleteReferences(req uatype.DeleteReferencesRequest, deadline time.Time) (*uatype.DeleteReferencesResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdDeleteReferencesRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdDeleteReferencesRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -259,17 +284,20 @@ func (c *Client) DeleteReferences(req uatype.DeleteReferencesRequest) (*uatype.D
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) Browse(req uatype.BrowseRequest) (*uatype.BrowseResponse, error) {
+// Browse sends a Browse request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) Browse(req uatype.BrowseRequest, deadline time.Time) (*uatype.BrowseResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdBrowseRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdBrowseRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -290,17 +318,20 @@ func (c *Client) Browse(req uatype.BrowseRequest) (*uatype.BrowseResponse, error
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) BrowseNext(req uatype.BrowseNextRequest) (*uatype.BrowseNextResponse, error) {
+// BrowseNext sends a BrowseNext request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) BrowseNext(req uatype.BrowseNextRequest, deadline time.Time) (*uatype.BrowseNextResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdBrowseNextRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdBrowseNextRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -321,17 +352,20 @@ func (c *Client) BrowseNext(req uatype.BrowseNextRequest) (*uatype.BrowseNextRes
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) TranslateBrowsePathsToNodeIds(req uatype.TranslateBrowsePathsToNodeIdsRequest) (*uatype.TranslateBrowsePathsToNodeIdsResponse, error) {
+// TranslateBrowsePathsToNodeIds sends a TranslateBrowsePathsToNodeIds request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) TranslateBrowsePathsToNodeIds(req uatype.TranslateBrowsePathsToNodeIdsRequest, deadline time.Time) (*uatype.TranslateBrowsePathsToNodeIdsResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdTranslateBrowsePathsToNodeIdsRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdTranslateBrowsePathsToNodeIdsRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -352,17 +386,20 @@ func (c *Client) TranslateBrowsePathsToNodeIds(req uatype.TranslateBrowsePathsTo
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) RegisterNodes(req uatype.RegisterNodesRequest) (*uatype.RegisterNodesResponse, error) {
+// RegisterNodes sends a RegisterNodes request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) RegisterNodes(req uatype.RegisterNodesRequest, deadline time.Time) (*uatype.RegisterNodesResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdRegisterNodesRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdRegisterNodesRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -383,17 +420,20 @@ func (c *Client) RegisterNodes(req uatype.RegisterNodesRequest) (*uatype.Registe
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) UnregisterNodes(req uatype.UnregisterNodesRequest) (*uatype.UnregisterNodesResponse, error) {
+// UnregisterNodes sends a UnregisterNodes request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) UnregisterNodes(req uatype.UnregisterNodesRequest, deadline time.Time) (*uatype.UnregisterNodesResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdUnregisterNodesRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdUnregisterNodesRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -414,17 +454,20 @@ func (c *Client) UnregisterNodes(req uatype.UnregisterNodesRequest) (*uatype.Unr
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) QueryFirst(req uatype.QueryFirstRequest) (*uatype.QueryFirstResponse, error) {
+// QueryFirst sends a QueryFirst request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) QueryFirst(req uatype.QueryFirstRequest, deadline time.Time) (*uatype.QueryFirstResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdQueryFirstRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdQueryFirstRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -445,17 +488,20 @@ func (c *Client) QueryFirst(req uatype.QueryFirstRequest) (*uatype.QueryFirstRes
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) QueryNext(req uatype.QueryNextRequest) (*uatype.QueryNextResponse, error) {
+// QueryNext sends a QueryNext request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) QueryNext(req uatype.QueryNextRequest, deadline time.Time) (*uatype.QueryNextResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdQueryNextRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdQueryNextRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -476,17 +522,20 @@ func (c *Client) QueryNext(req uatype.QueryNextRequest) (*uatype.QueryNextRespon
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) Read(req uatype.ReadRequest) (*uatype.ReadResponse, error) {
+// Read sends a Read request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) Read(req uatype.ReadRequest, deadline time.Time) (*uatype.ReadResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdReadRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdReadRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -507,17 +556,20 @@ func (c *Client) Read(req uatype.ReadRequest) (*uatype.ReadResponse, error) {
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) HistoryRead(req uatype.HistoryReadRequest) (*uatype.HistoryReadResponse, error) {
+// HistoryRead sends a HistoryRead request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) HistoryRead(req uatype.HistoryReadRequest, deadline time.Time) (*uatype.HistoryReadResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdHistoryReadRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdHistoryReadRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -538,17 +590,20 @@ func (c *Client) HistoryRead(req uatype.HistoryReadRequest) (*uatype.HistoryRead
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) Write(req uatype.WriteRequest) (*uatype.WriteResponse, error) {
+// Write sends a Write request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) Write(req uatype.WriteRequest, deadline time.Time) (*uatype.WriteResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdWriteRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdWriteRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -569,17 +624,20 @@ func (c *Client) Write(req uatype.WriteRequest) (*uatype.WriteResponse, error) {
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) HistoryUpdate(req uatype.HistoryUpdateRequest) (*uatype.HistoryUpdateResponse, error) {
+// HistoryUpdate sends a HistoryUpdate request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) HistoryUpdate(req uatype.HistoryUpdateRequest, deadline time.Time) (*uatype.HistoryUpdateResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdHistoryUpdateRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdHistoryUpdateRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -600,17 +658,20 @@ func (c *Client) HistoryUpdate(req uatype.HistoryUpdateRequest) (*uatype.History
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) Call(req uatype.CallRequest) (*uatype.CallResponse, error) {
+// Call sends a Call request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) Call(req uatype.CallRequest, deadline time.Time) (*uatype.CallResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdCallRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdCallRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -631,17 +692,20 @@ func (c *Client) Call(req uatype.CallRequest) (*uatype.CallResponse, error) {
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) CreateMonitoredItems(req uatype.CreateMonitoredItemsRequest) (*uatype.CreateMonitoredItemsResponse, error) {
+// CreateMonitoredItems sends a CreateMonitoredItems request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) CreateMonitoredItems(req uatype.CreateMonitoredItemsRequest, deadline time.Time) (*uatype.CreateMonitoredItemsResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdCreateMonitoredItemsRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdCreateMonitoredItemsRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -662,17 +726,20 @@ func (c *Client) CreateMonitoredItems(req uatype.CreateMonitoredItemsRequest) (*
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) ModifyMonitoredItems(req uatype.ModifyMonitoredItemsRequest) (*uatype.ModifyMonitoredItemsResponse, error) {
+// ModifyMonitoredItems sends a ModifyMonitoredItems request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) ModifyMonitoredItems(req uatype.ModifyMonitoredItemsRequest, deadline time.Time) (*uatype.ModifyMonitoredItemsResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdModifyMonitoredItemsRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdModifyMonitoredItemsRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -693,17 +760,20 @@ func (c *Client) ModifyMonitoredItems(req uatype.ModifyMonitoredItemsRequest) (*
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) SetMonitoringMode(req uatype.SetMonitoringModeRequest) (*uatype.SetMonitoringModeResponse, error) {
+// SetMonitoringMode sends a SetMonitoringMode request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) SetMonitoringMode(req uatype.SetMonitoringModeRequest, deadline time.Time) (*uatype.SetMonitoringModeResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdSetMonitoringModeRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdSetMonitoringModeRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -724,17 +794,20 @@ func (c *Client) SetMonitoringMode(req uatype.SetMonitoringModeRequest) (*uatype
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) SetTriggering(req uatype.SetTriggeringRequest) (*uatype.SetTriggeringResponse, error) {
+// SetTriggering sends a SetTriggering request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) SetTriggering(req uatype.SetTriggeringRequest, deadline time.Time) (*uatype.SetTriggeringResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdSetTriggeringRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdSetTriggeringRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -755,17 +828,20 @@ func (c *Client) SetTriggering(req uatype.SetTriggeringRequest) (*uatype.SetTrig
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) DeleteMonitoredItems(req uatype.DeleteMonitoredItemsRequest) (*uatype.DeleteMonitoredItemsResponse, error) {
+// DeleteMonitoredItems sends a DeleteMonitoredItems request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) DeleteMonitoredItems(req uatype.DeleteMonitoredItemsRequest, deadline time.Time) (*uatype.DeleteMonitoredItemsResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdDeleteMonitoredItemsRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdDeleteMonitoredItemsRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -786,17 +862,20 @@ func (c *Client) DeleteMonitoredItems(req uatype.DeleteMonitoredItemsRequest) (*
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) CreateSubscription(req uatype.CreateSubscriptionRequest) (*uatype.CreateSubscriptionResponse, error) {
+// CreateSubscription sends a CreateSubscription request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) CreateSubscription(req uatype.CreateSubscriptionRequest, deadline time.Time) (*uatype.CreateSubscriptionResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdCreateSubscriptionRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdCreateSubscriptionRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -817,17 +896,20 @@ func (c *Client) CreateSubscription(req uatype.CreateSubscriptionRequest) (*uaty
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) ModifySubscription(req uatype.ModifySubscriptionRequest) (*uatype.ModifySubscriptionResponse, error) {
+// ModifySubscription sends a ModifySubscription request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) ModifySubscription(req uatype.ModifySubscriptionRequest, deadline time.Time) (*uatype.ModifySubscriptionResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdModifySubscriptionRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdModifySubscriptionRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -848,17 +930,20 @@ func (c *Client) ModifySubscription(req uatype.ModifySubscriptionRequest) (*uaty
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) SetPublishingMode(req uatype.SetPublishingModeRequest) (*uatype.SetPublishingModeResponse, error) {
+// SetPublishingMode sends a SetPublishingMode request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) SetPublishingMode(req uatype.SetPublishingModeRequest, deadline time.Time) (*uatype.SetPublishingModeResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdSetPublishingModeRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdSetPublishingModeRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -879,17 +964,20 @@ func (c *Client) SetPublishingMode(req uatype.SetPublishingModeRequest) (*uatype
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) Publish(req uatype.PublishRequest) (*uatype.PublishResponse, error) {
+// Publish sends a Publish request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) Publish(req uatype.PublishRequest, deadline time.Time) (*uatype.PublishResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdPublishRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdPublishRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -910,17 +998,20 @@ func (c *Client) Publish(req uatype.PublishRequest) (*uatype.PublishResponse, er
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) Republish(req uatype.RepublishRequest) (*uatype.RepublishResponse, error) {
+// Republish sends a Republish request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) Republish(req uatype.RepublishRequest, deadline time.Time) (*uatype.RepublishResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdRepublishRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdRepublishRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -941,17 +1032,20 @@ func (c *Client) Republish(req uatype.RepublishRequest) (*uatype.RepublishRespon
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) TransferSubscriptions(req uatype.TransferSubscriptionsRequest) (*uatype.TransferSubscriptionsResponse, error) {
+// TransferSubscriptions sends a TransferSubscriptions request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) TransferSubscriptions(req uatype.TransferSubscriptionsRequest, deadline time.Time) (*uatype.TransferSubscriptionsResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdTransferSubscriptionsRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdTransferSubscriptionsRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -972,17 +1066,20 @@ func (c *Client) TransferSubscriptions(req uatype.TransferSubscriptionsRequest) 
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) DeleteSubscriptions(req uatype.DeleteSubscriptionsRequest) (*uatype.DeleteSubscriptionsResponse, error) {
+// DeleteSubscriptions sends a DeleteSubscriptions request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) DeleteSubscriptions(req uatype.DeleteSubscriptionsRequest, deadline time.Time) (*uatype.DeleteSubscriptionsResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdDeleteSubscriptionsRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdDeleteSubscriptionsRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -1003,17 +1100,20 @@ func (c *Client) DeleteSubscriptions(req uatype.DeleteSubscriptionsRequest) (*ua
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) FindServers(req uatype.FindServersRequest) (*uatype.FindServersResponse, error) {
+// FindServers sends a FindServers request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) FindServers(req uatype.FindServersRequest, deadline time.Time) (*uatype.FindServersResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdFindServersRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdFindServersRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -1034,17 +1134,20 @@ func (c *Client) FindServers(req uatype.FindServersRequest) (*uatype.FindServers
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) FindServersOnNetwork(req uatype.FindServersOnNetworkRequest) (*uatype.FindServersOnNetworkResponse, error) {
+// FindServersOnNetwork sends a FindServersOnNetwork request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) FindServersOnNetwork(req uatype.FindServersOnNetworkRequest, deadline time.Time) (*uatype.FindServersOnNetworkResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdFindServersOnNetworkRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdFindServersOnNetworkRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -1065,17 +1168,20 @@ func (c *Client) FindServersOnNetwork(req uatype.FindServersOnNetworkRequest) (*
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) GetEndpoints(req uatype.GetEndpointsRequest) (*uatype.GetEndpointsResponse, error) {
+// GetEndpoints sends a GetEndpoints request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) GetEndpoints(req uatype.GetEndpointsRequest, deadline time.Time) (*uatype.GetEndpointsResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdGetEndpointsRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdGetEndpointsRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -1096,17 +1202,20 @@ func (c *Client) GetEndpoints(req uatype.GetEndpointsRequest) (*uatype.GetEndpoi
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) RegisterServer(req uatype.RegisterServerRequest) (*uatype.RegisterServerResponse, error) {
+// RegisterServer sends a RegisterServer request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) RegisterServer(req uatype.RegisterServerRequest, deadline time.Time) (*uatype.RegisterServerResponse, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdRegisterServerRequest_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdRegisterServerRequest_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
@@ -1127,17 +1236,20 @@ func (c *Client) RegisterServer(req uatype.RegisterServerRequest) (*uatype.Regis
 	return nil, fmt.Errorf("Unexpected NodeID: %d %s", resp.NodeID.Uint(), resp.NodeID.DisplayName())
 }
 
-func (c *Client) RegisterServer2(req uatype.RegisterServer2Request) (*uatype.RegisterServer2Response, error) {
+// RegisterServer2 sends a RegisterServer2 request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) RegisterServer2(req uatype.RegisterServer2Request, deadline time.Time) (*uatype.RegisterServer2Response, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdRegisterServer2Request_Encoding_DefaultBinary),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, uatype.NodeIdRegisterServer2Request_Encoding_DefaultBinary).Expanded(),
 		Body:   &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}
