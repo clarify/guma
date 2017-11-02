@@ -14,17 +14,20 @@ type services struct {
 var servicesTmlp = template.Must(template.New("services.tmpl").Parse(`
 {{range .Operations}}
 {{if .Include}}
-func (c *Client) {{.GoName}}(req uatype.{{.GoReq}}) (*uatype.{{.GoResp}}, error) {
+// {{.GoName}} sends a {{.GoName}} request to the server, and waits for a
+// response or timeout. To send and receive with no timeout use the zero time
+// as deadline.
+func (c *Client) {{.GoName}}(req uatype.{{.GoReq}}, deadline time.Time) (*uatype.{{.GoResp}}, error) {
 	var buf bytes.Buffer
 
 	if err := binary.NewEncoder(&buf).Encode(req); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Channel.Send(&transport.Request{
-		NodeID: uatype.NewFourByteNodeID(0, {{.RequestNodeID}}),
+	resp, err := c.Channel.Send(transport.Request{
+		NodeID: uatype.NewFourByteNodeID(0, {{.RequestNodeID}}).Expanded(),
 		Body: &buf,
-	})
+	}, deadline)
 	if err != nil {
 		return nil, err
 	}

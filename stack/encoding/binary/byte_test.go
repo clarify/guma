@@ -94,6 +94,48 @@ func TestByteTranscoder(t *testing.T) {
 			Marshaled:    []byte{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
 		},
 		{
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
+			Name:         "[]byte{0xF0,0x0C}",
+			Unmarshaled:  []byte{0xF0, 0x0C},
+			DecodeTarget: &[]byte{0x00, 0x00},
+			Marshaled:    []byte{0xF0, 0x0C},
+		},
+		{
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
+			Name:         "[2]byte{0xF0,0x0C}",
+			Unmarshaled:  [2]byte{0xF0, 0x0C},
+			DecodeTarget: &[2]byte{0x00, 0x00},
+			Marshaled:    []byte{0xF0, 0x0C},
+		},
+		{
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
+			Name:         "[]int8{0xF0,0x0C}",
+			Unmarshaled:  []int8{-16, 0x0C},
+			DecodeTarget: &[]int8{0x00, 0x00},
+			Marshaled:    []byte{0xF0, 0x0C},
+		},
+		{
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
+			Name:         "[2]int8{-16,0x0C}",
+			Unmarshaled:  [2]int8{-16, 0x0C},
+			DecodeTarget: &[2]int8{0x00, 0x00},
+			Marshaled:    []byte{0xF0, 0x0C},
+		},
+		{
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
+			Name:         "[]uint16{0xCAFE,0x1337}",
+			Unmarshaled:  []uint16{0xCAFE, 0x1337},
+			DecodeTarget: &[]uint16{0xCAFE, 0x1337},
+			Marshaled:    []byte{0xFE, 0xCA, 0x37, 0x13},
+		},
+		{
+			SubTests:     testutil.TestEncode | testutil.TestDecode,
+			Name:         "[2]uint16{0xCADE,0x1337}",
+			Unmarshaled:  [2]uint16{0xCAFE, 0x1337},
+			DecodeTarget: &[2]uint16{0xCAFE, 0x1337},
+			Marshaled:    []byte{0xFE, 0xCA, 0x37, 0x13},
+		},
+		{
 			// Documenting current behavior where non-aligned bit-lengths >8 are
 			// not supported. In this sexample, for struct-field tags.
 			SubTests:    testutil.TestEncode,

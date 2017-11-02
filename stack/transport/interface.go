@@ -2,36 +2,34 @@ package transport
 
 import (
 	"io"
+	"time"
 
 	"github.com/searis/guma/stack/uatype"
 )
 
-// Request represents an OPCUA request received by a server or to be sent by a
-// client.
+// Request should contain a matching NodeID and encoded Body, and is used to
+// communicate against a server.
 type Request struct {
-	NodeID uatype.NodeId
+	NodeID uatype.ExpandedNodeId
 	Body   io.Reader
 }
 
-// Response represents an OPCUA response sent by a server or received by a
-// client.
+// Response should contain a matching NodeID and encoded Body, and is returned
+// from a server to a client.
 type Response struct {
-	NodeID uatype.NodeId
+	NodeID uatype.ExpandedNodeId
 	Body   io.Reader
 }
 
-// Channel is a OPCUA specific request/response driven interface.
-type Channel interface {
+// SecureChannel is an abstract interface for the (client-side) OPC UA Secure
+// Conversation concept. Different implementations may be given on top of
+// different types of connections, e.g. UACP v.s. HTTP.
+type SecureChannel interface {
 	// Send transmits a request via the channel. If a message cannot be
-	// successfully sent over the channel, Send returns an error.
-	Send(r *Request) (*Response, error)
+	// successfully sent over the channel, Send returns an error. To send
+	// without a deadline, use the zero time.
+	Send(req Request, deadline time.Time) (*Response, error)
 
-	// Close closes the channel after performing necessary clean up.
+	// Close closes the channel after performing necessary clean-up.
 	Close() error
-}
-
-// Conn is a OPCUA transport layer interface.
-type Conn interface {
-	Send(mt MessageType, r io.Reader) error
-	Receive() (io.Reader, error)
 }

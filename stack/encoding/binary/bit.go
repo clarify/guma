@@ -3,6 +3,7 @@ package binary
 import (
 	"errors"
 	"fmt"
+	"io"
 )
 
 // bitCacheMarshaler allows encoding (compression) of bit sequences and small
@@ -91,7 +92,7 @@ func (u *bitCacheUnmarshaler) UnmarshalBinary(data []byte) error {
 	// read one byte to cache if needed.
 	if u.cursor == 0 {
 		if len(data) < 1 {
-			return ErrNotEnoughData
+			return io.ErrShortBuffer
 		}
 		u.cache = data[0]
 		u.byteRead = true

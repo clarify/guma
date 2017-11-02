@@ -3,4 +3,12 @@
 
 package uatype
 
-type enumStatusCode uint32
+// StatusCode is expected to hold any value defined in the StatusCode<...> const
+// block.
+type StatusCode uint32
+
+// StatusText returns a text for the OPC UA status code. It returns the empty
+// string if the code is unknown.
+func StatusText(code StatusCode) string {
+	return statusText[code]
+}

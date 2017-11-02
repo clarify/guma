@@ -1,6 +1,7 @@
 package binary
 
 import (
+	"bytes"
 	"encoding"
 	"encoding/binary"
 	"fmt"
@@ -18,7 +19,17 @@ type bitSlice struct {
 	BitLength byte
 }
 
-// A Encoder writes OPC UA Binary content to an output stream.
+// Marshal encodes v into the OPC UA Binary Encoding format, and returns it as
+// a slice of bytes.
+func Marshal(v interface{}) ([]byte, error) {
+	var buff bytes.Buffer
+	enc := NewEncoder(&buff)
+	err := enc.Encode(v)
+	return buff.Bytes(), err
+
+}
+
+// An Encoder writes OPC UA Binary content to an output stream.
 type Encoder struct {
 	w             io.Writer
 	n             int64
@@ -64,16 +75,31 @@ func (enc *Encoder) encode(rv reflect.Value) error {
 
 	// Pick binary marshaler.
 	switch iv := rv.Interface().(type) {
+	case []byte:
+		if len(iv) > 0 {
+			m = (byteSlice)(iv)
+		} else {
+			m = nopMarshaler{}
+		}
 	case bool:
 		enc.byteMarshaler.SetData(iv)
 		m = &enc.byteMarshaler
 	case uint8, int8, uint16, int16, int32, uint32, int64, uint64, float32, float64:
 		enc.byteMarshaler.SetData(iv)
 		m = &enc.byteMarshaler
+	case []bool, []int8, []uint16, []int16, []int32, []uint32, []int64, []uint64, []float32, []float64:
+		if rv.Len() > 0 {
+			enc.byteMarshaler.SetData(iv)
+			m = &enc.byteMarshaler
+		} else {
+			m = nopMarshaler{}
+		}
 	case string:
 		m = uaString(iv)
 	case time.Time:
 		m = dateTime(iv)
+	case time.Duration:
+		m = duration(iv)
 	case uatype.Bit:
 		var err error
 		if iv {
@@ -113,7 +139,7 @@ func (enc *Encoder) encode(rv reflect.Value) error {
 		}
 	default:
 		switch rv.Kind() {
-		case reflect.Slice, reflect.Array:
+		case reflect.Array, reflect.Slice:
 			m = listMarshaler(&enc.byteMarshaler, rv)
 			if m == nil {
 				return enc.encodeList(rv)
@@ -255,11 +281,12 @@ func (enc *Encoder) encodeStruct(rv reflect.Value) error {
 // faster than encodeList. When no optimization is found, nil is returned.
 func listMarshaler(bm *byteMarshaler, rv reflect.Value) encoding.BinaryMarshaler {
 	// TODO: Prove this optimizations with micro-benchmarks.
-	if rv.Len() == 0 {
+	l := rv.Len()
+	if l == 0 {
 		return nil
 	}
 	switch rv.Index(0).Interface().(type) {
-	case bool, int8, uint8, int16, uint16, int32, uint32, float32, int64, uint64, float64:
+	case bool, uint8, int8, int16, uint16, int32, uint32, float32, int64, uint64, float64:
 		bm.SetData(rv.Interface())
 		return bm
 	}

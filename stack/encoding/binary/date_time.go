@@ -25,6 +25,9 @@ func (t dateTime) MarshalBinary() ([]byte, error) {
 	sec := time.Time(t).Unix()
 	nsec := time.Time(t).Nanosecond()
 
+	// We do all calculations as int64 to ensure the sign is correct during
+	// addition and integer scaling. We then cast to uint64 for the final
+	// put-operation only.
 	i := sec*1e7 + hundredNanoSecondsToUnixEpoch + int64(nsec/100)
 	binary.LittleEndian.PutUint64(b, uint64(i))
 

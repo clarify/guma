@@ -12,7 +12,6 @@ import (
 
 	"io/ioutil"
 
-	"bytes"
 	"runtime/debug"
 )
 
@@ -32,7 +31,8 @@ type BitLengther interface {
 // Unmarshal parses the OPC UA binary encoded data into the value pointed to by
 // v.
 func Unmarshal(data []byte, v interface{}) error {
-	dec := NewDecoder(bytes.NewReader(data))
+	dec := NewDecoder(nil)
+	dec.data = data
 	return dec.Decode(v)
 }
 
@@ -64,10 +64,18 @@ func (dec *Decoder) Decode(v interface{}) (err error) {
 		}
 	}()
 
-	// As an initial implementation we read all binary data directly into memory
-	// without any steaming. We might improve on this later if needed.
-	if dec.data, err = ioutil.ReadAll(dec.r); err != nil {
-		return err
+	// Check if dec.r is (still) set to allow multiple calls to Decode, as well
+	// as an optimized path for the Unmarshal function.
+	if dec.r != nil {
+		// FIXME: As an initial implementation we read all binary data directly
+		// into memory without any steaming. We should improve on this later
+		// to prevent consuming data that we do not need.
+		if dec.data, err = ioutil.ReadAll(dec.r); err != nil {
+			return err
+		}
+
+		// get rid of the reader to symbolize that it's been exhausted.
+		dec.r = nil
 	}
 
 	rv := reflect.ValueOf(v)
@@ -91,6 +99,13 @@ func (dec *Decoder) decode(rv reflect.Value) error {
 
 	// Pick binary marshaler.
 	switch iv := rv.Interface().(type) {
+	case *[]byte:
+		size = len(*iv)
+		if size == 0 {
+			u = nopUnmarshaler{}
+		} else {
+			u = (*byteSlice)(iv)
+		}
 	case *bool, *uint8, *int8:
 		u = byteUnmarshaler{iv}
 		size = 1
@@ -103,9 +118,39 @@ func (dec *Decoder) decode(rv reflect.Value) error {
 	case *int64, *uint64, *float64:
 		u = byteUnmarshaler{iv}
 		size = 8
+	case *[]bool, *[]int8:
+		size = rv.Elem().Len()
+		if size == 0 {
+			u = nopUnmarshaler{}
+		} else {
+			u = byteUnmarshaler{iv}
+		}
+	case *[]uint16, *[]int16:
+		size = rv.Elem().Len() * 2
+		if size == 0 {
+			u = nopUnmarshaler{}
+		} else {
+			u = byteUnmarshaler{iv}
+		}
+	case *[]int32, *[]uint32, *[]float32:
+		size = rv.Elem().Len() * 4
+		if size == 0 {
+			u = nopUnmarshaler{}
+		} else {
+			u = byteUnmarshaler{iv}
+		}
+	case *[]int64, *[]uint64, *[]float64:
+		size = rv.Elem().Len() * 8
+		if size == 0 {
+			u = nopUnmarshaler{}
+		} else {
+			u = byteUnmarshaler{iv}
+		}
 	case *time.Time:
 		u = (*dateTime)(iv)
 		size = 8
+	case *time.Duration:
+		u = (*duration)(iv)
 	case *uatype.Bit:
 		dec.bitUnmarshaler.SetBoolTarget((*bool)(iv))
 		u = &dec.bitUnmarshaler
@@ -136,12 +181,12 @@ func (dec *Decoder) decode(rv reflect.Value) error {
 			return fmt.Errorf("bit length above 8 must be aligned to 8 bits; bit length was %d", nBits)
 		} else {
 			size = nBits / 8
-			u = &byteUnmarshaler{iv}
+			u = byteUnmarshaler{iv}
 		}
 	default:
 		re := rv.Elem()
 		switch re.Kind() {
-		case reflect.Slice, reflect.Array:
+		case reflect.Array, reflect.Slice:
 			u, size = listUnmarshaler(re)
 			if u == nil {
 				return dec.decodeList(re)
@@ -170,7 +215,7 @@ func (dec *Decoder) decode(rv reflect.Value) error {
 	// Limit input data if the (max) size is known.
 	if size != 0 {
 		if size > len(dec.data) {
-			return ErrNotEnoughData
+			return io.ErrShortBuffer
 		}
 		data = dec.data[:size]
 	} else if maxSize != 0 && len(dec.data) > maxSize {
@@ -309,19 +354,19 @@ func (dec *Decoder) decodeStruct(rv reflect.Value) error {
 // faster than decodeList. When no optimization is found, nil is returned.
 func listUnmarshaler(rv reflect.Value) (encoding.BinaryUnmarshaler, int) {
 	// TODO: Prove this optimizations with micro-benchmarks.
-	len := rv.Len()
-	if len == 0 {
+	l := rv.Len()
+	if l == 0 {
 		return nopUnmarshaler{}, 0
 	}
 	switch rv.Index(0).Interface().(type) {
-	case bool, int8, uint8:
-		return byteUnmarshaler{rv.Addr().Interface()}, len
+	case bool, uint8, int8:
+		return byteUnmarshaler{rv.Addr().Interface()}, l
 	case int16, uint16:
-		return byteUnmarshaler{rv.Addr().Interface()}, 2 * len
+		return byteUnmarshaler{rv.Addr().Interface()}, 2 * l
 	case int32, uint32, float32:
-		return byteUnmarshaler{rv.Addr().Interface()}, 4 * len
+		return byteUnmarshaler{rv.Addr().Interface()}, 4 * l
 	case int64, uint64, float64:
-		return byteUnmarshaler{rv.Addr().Interface()}, 8 * len
+		return byteUnmarshaler{rv.Addr().Interface()}, 8 * l
 	}
 	return nil, 0
 }
