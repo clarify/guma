@@ -15,10 +15,35 @@ At the moment, this repo includes the following:
   - A script to download the OPC UA XML and CSV schemas.
 - generate/cmd:
   - Commands used to generate code structures from XML and CSV.
-- uatype:
+- stack
+  - A low level client for talking to OPC UA servers
+- stack/uatype:
   - A package exporting a set of Go types that has mostly been generated from source.
+- stack/transport:
+  - A parent package for OPC UA Secure Channel implementations.
+- stack/ecoding/binary:
+  - A package similar to `encoding/json` in the standard library, that allows encoding of structs into an OPC UA binary representation.
 
-To re-generate code, we rely on go-task:
+
+## Features
+
+- [x] Handshake and opening of Secure Channel.
+- [ ] Closing a secure channel (easy, but not implemented).
+- [x] Access to all OPC UA Service calls, such as Read, Browse and Subscribe.
+- [x] SecureChannel made safe for concurrent access (necesary for e.g. Subscribe).
+- [ ] Secure channel Message signing and encryption.
+- [ ] Stateless HTTPS / HTTP.
+- [ ] Reconnect TCP Socket on errors.
+- [ ] Re-new Secure Channels at 75% of revised lifetine.
+
+## Long term goals
+
+- [ ] Certify an application built with this library with the OPC Fondation.
+
+
+## Development
+
+To re-generate code, we rely on go-task (broken patches needs fixing!):
 
 ```bash
 $ go get -u -v github.com/go-task/task/cmd/task
@@ -28,23 +53,9 @@ $ task generate
 Run unit-tests:
 
 ```bash
-$ glide install
-$ go test -v
+$ dep ensure
+$ go test -v ./...
 ```
 
-Dependencies is managed via [Glide](http://glide.sh) until Go's new official dependency tool is ready. Run `glide init` or `glide cw` to use Glide on your own projects.
-
-## Features:
-
-- [x] Auto generate a large selection of structures and types with struct tags.
-- [ ] Provide an encoder for encoding all supported data structures to the OPC UA binary format.
-- [ ] Provide a decoder for decoding the OPC UA binary format into Go structs.
-- [ ] Support code for creating OPC UA Client applications:
-  - [ ] Basic message handling logic.
-  - [ ] Basic client connection capabilities.
-  - [ ] User authentication support.
-  - [ ] Read and Browse capabilities.
-  - [ ] Subscription support.
-- [ ] Support for creating OPC UA server applications?
 
 ![Image of the Guma](/misc/img/guma.png)
