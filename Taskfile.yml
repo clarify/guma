@@ -1,24 +1,34 @@
-download-schemas:
-  cmds:
-    - generate/scripts/download-schemas.bash
-    # Patch schemas
-    - for i in misc/patches/1.03/*.patch; do patch schemas/1.03/Opc.Ua.Types.bsd.xml $i; done
-  sources:
-    - generate/scripts/download-schemas.bash
-    - misc/patches/1.03/*.patch
-  generates:
-    - schemas/1.03/*
-
-generate-tools:
-  cmds:
-    - go get -u golang.org/x/tools/cmd/goimports
-    - go install github.com/searis/guma/generate/cmd/opcua-xml2code
-    - go install github.com/searis/guma/generate/cmd/csv2code
-
-generate:
-  deps:
+version: "2.2"
+tasks:
+  generate:
+    desc: "Generate Go code"
+    deps:
     - download-schemas
     - generate-tools
-  cmds:
+    cmds:
     - go generate ./stack/uatype
+  generate-tools:
+    desc: "Download tools needed for code generation"
+    cmds:
+    - go get -u golang.org/x/tools/cmd/goimports
+    - go install ./generate/cmd/opcua-xml2code
+    - go install ./generate/cmd/csv2code
     - go generate ./stack
+  download-schemas:
+    desc: "Download & patch schemas"
+    cmds:
+    - generate/scripts/download-schemas.bash
+    # Patch schemas
+    - |
+      set -e
+      for i in misc/patches/1.03/*.patch
+      do
+        patch schemas/1.03/Opc.Ua.Types.bsd.xml $i
+      done
+    sources:
+    - generate/scripts/download-schemas.bash
+    - misc/patches/1.03/*.patch
+    generates:
+    - schemas/1.03/*
+
+
